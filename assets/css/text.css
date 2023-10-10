@@ -1,0 +1,9 @@
+@layer base {
+  h1 {
+    @apply text-4xl lg:text-[64px] lg:leading-[64px] font-normal;
+  }
+
+  h2 {
+    @apply text-xl sm:text-[28px] leading-7;
+  }
+}

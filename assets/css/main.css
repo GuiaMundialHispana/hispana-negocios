@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&display=swap');
+@import "./text.css";
+@import "./range-slider.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  &.modal-open {
+    @apply relative w-screen h-screen overflow-hidden;
+    @apply after:fixed after:w-full after:h-full after:z-[70] after:top-0 after:left-0 after:bg-neutral-black after:bg-opacity-40;
+  }
+}
+
+.nuxt-icon svg { @apply mb-0 !important; }
+
+.navigation-button {
+  @apply w-8 h-8 flex items-center justify-center border border-gray-300 bg-neutral-white rounded-full;
+}
+
+.filterStatus-tabs-lg {
+  @apply h-20 font-semibold w-fit !important;
+  & .btn {
+    @apply h-full px-6 text-xl !important;
+  }
+}
+
+.filterStatus-tabs-sm {
+  @apply h-10 xl:w-fit w-full !important;
+  & .btn{
+    @apply h-full w-full px-[9px] !important;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Checkbox Style */
+.dropdown-wrapper {
+  @apply bg-neutral-white border-2 border-gray-100 rounded-lg px-2.5 pt-3 overflow-y-scroll hover:overscroll-contain;
+
+  & .checkbox-labels {
+    @apply cursor-pointer select-none flex items-center font-normal text-sm leading-[22px] mb-3;
+  
+    & .checkbox {
+      @apply relative appearance-none flex-none w-4 h-4 border border-gray-300 rounded-sm mr-2 cursor-pointer hover:bg-secondary-100 hover:border-none checked:bg-primary-100 checked:hover:bg-gray-300 checked:border-none
+      after:w-full
+      after:h-full
+      after:absolute
+      after:bg-no-repeat
+      after:bg-center
+      after:bg-[length:10px]
+      after:bg-[url('~/assets/icons/general/check.svg')];
+    }
+  }
+
+  &.scrollbar {
+    &::-webkit-scrollbar {
+      @apply w-7;
+    }
+  
+    &::-webkit-scrollbar-track {
+      @apply bg-neutral-white rounded-full;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      @apply border-[10px] border-solid border-neutral-white rounded-full bg-[#C1C1C1];
+    }
+  }
+}
+
+.control-steps-PostVehicle { @apply flex justify-center w-full gap-2.5 mt-6 mb-11; }
+.swal2-styled.swal2-confirm {
+  @apply bg-primary-100 !important;
+}
+
+.skeleton {
+  @apply bg-neutral-20 animate-pulse;
+}

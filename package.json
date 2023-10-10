@@ -1,0 +1,30 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/postcss8": "^1.1.3",
+    "@types/node": "^18",
+    "@vueuse/components": "^10.1.2",
+    "nuxt": "^3.4.1",
+    "nuxt-viewport": "^2.0.3",
+    "postcss": "^8.4.21",
+    "postcss-nesting": "^10.2.0",
+    "tailwindcss": "^3.2.4"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.4.8",
+    "form-data": "^4.0.0",
+    "multi-range-slider-vue": "^1.1.4",
+    "nuxt-icons": "^3.1.0",
+    "nuxt-swiper": "^1.1.0",
+    "sweetalert2": "^11.7.3",
+    "vue-sweetalert2": "^5.0.5"
+  }
+}
