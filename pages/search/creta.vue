@@ -1,5 +1,5 @@
 <template>
-  <main class="h-screen px-20">
+  <main class=" lg:px-20 md:px-8 px-5">
     <div class="flex w-full items-center justify-center">
       <!-- Fotos/ carrusel -->
       <figure>
@@ -13,13 +13,13 @@
       </figure>
 
     </div>
-    <section class="max-w-[1250px] mx-auto flex flex-col px-5">
-      <div class="relative flex mb-[60px] pt-10 justify-between items-center">
-        <figure class="bg-neutral-white p-6 w-[170px] h-[170px] border-2 rounded-lg flex items-center justify-center border-[#F5F5F5] absolute -top-2/3 ">
+    <section class="max-w-[1250px] mx-auto flex flex-col lg:px-5">
+      <div class="relative flex lg:mb-[60px] mb-8 lg:flex-row flex-col pt-10 justify-between items-center">
+        <figure class="bg-neutral-white p-6 w-[170px] h-[170px] border-2 rounded-lg flex items-center justify-center border-[#F5F5F5] absolute lg:-top-2/3 -top-1/4 ">
           <img src="/img/business.png" alt="">
         </figure>
-        <h2 class="ml-[200px] text-5xl font-semibold text-primary-100">Farmacia Carol</h2>
-        <div class="flex gap-3.5 text-sm">
+        <h2 class="lg:ml-[200px] mt-[90px] lg:mt-0 xl:text-5xl text-4xl font-semibold text-primary-100 mr-4 whitespace-nowrap">Farmacia Carol</h2>
+        <div class="flex gap-3.5 text-sm mt-4 lg:mt-0 flex-wrap md:justify-end justify-center">
             <p class="hour" :class="{closed: !open}">
               <AtomsIcon name="general/clock" :size=32 class="absolute left-0 "/>
               8:00 a.m. -  5:00 p.m.
@@ -36,7 +36,7 @@
       </div>
       <MoleculesCharacteristics class="contact-info" />
     </section>
-    <section class="max-w-[1250px] mx-auto px-5">
+    <section class="max-w-[1250px] mx-auto lg:px-5">
       <h3 class="w-full border-b border-b-[#F5F5F5] text-[28px] font-medium py-2.5 mb-5">
         Ubicación
       </h3>
@@ -57,9 +57,9 @@ const open = ref(true);
     }
   }
   .bussines-category{
-    @apply text-primary-100 bg-[#F1F1F1] flex items-center justify-center text-center px-2 rounded-lg;
+    @apply text-primary-100 bg-[#F1F1F1] flex items-center justify-center text-center px-2 rounded-lg h-8;
   }
   .contact-info{
-    @apply gap-x-16 bg-[#FCFCFC] py-6 px-10 rounded-2xl w-full items-center justify-center my-16 !important
+    @apply lg:gap-x-16 gap-x-8 bg-[#FCFCFC] py-6 px-10 rounded-2xl w-full items-center justify-center my-16 !important
   }
 </style>
