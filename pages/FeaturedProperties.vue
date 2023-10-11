@@ -11,7 +11,7 @@
         Buscar más propiedades
       </AtomsLink>
     </div>
-    <img src="/img/hero.png" alt="Building" class="absolute z-0 top-0 w-full h-full object-cover transform -scale-x-100 ">
+    <img src="/img/hero.jpg" alt="Building" class="absolute z-0 top-0 w-full h-full object-cover transform -scale-x-100 ">
     <p class="hidden">
       Foto de <a href="https://unsplash.com/es/@chatelp?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Pierre Châtel-Innocenti</a> en <a href="https://unsplash.com/es/fotos/N5RN0JE5kaY?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
     </p>
