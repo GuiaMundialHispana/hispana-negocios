@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   routeRules:{
     '/profile': { ssr: false },
     '/edit-vehicle': { ssr: false },
-    '/PostVehicle': { ssr: false },
+    '/PostBussines': { ssr: false },
   },
   app: {
     head: {

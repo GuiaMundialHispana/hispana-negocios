@@ -194,7 +194,7 @@ async function createAdvertisement() {
           <AtomsIcon name="general/slim-check" />
           <p>Finalizado</p>
           <hr class="hidden lg:block border-secondary-100 border w-12 ml-2" :class="[{'w-20': step === 5}]">
-          <img v-if="step < 5" class="hidden lg:block w-[177px]" :src="`/img/PostVehicle/step-${step}.png`" alt="Vehicle">
+          <img v-if="step < 5" class="hidden lg:block w-[177px]" :src="`/img/PostBussines/step-${step}.png`" alt="Vehicle">
         </div>
       </div>
     </nav>
@@ -222,7 +222,7 @@ async function createAdvertisement() {
     </KeepAlive>
     <!-- 5 -->
     <PopulationEditVehiclesStep5 v-if="step === 5" />
-    <nav class="control-steps-PostVehicle">
+    <nav class="control-steps-PostBussines">
       <AtomsButtons v-if="step === 4" @click="createAdvertisement()">
         Actualizar Anuncio
       </AtomsButtons>

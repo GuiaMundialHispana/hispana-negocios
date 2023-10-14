@@ -127,7 +127,7 @@ watch(newPreview.value, (newx) => {
     </div>
     <p class="text-center mt-16 mb-8">{{ newPreview.length + previewImages.length }}/{{planSelected.quantity}} Fotos</p>
   </div>
-  <nav class="control-steps-PostVehicle">
+  <nav class="control-steps-PostBussines">
     <AtomsButtons @click="emit('back')" btn-style="outline-primary">
       Atras
     </AtomsButtons>

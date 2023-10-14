@@ -270,7 +270,7 @@ watch(price_temp,(new_price) => {
       <!-- Map -->
       <!-- <div class="col-span-2">
         <ClientOnly>
-          <PopulationPostVehicleMap @send-location="getAddress"/>
+          <PopulationPostBussinesMap @send-location="getAddress"/>
         </ClientOnly>
       </div> -->
       <!-- ubicacion -->
@@ -380,7 +380,7 @@ watch(price_temp,(new_price) => {
       </label>
     </div>   
   </div>
-  <nav class="control-steps-PostVehicle">
+  <nav class="control-steps-PostBussines">
     <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
       Atras
     </AtomsButtons>

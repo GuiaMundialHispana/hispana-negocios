@@ -22,7 +22,6 @@ function send_plan(id,pictures) {
   use_posts.plan_pictures = pictures;
   next.value = true;
 };
-
 </script>
 
 <template>
@@ -87,7 +86,7 @@ function send_plan(id,pictures) {
   <div class="flex justify-center">
     <AtomsLink link-to="/plans" class="mx-auto my-6">Adquirir mas planes</AtomsLink>
   </div>
-  <nav class="control-steps-PostVehicle">
+  <nav class="control-steps-PostBussines">
     <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
       Atras
     </AtomsButtons>

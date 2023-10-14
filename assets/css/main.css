@@ -82,7 +82,7 @@ input[type=number] {
   }
 }
 
-.control-steps-PostVehicle { @apply flex justify-center w-full gap-2.5 mt-6 mb-11; }
+.control-steps-PostBussines { @apply flex justify-center w-full gap-2.5 mt-6 mb-11; }
 .swal2-styled.swal2-confirm {
   @apply bg-primary-100 !important;
 }
