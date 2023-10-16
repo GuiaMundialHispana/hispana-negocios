@@ -11,7 +11,6 @@
       <figure>
         <img src="/img/carol3.png" alt="">
       </figure>
-
     </div>
     <section class="max-w-[1250px] mx-auto flex flex-col px-5">
       <div class="relative flex mb-[60px] pt-10 justify-between items-center">

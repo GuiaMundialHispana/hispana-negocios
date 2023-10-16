@@ -22,23 +22,42 @@
         @click="showFilters = false"
       />
       <div class="flex flex-wrap gap-2 xl:flex-row flex-col">
-        <MoleculesFilterStatusProperties
-          @change="getCondition"
-          class="filterStatus-tabs-sm"
-        />
-        <MoleculesSearchFiltersBar
-          @make="getMake"
-          @priceType="getPriceType"
-          @price="getPrice"
-          @unitType="getUnitType"
-          @unit="getUnit"
-          @year="getYear"
-          @category="getCategory"
-          @model="getModel"
-        />
+        <div class="filters-container relative">
+          <label class="form-control">
+            <AtomsIcon name="general/search" :size=24 class="text-secondary-100" />
+            <input type="text" v-model="title" placeholder="¿Qué buscas?">
+          </label>
+          <label class="form-control">
+            <AtomsIcon name="general/location" :size=24 class="text-secondary-100" />
+            <input type="text" placeholder="¿Dónde?">
+          </label>
+          <div class="form-control relative">
+            <button class="categories-btn" @click="showCategory = !showCategory">Categorías</button>
+            <OnClickOutside @trigger="showCategory = false" v-if="showCategory" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md">
+              <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
+                <label class="checkbox-labels" v-for="category in businessCategories" :key="category" :for="category">
+                  <input
+                    type="checkbox"
+                    class="checkbox"
+                    :name="category"
+                    :value="category"
+                    :id="category"
+                  >
+                  {{ category }}
+                </label>
+              </div>
+            </OnClickOutside>
+          </div>
+          <AtomsButtons
+            icon-name="general/close"
+            btn-type="btn-icon"
+            class="close-btn flex-none"
+            @click="clearFilter()"
+          />
+        </div>
       </div>
     </OnClickOutside>
-    <div v-if="!peending" class="flex items-center justify-between mt-8 2xl:mt-11 text-sm font-normal">
+    <div v-if="properties.length > 0" class="flex items-center justify-between mt-8 2xl:mt-11 text-sm font-normal">
       <p class="text-neutral-black">
         <span class="text-primary-100 font-semibold">
           {{ properties.length}} resultados
@@ -47,51 +66,48 @@
       </p>
     </div>
     <div class="mt-8 pb-14">
-      <ul class="property-list" v-if="!peending">
+      <ul class="property-list" v-if="!pending">
         <li v-for="property in properties" :key="property">
-          <MoleculesVehicle
-            :property="property.auto"
-            :property-id="property.advertisement_id"
-          />
+          <MoleculesBusiness :advertisement="property" />
         </li>
       </ul>
-      <div v-else class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        <div class="skeleton">
-          <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
-        </div>
-        <div class="skeleton">
-          <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
-        </div>
-        <div class="skeleton">
-          <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
-        </div>
-        <div class="skeleton">
-          <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
-        </div>
-        <div class="skeleton">
-          <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
-        </div>
-        <div class="skeleton">
-          <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
-        </div>
-      </div>
-      <div v-if="properties.length === 0 && !peending">
+      <div v-if="properties.length === 0 && !pending" class="pt-20">
         <figure class="mb-4">
           <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
         </figure>
         <h6 class="text-4xl text-primary-100 font-bold mb-4 text-center">No hemos encontramos propiedades <br/>con estos resultados</h6>
+      </div>
+      <div v-if="pending" class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div class="skeleton">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-date"></div>
+          <div class="skeleton-body"></div>
+        </div>
+        <div class="skeleton">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-date"></div>
+          <div class="skeleton-body"></div>
+        </div>
+        <div class="skeleton">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-date"></div>
+          <div class="skeleton-body"></div>
+        </div>
+        <div class="skeleton">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-date"></div>
+          <div class="skeleton-body"></div>
+        </div>
+        <div class="skeleton">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-date"></div>
+          <div class="skeleton-body"></div>
+        </div>
+        <div class="skeleton">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-date"></div>
+          <div class="skeleton-body"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -100,117 +116,79 @@
 <script lang="ts" setup>
 import { OnClickOutside } from '@vueuse/components';
 import { ref } from 'vue';
+
 const config = useRuntimeConfig();
 const viewport = useViewport();
+const countries = useGetCountry().countries;
 
 //Mostrar propiedades
 let properties = ref([]);
 let showFilters = ref(false);
-const makeId = ref(null);
-let priceType = useRoute().query.priceType;
-let condition = useRoute().query.condition;
-let price = useRoute().query.price || '';
-const unitType = ref("KM");
-const unit = ref("");
-let year = useRoute().query.year || '';
-let category = useRoute().query.category || [];
-let model = useRoute().query.model || null;
-let peending = ref(true);
 
-function getCondition(x: string) {
-  condition = x;
-  getAds();
+const title = ref(useRoute().query.title || '');
+const country = ref(useRoute().query.country || '');
+const categories = ref(useRoute().query.categorySeleted || []);
+const showCategory = ref(false);
+const businessCategories = ref([
+	"Restaurante",
+  "Cafetería",
+  "Tienda de ropa",
+  "Salón de belleza",
+  "Supermercado",
+  "Farmacia",
+  "Gimnasio",
+  "Librería",
+  "Taller mecánico",
+  "Peluquería",
+  "Spa",
+  "Panadería",
+  "Tienda de electrónica",
+  "Cervecería",
+  "Joyería",
+  "Veterinaria",
+  "Agencia de viajes",
+  "Estudio de diseño",
+  "Estudio de fotografía",
+  "Florería",
+  "Tienda de música",
+  "Estudio de tatuajes",
+  "Estudio de yoga",
+  "Tienda de muebles",
+  "Bar",
+  "Pizzería",
+  "Cine",
+  "Teatro",
+  "Agencia inmobiliaria",
+]);
+
+const { data, pending, refresh } = useLazyFetch('advertisements/search', {
+  method: 'GET',
+  baseURL: config.public.API,
+  params: {
+    title : title,
+    country: country,
+    category: categories,
+  },
+  transform(data) {
+    properties.value = data.results.data;
+  },
+});
+
+watch(title, () => { refresh(); });
+watch(country, () => { refresh(); });
+watch(title, () => { refresh(); });
+
+function clearFilter() {
+  title.value = "";
+  country.value = "";
+  categories.value = "";
+  refresh();
 }
-
-function getMake(make:null) {
-  makeId.value = make.join();
-  getAds();
-}
-
-function getModel(models:null) {
-  model = models.join();
-  getAds();
-}
-
-function getPriceType(priceTypes:null) {
-  priceType = priceTypes;
-  getAds();
-}
-
-function getPrice(prices:null) {
-  price = prices;
-  getAds();
-}
-
-function getUnitType(unitTypes: null) {
-  unitType.value = unitTypes;
-  getAds();
-}
-
-function getUnit(units: null) {
-  unit.value = units;
-  getAds();
-}
-
-function getYear(years:null) {
-  console.log(years)
-  year = years;
-  getAds();
-}
-
-function getCategory(categorys: null) {
-  category = categorys.join();
-  getAds();
-}
-
-function getAds() {
-  peending.value = true;
-  const { data,pending } = useLazyFetch('advertisements/search', {
-    method: 'GET',
-    baseURL: config.public.API,
-    params: {
-      condition: condition,
-      price_type: priceType,
-      price: price,
-      unit_type: unitType.value,
-      unit: unit.value,
-      year: year,
-      categories: category,
-      make_ids: makeId.value,
-      model_ids: model
-    },
-    watch: [
-      condition,
-      priceType,
-      price,
-      unitType.value,
-      unit.value,
-      year,
-      category,
-      makeId.value,
-      model
-    ],
-    transform(data) {
-      properties.value = data.results.data;
-    },
-    onResponse({response}) {
-      if(response.status === 200 ) {
-        peending.value = false;
-      }
-    }
-  });
-}
-
-getAds();
 </script>
 
 <style lang="postcss" scoped>
 .swiper-slide {
   @apply flex-none w-[350px] !important;
-}
-
-.property-list {
-  @apply grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5;
 }
 
 .search-button {
@@ -238,5 +216,18 @@ getAds();
   & .skeleton-image { @apply w-full md:h-72 h-[230px] bg-neutral-10 mb-3; }
   & .skeleton-date { @apply w-32 h-4 bg-neutral-10 mb-2; }
   & .skeleton-body { @apply w-4/5 h-4 bg-neutral-10; }
+}
+
+
+.filters-container{
+	@apply lg:bg-neutral-white max-w-[950px] w-full rounded-full p-3 mx-4 mt-3 flex flex-col items-center lg:flex-row lg:justify-between relative z-20 gap-5 lg:gap-0;
+}
+
+.form-control{
+	@apply 
+	bg-neutral-white rounded-full lg:rounded-none p-4 py-4 lg:py-0 w-[400px] items-center justify-between lg:w-full lg:first:pl-0 lg:border-l border-l-neutral-black first:border-none text-neutral-black flex gap-2.5;
+	& input {
+		@apply  outline-none appearance-none w-full;
+	}
 }
 </style>

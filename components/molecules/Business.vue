@@ -1,12 +1,12 @@
 <template>
   <article class="flex border-b-2 rounded-2xl p-6 gap-12 border-b-gray-300">
     <figure class="bg-neutral-white min-w-[170px] flex items-center justify-center">
-      <img src="/img/business.png" alt="Negocio">
+      <img :src="useRuntimeConfig().public.IMAGE_ROUTE+advertisement.business.image" :alt="advertisement.business.name">
     </figure>
     <div class="flex flex-col gap-[18px]">
       <div class="flex justify-between">
         <h2 class="text-primary-100 font-semibold text-xl h-fit">
-          Famacias Carol
+          {{ advertisement.business.name }}
         </h2>
         <div class="flex gap-3.5 text-sm">
           <p class="hour" :class="{closed: !open}">
@@ -20,19 +20,35 @@
       </div>
       <div class="flex flex-col gap-[18px] text-sm leading-6"> 
         <p class="flex items-center gap-2 text-primary-100">
-          <AtomsIcon name="general/business_location" :size=24 class="text-primary-100"/> Calle patroclo medina #47
+          <AtomsIcon name="general/business_location" :size=24 class="text-primary-100"/>
+          {{  advertisement.business.address }}
         </p>
         <p class="text-gray-20">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto iste eum alias dolores tenetur! Mollitia dolore inventore facilis assumenda. Distinctio nemo totam, eaque quia suscipit impedit facilis velit vero non? Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus minus officia nostrum expedita. A laboriosam quod illo! Reiciendis ipsa, iure rerum perspiciatis cum modi fuga laborum ipsam dolores. Molestias, natus. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro odio autem assumenda, nisi iure consequuntur odit nulla, officia cum, dolorem iste accusantium cupiditate? Placeat, distinctio. Sit eligendi illo nostrum repellendus? 
+          {{ advertisement.business.description }}
         </p>
       </div>
-      <MoleculesCharacteristics />
+      <MoleculesCharacteristics
+        :facebook="advertisement.business.facebook"
+        :whatsapp="advertisement.business.whatsapp"
+        :phone="advertisement.business.phone"
+        :email="advertisement.business.email"
+        :instagram="advertisement.business.instagram"
+        :website	="advertisement.business.webpage"
+      />
     </div>
   </article>
 </template>
+
 <script setup>
 const open = ref(true);
+const props = defineProps({
+  advertisement: {
+    type: Object,
+    default: () => {}
+  }
+});
 </script>
+
 <style lang="postcss" scoped>
   .hour{
     @apply flex bg-[#D3FFD5] text-[#4CAF50] relative items-center justify-center rounded-lg h-8 pl-8 pr-2 before:content-['Abierto:'] before:mr-1 whitespace-nowrap;

@@ -11,10 +11,11 @@
 			</strong>
 			, el buscador <br hidden class="lg:block"> de negocios que te ofrece la mejor selección de opciones. 
 		</p>
+		<!--  -->
 		<div class="filters-container relative">
 			<label class="form-control">
 				<AtomsIcon name="general/search" :size=24 class="text-secondary-100" />
-				<input type="text" placeholder="¿Qué buscas?">
+				<input type="text" v-model="searchText" placeholder="¿Qué buscas?">
 			</label>
 			<label class="form-control">
 				<AtomsIcon name="general/location" :size=24 class="text-secondary-100" />
@@ -24,21 +25,21 @@
 				<button class="categories-btn" @click="categories = !categories">Categorías</button>
 				<AtomsButtons v-if="categories" icon-name="general/close" btn-type="btn-icon" class="close-btn" @click="categories = false" />
 				<OnClickOutside @trigger="categories = false" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md" v-if="categories">
-						<div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-							<label class="checkbox-labels" v-for="category in businessCategories" :key="category">
-								<input
-									type="checkbox"
-									class="checkbox"
-									name="category"
-									:value="category"
-									:id="category"
-								>
-								{{ category }}
-							</label>
-						</div>
-					</OnClickOutside>
+					<div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
+						<label class="checkbox-labels" v-for="category in businessCategories" :key="category">
+							<input
+								type="checkbox"
+								class="checkbox"
+								name="category"
+								v-model="categorySeleted"
+								:id="category"
+							>
+							{{ category }}
+						</label>
+					</div>
+				</OnClickOutside>
 			</div>
-			<button class="search-btn">
+			<button class="search-btn" @click="searchAds()">
 				Buscar 
 				<AtomsIcon name="general/search" :size=12 class="text-neutral-white "/>
 			</button>
@@ -48,7 +49,23 @@
 <script setup>
 import {ref} from 'vue';
 import { OnClickOutside } from '@vueuse/components';
-const categories = ref(false)
+
+const searchText = ref("");
+const country = ref("");
+const categorySeleted = ref("");
+const categories = ref(false);
+
+function searchAds() {
+	useRouter().push({
+		path: '/search', 
+		query: {
+			title: searchText.value,
+			country: country.value,
+			categories: categorySeleted.value
+		}
+	});
+}
+
 const businessCategories = ref([
 	"Restaurante",
   "Cafetería",
@@ -79,8 +96,9 @@ const businessCategories = ref([
   "Cine",
   "Teatro",
   "Agencia inmobiliaria",
-])
+]);
 </script>
+
 <style scoped>
 .hero-bg{
 	background: url("/img/hero.jpg"), no-repeat center ;
