@@ -1,0 +1,13 @@
+export default function useCategories() {
+  const config = useRuntimeConfig();
+
+  const { data: categories } = useFetch('generals/categories', {
+    method: 'GET',
+    baseURL: config.public.API,
+    transform(data) {
+      return data.results
+    }
+  });
+
+  return { categories }
+}

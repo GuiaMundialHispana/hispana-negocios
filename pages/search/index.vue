@@ -32,18 +32,22 @@
             <input type="text" placeholder="¿Dónde?">
           </label>
           <div class="form-control relative">
-            <button class="categories-btn" @click="showCategory = !showCategory">Categorías</button>
-            <OnClickOutside @trigger="showCategory = false" v-if="showCategory" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md">
+            <button class="categories-btn" @click="displayCategories = !displayCategories">
+              {{ checkedCategories.length < 1 ? 'Categorías' : categoryName }}
+            </button>
+            <OnClickOutside @trigger="displayCategories = false" v-if="displayCategories" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md">
               <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-                <label class="checkbox-labels" v-for="category in businessCategories" :key="category" :for="category">
+                <label class="checkbox-labels" v-for="category in categories" :key="category">
                   <input
-                    type="checkbox"
+                    type="radio"
                     class="checkbox"
-                    :name="category"
-                    :value="category"
-                    :id="category"
+                    :name="category.name"
+                    :id="category.name"
+                    :value="category.id"
+                    v-model="checkedCategories"
+                    @click="categoryName = category.name"
                   >
-                  {{ category }}
+                  {{ category.name }}
                 </label>
               </div>
             </OnClickOutside>
@@ -127,39 +131,10 @@ let showFilters = ref(false);
 
 const title = ref(useRoute().query.title || '');
 const country = ref(useRoute().query.country || '');
-const categories = ref(useRoute().query.categorySeleted || []);
-const showCategory = ref(false);
-const businessCategories = ref([
-	"Restaurante",
-  "Cafetería",
-  "Tienda de ropa",
-  "Salón de belleza",
-  "Supermercado",
-  "Farmacia",
-  "Gimnasio",
-  "Librería",
-  "Taller mecánico",
-  "Peluquería",
-  "Spa",
-  "Panadería",
-  "Tienda de electrónica",
-  "Cervecería",
-  "Joyería",
-  "Veterinaria",
-  "Agencia de viajes",
-  "Estudio de diseño",
-  "Estudio de fotografía",
-  "Florería",
-  "Tienda de música",
-  "Estudio de tatuajes",
-  "Estudio de yoga",
-  "Tienda de muebles",
-  "Bar",
-  "Pizzería",
-  "Cine",
-  "Teatro",
-  "Agencia inmobiliaria",
-]);
+const checkedCategories = ref(useRoute().query.categories || "");
+const categoryName = ref('');
+const categories = useCategories().categories;
+const displayCategories = ref(false);
 
 const { data, pending, refresh } = useLazyFetch('advertisements/search', {
   method: 'GET',
@@ -167,7 +142,7 @@ const { data, pending, refresh } = useLazyFetch('advertisements/search', {
   params: {
     title : title,
     country: country,
-    category: categories,
+    category: checkedCategories,
   },
   transform(data) {
     properties.value = data.results.data;
@@ -176,12 +151,12 @@ const { data, pending, refresh } = useLazyFetch('advertisements/search', {
 
 watch(title, () => { refresh(); });
 watch(country, () => { refresh(); });
-watch(title, () => { refresh(); });
+watch(checkedCategories, () => { refresh(); });
 
 function clearFilter() {
   title.value = "";
   country.value = "";
-  categories.value = "";
+  checkedCategories.value = "";
   refresh();
 }
 </script>
