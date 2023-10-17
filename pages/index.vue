@@ -11,34 +11,57 @@
 			</strong>
 			, el buscador <br hidden class="lg:block"> de negocios que te ofrece la mejor selección de opciones. 
 		</p>
+		<!--  -->
 		<div class="filters-container relative">
 			<label class="form-control">
 				<AtomsIcon name="general/search" :size=24 class="text-secondary-100" />
-				<input type="text" placeholder="¿Qué buscas?">
+				<input type="text" v-model="searchText" placeholder="¿Qué buscas?">
 			</label>
-			<label class="form-control">
+			<label class="form-control relative">
 				<AtomsIcon name="general/location" :size=24 class="text-secondary-100" />
-				<input type="text" placeholder="¿Dónde?">
+				<button class="categories-btn" @click="displayCountry = !displayCountry">
+					{{ checkedCountry.length < 1 ? 'Pais' : countryName }}
+				</button>
+				<OnClickOutside @trigger="displayCountry = false" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md" v-if="displayCountry">
+					<div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
+						<label class="checkbox-labels" v-for="country in countries" :key="country">
+							<input
+								type="radio"
+								class="checkbox"
+								:name="country.name"
+								:id="country.name"
+								:value="country.id"
+								v-model="checkedCountry"
+								@click="countryName = country.name"
+							>
+							{{ country.name }}
+						</label>
+					</div>
+				</OnClickOutside>
 			</label>
 			<div class="form-control relative">
-				<button class="categories-btn" @click="categories = !categories">Categorías</button>
-				<AtomsButtons v-if="categories" icon-name="general/close" btn-type="btn-icon" class="close-btn" @click="categories = false" />
-				<OnClickOutside @trigger="categories = false" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md" v-if="categories">
-						<div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-							<label class="checkbox-labels" v-for="category in businessCategories" :key="category">
-								<input
-									type="checkbox"
-									class="checkbox"
-									name="category"
-									:value="category"
-									:id="category"
-								>
-								{{ category }}
-							</label>
-						</div>
-					</OnClickOutside>
+				<button class="categories-btn" @click="displayCategories = !displayCategories">
+					{{ checkedCategories.length < 1 ? 'Categorías' : categoryName }}
+				</button>
+				<AtomsButtons v-if="displayCategories" icon-name="general/close" btn-type="btn-icon" class="close-btn" @click="displayCategories = false" />
+				<OnClickOutside @trigger="displayCategories = false" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md" v-if="displayCategories">
+					<div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
+						<label class="checkbox-labels" v-for="category in categories" :key="category">
+							<input
+								type="radio"
+								class="checkbox"
+								:name="category.name"
+								:id="category.name"
+								:value="category.id"
+								v-model="checkedCategories"
+								@click="categoryName = category.name"
+							>
+							{{ category.name }}
+						</label>
+					</div>
+				</OnClickOutside>
 			</div>
-			<button class="search-btn">
+			<button class="search-btn" @click="searchAds()">
 				Buscar 
 				<AtomsIcon name="general/search" :size=12 class="text-neutral-white "/>
 			</button>
@@ -48,39 +71,29 @@
 <script setup>
 import {ref} from 'vue';
 import { OnClickOutside } from '@vueuse/components';
-const categories = ref(false)
-const businessCategories = ref([
-	"Restaurante",
-  "Cafetería",
-  "Tienda de ropa",
-  "Salón de belleza",
-  "Supermercado",
-  "Farmacia",
-  "Gimnasio",
-  "Librería",
-  "Taller mecánico",
-  "Peluquería",
-  "Spa",
-  "Panadería",
-  "Tienda de electrónica",
-  "Cervecería",
-  "Joyería",
-  "Veterinaria",
-  "Agencia de viajes",
-  "Estudio de diseño",
-  "Estudio de fotografía",
-  "Florería",
-  "Tienda de música",
-  "Estudio de tatuajes",
-  "Estudio de yoga",
-  "Tienda de muebles",
-  "Bar",
-  "Pizzería",
-  "Cine",
-  "Teatro",
-  "Agencia inmobiliaria",
-])
+
+const searchText = ref("");
+const displayCountry = ref(false);
+const countries = useGetCountry().countries;
+const countryName = ref("");
+const checkedCountry = ref([]);
+const displayCategories = ref(false);
+const checkedCategories = ref([]);
+const categoryName = ref('');
+const categories = useCategories().categories;
+
+function searchAds() {
+	useRouter().push({
+		path: '/search', 
+		query: {
+			title: searchText.value,
+			country: checkedCountry.value,
+			categories: checkedCategories.value
+		}
+	});
+}
 </script>
+
 <style scoped>
 .hero-bg{
 	background: url("/img/hero.jpg"), no-repeat center ;
