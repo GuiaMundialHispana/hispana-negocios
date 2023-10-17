@@ -125,29 +125,29 @@ async function createAdvertisement() {
           <AtomsIcon name="general/slim-check" />
           <p>Finalizado</p>
           <hr class="hidden lg:block border-secondary-100 border w-12 ml-2" :class="[{'w-20': step === 5}]">
-          <img v-if="step < 5" class="hidden lg:block w-[177px]" :src="`/img/PostVehicle/step-${step}.png`" alt="Property">
+          <img v-if="step < 5" class="hidden lg:block w-[177px]" :src="`/img/PostBussines/step-${step}.png`" alt="Property">
         </div>
       </div>
     </nav>
     <!-- 1 -->
     <KeepAlive>
-      <PopulationPostVehicleStep1 v-if="step === 1" @nexts="step = 2" />
+      <PopulationPostBussinesStep1 v-if="step === 1" @nexts="step = 2" />
     </KeepAlive>
     <!-- 2 -->
     <KeepAlive>
-      <PopulationPostVehicleStep2 v-if="step === 2" @nexts="step = 3" @back="step--" />
+      <PopulationPostBussinesStep2 v-if="step === 2" @nexts="step = 3" @back="step--" />
     </KeepAlive>
     <!-- 3 -->
     <KeepAlive>
-      <PopulationPostVehicleStep3 v-if="step === 3" @nexts="step = 4" @back="step--" />
+      <PopulationPostBussinesStep3 v-if="step === 3" @nexts="step = 4" @back="step--" />
     </KeepAlive>
     <!-- 4 -->
     <KeepAlive>
-      <PopulationPostVehicleStep4 v-if="step === 4" @back="step--" />
+      <PopulationPostBussinesStep4 v-if="step === 4" @back="step--" />
     </KeepAlive>
     <!-- 5 -->
-    <PopulationPostVehicleStep5 v-if="step === 5" />
-    <nav class="control-steps-PostVehicle">
+    <PopulationPostBussinesStep5 v-if="step === 5" />
+    <nav class="control-steps-PostBussines">
       <AtomsButtons v-if="step === 4" @click="createAdvertisement()">
         Crear Anuncio
       </AtomsButtons>

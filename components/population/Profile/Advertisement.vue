@@ -9,7 +9,7 @@
         <span class="text-primary-100">nada.</span>
       </h6>
       <div class="flex justify-center mb-4">
-        <AtomsLink link-to="/PostVehicle" class="mx-auto">Crear un anuncio</AtomsLink>
+        <AtomsLink link-to="/PostBussines" class="mx-auto">Crear un anuncio</AtomsLink>
       </div>
       <p class="text-sm text-neutral-black text-center">¡No dejes pasar esta oportunidad de mostrar tu propiedad al mundo!</p>
     </div>
@@ -224,7 +224,7 @@
         </div>
       </div>
       <div class="flex justify-center my-8">
-        <AtomsLink link-to="/PostVehicle" class="mx-auto">Crear un anuncio</AtomsLink>
+        <AtomsLink link-to="/PostBussines" class="mx-auto">Crear un anuncio</AtomsLink>
       </div>
     </div>
   </section>

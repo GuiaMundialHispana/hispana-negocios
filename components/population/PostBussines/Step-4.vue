@@ -86,7 +86,7 @@ function setFirtsImg(array, index) {
     </div>
     <p class="text-center mt-16 mb-8">{{ previewImages.length }}/{{planSelected.quantity}} Fotos</p>
   </div>
-  <nav class="control-steps-PostVehicle">
+  <nav class="control-steps-PostBussines">
     <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
       Atras
     </AtomsButtons>
@@ -97,7 +97,7 @@ function setFirtsImg(array, index) {
 h4 { @apply font-semibold text-[28px] leading-[42px]; }
 .upload-button {
   @apply sm:col-span-2 flex flex-col relative items-center justify-center border border-gray-300 rounded-md w-full h-[165px] overflow-hidden text-center px-2;
-  & > div { @apply flex items-center justify-center rounded-full bg-secondary-100 w-14 h-14;}
+  & > div { @apply flex items-center justify-center rounded-full bg-neutral-10 w-14 h-14;}
 }
 
 figure {

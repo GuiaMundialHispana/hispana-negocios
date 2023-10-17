@@ -57,7 +57,7 @@ const emit = defineEmits(['back', 'nexts'])
       {{ category.name }}
     </label>
   </div>
-  <nav class="control-steps-PostVehicle">
+  <nav class="control-steps-PostBussines">
     <AtomsLink btn-style="outline-primary" link-to="/profile?tab=anuncio">
       Cancelar
     </AtomsLink>

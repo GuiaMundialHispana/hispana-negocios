@@ -17,7 +17,7 @@ watch(categorySelected,(value) => {
 
 <template>
   <h4>
-    Selecciona la categoría de tu <span class=" text-secondary-100"> vehículo </span>
+    Selecciona la categoría de tu <span class=" text-secondary-100"> negocio </span>
   </h4>
   <div class="wrapper" v-if="pending">
     <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
@@ -55,7 +55,7 @@ watch(categorySelected,(value) => {
       {{ category.name }}
     </label>
   </div>
-  <nav class="control-steps-PostVehicle">
+  <nav class="control-steps-PostBussines">
     <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
       Atras
     </AtomsButtons>

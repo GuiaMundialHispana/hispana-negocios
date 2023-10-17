@@ -26,7 +26,7 @@
               <NuxtLink :to='item.route'  @click="showMenu = false">{{item.name}}</NuxtLink>
             </li>
             <li class="text-sm text-neutral-black font-normal hover:text-primary-100 mb-4 lg:mb-0 cursor-pointer" v-show="auth.isLoggedIn">
-              <NuxtLink to="/PostVehicle">Vender</NuxtLink>
+              <NuxtLink to="/PostBussines">Vender</NuxtLink>
             </li>
             <li class="mb-4 lg:mb-0" v-show="!auth.isLoggedIn">
               <AtomsButtons @click="showMenu = false; displayModal = true">
@@ -77,7 +77,7 @@
             <li v-show="auth.isLoggedIn">
               <AtomsLink
                 @click="showMenu = false"
-                link-to="/PostVehicle"
+                link-to="/PostBussines"
                 icon-name="general/plus"
                 icon-position="left"
                 :icon-size=14
