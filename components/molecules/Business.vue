@@ -14,7 +14,7 @@
             8:00 a.m. -  5:00 p.m.
           </p>
           <p class="bussines-category">
-            Farmacias
+            {{ category_type.name }}
           </p>
         </div>
       </div>
@@ -41,6 +41,10 @@
 
 <script setup>
 const open = ref(true);
+const categories = useCategories().categories;
+
+const category_type = categories.value.find(element => element.id === props.advertisement.business.business_category_id)
+
 const props = defineProps({
   advertisement: {
     type: Object,
