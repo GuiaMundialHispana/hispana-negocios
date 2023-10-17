@@ -6,9 +6,9 @@ export default function useGetCountry() {
     method: 'GET',
     baseURL: config.public.API,
     transform(data) {
-      data.forEach(element => {
+      data.results.data.forEach(element => {
         if(element.id === 63 || element.id === 236) {
-          countries.push(element)
+          countries.value.push(element)
         }
       })
     }

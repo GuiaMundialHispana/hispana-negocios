@@ -19,18 +19,22 @@
 			</label>
 			<label class="form-control relative">
 				<AtomsIcon name="general/location" :size=24 class="text-secondary-100" />
-				<button class="categories-btn" @click="displayCountry = !displayCountry">Pais</button>
+				<button class="categories-btn" @click="displayCountry = !displayCountry">
+					{{ checkedCountry.length < 1 ? 'Pais' : countryName }}
+				</button>
 				<OnClickOutside @trigger="displayCountry = false" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md" v-if="displayCountry">
 					<div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-						<label class="checkbox-labels" v-for="category in businessCategories" :key="category">
+						<label class="checkbox-labels" v-for="country in countries" :key="country">
 							<input
-								type="checkbox"
+								type="radio"
 								class="checkbox"
-								name="category"
-								v-model="categorySeleted"
-								:id="category"
+								:name="country.name"
+								:id="country.name"
+								:value="country.id"
+								v-model="checkedCountry"
+								@click="countryName = country.name"
 							>
-							{{ category }}
+							{{ country.name }}
 						</label>
 					</div>
 				</OnClickOutside>
@@ -71,7 +75,8 @@ import { OnClickOutside } from '@vueuse/components';
 const searchText = ref("");
 const displayCountry = ref(false);
 const countries = useGetCountry().countries;
-const country = ref("");
+const countryName = ref("");
+const checkedCountry = ref([]);
 const displayCategories = ref(false);
 const checkedCategories = ref([]);
 const categoryName = ref('');
@@ -82,7 +87,7 @@ function searchAds() {
 		path: '/search', 
 		query: {
 			title: searchText.value,
-			country: country.value,
+			country: checkedCountry.value,
 			categories: checkedCategories.value
 		}
 	});

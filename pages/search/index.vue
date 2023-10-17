@@ -27,9 +27,27 @@
             <AtomsIcon name="general/search" :size=24 class="text-secondary-100" />
             <input type="text" v-model="title" placeholder="¿Qué buscas?">
           </label>
-          <label class="form-control">
+          <label class="form-control relative">
             <AtomsIcon name="general/location" :size=24 class="text-secondary-100" />
-            <input type="text" placeholder="¿Dónde?">
+            <button class="categories-btn" @click="displayCountry = !displayCountry">
+              {{ checkedCountry.length < 1 ? 'Pais' : countryName }}
+            </button>
+            <OnClickOutside @trigger="displayCountry = false" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md" v-if="displayCountry">
+              <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
+                <label class="checkbox-labels" v-for="country in countries" :key="country">
+                  <input
+                    type="radio"
+                    class="checkbox"
+                    :name="country.name"
+                    :id="country.name"
+                    :value="country.id"
+                    v-model="checkedCountry"
+                    @click="countryName = country.name"
+                  >
+                  {{ country.name }}
+                </label>
+              </div>
+				</OnClickOutside>
           </label>
           <div class="form-control relative">
             <button class="categories-btn" @click="displayCategories = !displayCategories">
@@ -123,7 +141,6 @@ import { ref } from 'vue';
 
 const config = useRuntimeConfig();
 const viewport = useViewport();
-const countries = useGetCountry().countries;
 
 //Mostrar propiedades
 let properties = ref([]);
@@ -131,6 +148,10 @@ let showFilters = ref(false);
 
 const title = ref(useRoute().query.title || '');
 const country = ref(useRoute().query.country || '');
+const displayCountry = ref(false);
+const countries = useGetCountry().countries;
+const countryName = ref("");
+const checkedCountry = ref([])
 const checkedCategories = ref(useRoute().query.categories || "");
 const categoryName = ref('');
 const categories = useCategories().categories;
@@ -141,7 +162,7 @@ const { data, pending, refresh } = useLazyFetch('advertisements/search', {
   baseURL: config.public.API,
   params: {
     title : title,
-    country: country,
+    country: checkedCountry,
     category: checkedCategories,
   },
   transform(data) {
@@ -155,7 +176,7 @@ watch(checkedCategories, () => { refresh(); });
 
 function clearFilter() {
   title.value = "";
-  country.value = "";
+  checkedCountry.value = "";
   checkedCategories.value = "";
   refresh();
 }
