@@ -1,24 +1,28 @@
 <template>
   <div class="flex items-center flex-wrap gap-6">
-    <div class="items">
+    <div class="items" v-if="phone">
       <AtomsIcon name="general/phone" :size=20 />
-      <p>(829) 280-2643</p>
+      <a :href="`tel:${phone}`">{{ phone }}</a>
     </div>
-    <div class="items">
+    <div class="items" v-if="whatsapp">
       <AtomsIcon name="general/whatsapp" :size=20 />
-      <p>(829) 280-2643</p>
+      <a :href="`https://wa.me/${whatsapp}`">{{ whatsapp }}</a>
     </div>
-    <div class="items">
+    <div class="items" v-if="facebook">
       <AtomsIcon name="general/facebook" :size=20 />
-      <p>Farmacias Carol</p>
+      <a :href="facebook" target="blank">{{facebook}}</a>
     </div>
-    <div class="items">
+    <div class="items" v-if="instagram">
       <AtomsIcon name="general/instagram" :size=20 />
-      <p>@farmaciascarol</p>
+      <a :href="instagram" target="blank">{{ instagram }}</a>
     </div>
-    <div class="items">
+    <div class="items" v-if="website">
       <AtomsIcon name="general/web" :size=20 />
-      <p>farmaciascarol.com</p>
+      <a :href="website" target="blank">{{website}}</a>
+    </div>
+    <div class="items" v-if="email">
+      <AtomsIcon name="general/mail" :size=20 />
+      <a :href="`mailto:${email}`">{{ email }}</a>
     </div>
   </div>
 </template>
@@ -27,15 +31,27 @@
 export default {
   name: 'characteristics',
   props: {
-    year: {
+    phone: {
       type: String,
       default: 2023
     },
-    mileage: {
+    whatsapp: {
       type: String,
       default: 5248
     },
-    location: {
+    facebook: {
+      type: String,
+      default: 'Santo Domingo'
+    },
+    instagram: {
+      type: String,
+      default: 'Santo Domingo'
+    },
+    website: {
+      type: String,
+      default: 'Santo Domingo'
+    },
+    email: {
       type: String,
       default: 'Santo Domingo'
     },

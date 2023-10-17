@@ -83,7 +83,7 @@
                 :icon-size=14
                 btnStyle="outline-primary"
               >
-                Publicar
+                Publicar mi negocio
               </AtomsLink>
             </li>
           </ul>
@@ -120,6 +120,10 @@ export default {
       userDropdown: false,
       displayModal: false,
       menu: [
+      {
+        name: 'Buscar',
+        route: '/search'
+      },
       {
         name: 'Contacto',
         route: '/contact'
