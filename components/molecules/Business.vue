@@ -1,13 +1,27 @@
 <template>
   <article class="flex border-b-2 rounded-2xl p-6 gap-12 border-b-gray-300">
-    <figure class="bg-neutral-white min-w-[170px] flex items-center justify-center">
-      <img :src="useRuntimeConfig().public.IMAGE_ROUTE+advertisement.business.image" :alt="advertisement.business.name">
-    </figure>
+    <NuxtLink :to="{
+      path: `/search/${advertisement.business.name}`,
+      query: {
+        property_id: advertisement.business_id
+      }
+    }">
+      <figure class="bg-neutral-white min-w-[170px] flex items-center justify-center">
+        <img :src="useRuntimeConfig().public.IMAGE_ROUTE+advertisement.business.image" :alt="advertisement.business.name">
+      </figure>
+    </NuxtLink>
     <div class="flex flex-col gap-[18px]">
       <div class="flex justify-between">
-        <h2 class="text-primary-100 font-semibold text-xl h-fit">
-          {{ advertisement.business.name }}
-        </h2>
+        <NuxtLink :to="{
+          path: `/search/${advertisement.business.name}`,
+          query: {
+            property_id: advertisement.business_id
+          }
+        }">
+          <h2 class="text-primary-100 font-semibold text-xl h-fit">
+            {{ advertisement.business.name }}
+          </h2>
+        </NuxtLink>
         <div class="flex gap-3.5 text-sm">
           <p class="hour" :class="{closed: !open}">
             <AtomsIcon name="general/clock" :size=32 class="absolute left-0 "/>

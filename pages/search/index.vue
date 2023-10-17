@@ -163,7 +163,7 @@ const { data, pending, refresh } = useLazyFetch('advertisements/search', {
   params: {
     title : title,
     country: checkedCountry,
-    category: checkedCategories,
+    categories: checkedCategories,
   },
   transform(data) {
     properties.value = data.results.data;
