@@ -5,7 +5,7 @@
       </h1>
       <p class="pt-6 md:pt-8 text-sm lg:whitespace-nowrap">Busca, encuentra y conduce el vehículo perfecto con  <strong>Hispana Auto</strong>, el buscador de vehículos<br class="md:block hidden"> que te ofrece la mejor selección de opciones.</p>
     </div>
-    <img src="/img/hero.png" alt="Building" class="absolute z-0 top-0 w-full h-full object-cover object-top md:block hidden">
+    <img src="/img/hero.jpg" alt="Building" class="absolute z-0 top-0 w-full h-full object-cover object-top md:block hidden">
     <PopulationHomeFilterProperties class="hidden lg:block left-1/2 -translate-x-2/4"/>
     <div class="flex justify-center relative z-10 lg:hidden">
       <AtomsLink
