@@ -78,6 +78,7 @@ const { data: advertisement, pending, error} = await useLazyFetch(`advertisement
   baseURL: config.public.API,
   transform:(_advertisement) => _advertisement.results,
   onResponse({response}){
+    console.log(response)
     if(response.status === 400) {
       return navigateTo('/notFound')
     }
@@ -85,7 +86,7 @@ const { data: advertisement, pending, error} = await useLazyFetch(`advertisement
 });
 
 watchEffect(()=> {
-  if(advertisement !== null) {
+  if(advertisement.value != null) {
     category_type.value = categories.value.find(element => element.id === advertisement.value.business.business_category_id);
     renderMap.value = `https://maps.google.com/maps?q=${advertisement.value.business.latitude},${advertisement.value.business.longitude}&hl=es;z%3D14&amp&output=embed`;
     advertisement.value.business.schedule.find(element => element.id === shedule.actual_day ? shedule.checkearDisponibilidad(element) : console.log(element))
