@@ -18,9 +18,9 @@
         </figure>
         <h2 class="lg:ml-[200px] mt-[90px] lg:mt-0 xl:text-5xl text-4xl font-semibold text-primary-100 mr-4 whitespace-nowrap">{{ advertisement.business.name}}</h2>
         <div class="flex gap-3.5 text-sm mt-4 lg:mt-0 flex-wrap md:justify-end justify-center">
-          <p class="hour" :class="{closed: !open}">
+          <p class="hour" :class="{closed: !shedule.isOpen}">
             <AtomsIcon name="general/clock" :size=32 class="absolute left-0 "/>
-            8:00 a.m. -  5:00 p.m.
+            {{ shedule.schedule_message }}
           </p>
           <p class="bussines-category">
             {{ category_type.name }}
@@ -69,6 +69,7 @@ const open = ref(true);
 const route = useRoute();
 const config = useRuntimeConfig();
 const categories = useCategories().categories;
+const shedule = useRenderSchedule();
 const category_type = ref(null);
 const renderMap = ref(null);
 
@@ -87,6 +88,7 @@ watchEffect(()=> {
   if(advertisement !== null) {
     category_type.value = categories.value.find(element => element.id === advertisement.value.business.business_category_id);
     renderMap.value = `https://maps.google.com/maps?q=${advertisement.value.business.latitude},${advertisement.value.business.longitude}&hl=es;z%3D14&amp&output=embed`;
+    advertisement.value.business.schedule.find(element => element.id === shedule.actual_day ? shedule.checkearDisponibilidad(element) : console.log(element))
   }
 })
 
@@ -97,9 +99,9 @@ definePageMeta({
 
 <style lang="postcss" scoped>
 .hour{
-  @apply flex bg-[#D3FFD5] text-[#4CAF50] relative items-center justify-center rounded-lg h-8 pl-8 pr-2 before:content-['Abierto:'] before:mr-1 whitespace-nowrap;
+  @apply flex bg-[#D3FFD5] text-[#4CAF50] relative items-center justify-center rounded-lg h-8 pl-8 pr-2 before:mr-1 whitespace-nowrap;
   &.closed {
-    @apply bg-[#FFE4E3] text-[#FF2625] before:content-['Cerrado:'];
+    @apply bg-[#FFE4E3] text-[#FF2625];
   }
 }
 .bussines-category{
