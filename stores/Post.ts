@@ -20,7 +20,8 @@ export const usePostsStore = defineStore('posts', {
       town_id: Number || String,
       city_id: Number || String,
       saved_images: [],
-      new_images: [],
+
+      image: File || '',
       new_portada: File || '',
       testPortada: false,
       day_of_week: [],

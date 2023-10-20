@@ -1,8 +1,10 @@
 <script setup>
 import {ref, watch} from 'vue';
 import { usePostsStore } from '~/stores/Post';
+import { useUserStore } from '~/stores/User';
 
 const use_posts = usePostsStore();
+const user = useUserStore();
 const config = useRuntimeConfig();
 const title = ref('');
 const description = ref('');
@@ -117,6 +119,16 @@ watch(sector,(sector_id) => {
   displayCity.value = true;
 });
 
+const images = ref(null);
+const profilePic = ref("");
+const isNewImage = ref(false);
+
+function previewFiles(event) {
+  images.value = event.target.files[0]
+  profilePic.value = URL.createObjectURL(images.value);
+  isNewImage.value = true;
+};
+
 function save_data() {
   use_posts.title = title.value;
   use_posts.description = description.value;
@@ -131,6 +143,7 @@ function save_data() {
   use_posts.country_id = country.value;
   use_posts.town_id = sector.value;
   use_posts.city_id = city.value;
+  use_posts.image = profilePic.value;
 };
 </script>
 
@@ -151,7 +164,7 @@ function save_data() {
     <!-- Horario -->
     <ul class="col-span-2 flex flex-col gap-5 text-sm leading-[22px] mb-5">
       <p>Horario</p>
-      <li v-for="day in week" :key="day">
+      <li v-for="day in week" :key="day.day">
         <p class="mb-3.5 font-medium">
           {{day.day}}
         </p>
@@ -215,10 +228,12 @@ function save_data() {
       <div class="flex md:mr-14 mb-6">
         <div class="flex flex-col items-center">
           <p class="whitespace-nowrap text-sm">Foto de perfil</p>
-          <figure class="w-[107px] h-[107px] rounded-full border-[5px] border-secondary-100 mt-5 flex items-center justify-center z-10">
+          <figure class="w-[107px] h-[107px] rounded-full border-[5px] border-secondary-100 mt-5 flex items-center justify-center z-10 overflow-hidden">
+            <span class="font-bold text-5xl text-primary-100" v-if="!isNewImage">{{user.userData.name.charAt(0)}}{{ user.userData.lastname.charAt(0) }}</span>
             <img
-              src="/img/business.png"
-              class=" w-full object-cover"
+              v-if="isNewImage"
+              :src="`${profilePic}`"
+              class="w-full h-full object-cover"
             >
           </figure>
         </div>
