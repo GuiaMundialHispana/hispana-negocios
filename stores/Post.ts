@@ -22,6 +22,7 @@ export const usePostsStore = defineStore('posts', {
       saved_images: [],
 
       image: File || '',
+      new_images: [],
       new_portada: File || '',
       testPortada: false,
       day_of_week: [],

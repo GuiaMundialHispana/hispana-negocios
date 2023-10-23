@@ -1,9 +1,20 @@
 <template>
   <article class="flex border-b-2 rounded-2xl p-6 gap-12 border-b-gray-300">
+    <NuxtLink
+      :to="{
+        path: `edit-vehicle`,
+        query: {
+          property_id: advertisement.advertisement_id
+        }
+      }"
+      class="btn-icon small active"
+    >
+      editar
+    </NuxtLink>
     <NuxtLink :to="{
       path: `/search/${advertisement.business.name}`,
       query: {
-        property_id: advertisement.business_id
+        property_id: advertisement.advertisement_id
       }
     }">
       <figure class="bg-neutral-white min-w-[170px] flex items-center justify-center">
@@ -15,7 +26,7 @@
         <NuxtLink :to="{
           path: `/search/${advertisement.business.name}`,
           query: {
-            property_id: advertisement.business_id
+            property_id: advertisement.advertisement_id
           }
         }">
           <h2 class="text-primary-100 font-semibold text-xl h-fit">

@@ -33,49 +33,56 @@ const week = ref([
     open: "00:00",
     close: "00:00",
     isClose: 0,
-    franja: "AM"
+    franja: "AM",
+    franjaClose: "PM"
   },
   {
     day: "Lunes",
     open: "00:00",
     close: "00:00",
     isClose: 0,
-    franja: "AM"
+    franja: "AM",
+    franjaClose: "PM"
   },
   {
     day: "Martes",
     open: "00:00",
     close: "00:00",
     isClose: 0,
-    franja: "AM"
+    franja: "AM",
+    franjaClose: "PM"
   },
   {
     day: "Miercoles",
     open: "00:00",
     close: "00:00",
     isClose: 0,
-    franja: "AM"
+    franja: "AM",
+    franjaClose: "PM"
   },
   {
     day: "Jueves",
     open: "00:00",
     close: "00:00",
     isClose: 0,
-    franja: "AM"
+    franja: "AM",
+    franjaClose: "PM"
   },
   {
     day: "Viernes",
     open: "00:00",
     close: "00:00",
     isClose: 0,
-    franja: "AM"
+    franja: "AM",
+    franjaClose: "PM"
   },
   {
     day: "Sabado",
     open: "00:00",
     close: "00:00",
     isClose: 0,
-    franja: "AM"
+    franja: "AM",
+    franjaClose: "PM"
   }
 ]);
 
@@ -184,7 +191,7 @@ function save_data() {
             <label for="openHour" class="whitespace-nowrap">Cierra a las(s)</label>
             <div class="hour-select-container">
               <input type="time" v-model="day.close" min="00:00" max="12:50">
-              <select v-model="day.franja">
+              <select v-model="day.franjaClose">
                 <option value="AM">A.M.</option>
                 <option value="PM">P.M.</option>
               </select>

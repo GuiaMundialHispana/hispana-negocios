@@ -45,7 +45,7 @@ function setFirtsImg(array, index) {
   <div class="w-fit mx-auto lg:px-8 px-4">
     <h4 class="mt-11 mb-7 text-center">
       Sube buenas fotos de tu 
-      <span class="text-secondary-100">negocios</span>
+      <span class="text-secondary-100">negocio</span>
     </h4>
     <div class="flex mx-auto w-fit gap-4 mb-5">
       <p v-if="totalImgs > planSelected.quantity" class="warning-message">
