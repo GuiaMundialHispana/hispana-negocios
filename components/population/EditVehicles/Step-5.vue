@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col text-center items-center justify-center">
-    <!-- <img class="w-[311px] mb-8 mt-11" src="/img/property-post.png" alt="Property"> -->
+    <img class="w-[311px] mb-8 mt-11" src="/img/PostBussines/step-5.png" alt="Property">
     <h4 class="text-4xl leading-[42px] mb-7 font-medium">
       Anuncio actualizado
       <br>
