@@ -25,9 +25,6 @@
             >
               <NuxtLink :to='item.route'  @click="showMenu = false">{{item.name}}</NuxtLink>
             </li>
-            <li class="text-sm text-neutral-black font-normal hover:text-primary-100 mb-4 lg:mb-0 cursor-pointer" v-show="auth.isLoggedIn">
-              <NuxtLink to="/PostBussines">Vender</NuxtLink>
-            </li>
             <li class="mb-4 lg:mb-0" v-show="!auth.isLoggedIn">
               <AtomsButtons @click="showMenu = false; displayModal = true">
                 Iniciar sesión

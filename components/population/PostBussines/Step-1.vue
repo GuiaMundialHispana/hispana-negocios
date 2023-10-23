@@ -10,7 +10,7 @@ const { data, pending } = useLazyFetch('generals/categories', {
 });
 
 watch(categorySelected,(value) => {
-  use_posts.auto_category_id = value;
+  use_posts.category_id = value;
 });
 
 </script>

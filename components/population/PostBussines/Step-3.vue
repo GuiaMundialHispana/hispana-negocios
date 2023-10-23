@@ -30,56 +30,54 @@ let address = ref('');
 const week = ref([
   {
     day: "Domingo",
-    open: "",
-    close: "",
-    isClose: false,
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
     franja: "AM"
   },
   {
     day: "Lunes",
-    open: "",
-    close: "",
-    isClose: false,
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
     franja: "AM"
   },
   {
     day: "Martes",
-    open: "",
-    close: "",
-    isClose: false,
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
     franja: "AM"
   },
   {
     day: "Miercoles",
-    open: "",
-    close: "",
-    isClose: false,
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
     franja: "AM"
   },
   {
     day: "Jueves",
-    open: "",
-    close: "",
-    isClose: false,
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
     franja: "AM"
   },
   {
     day: "Viernes",
-    open: "",
-    close: "",
-    isClose: false,
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
     franja: "AM"
   },
   {
     day: "Sabado",
-    open: "",
-    close: "",
-    isClose: false,
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
     franja: "AM"
   }
 ]);
-
-const creta = [];
 
 for(let i = 0; i < week.value.length; i++) {
   use_posts.day_of_week.push(week.value[i]);
@@ -103,7 +101,6 @@ function getAddress(lant, long, location) {
   lat = lant;
   log = long;
   address.value = location;
-  console.log(lat, log, address.value)
 };
 
 watch(country,(country_id) => {
@@ -143,7 +140,7 @@ function save_data() {
   use_posts.country_id = country.value;
   use_posts.town_id = sector.value;
   use_posts.city_id = city.value;
-  use_posts.image = profilePic.value;
+  use_posts.image = images.value;
 };
 </script>
 
@@ -170,10 +167,10 @@ function save_data() {
         </p>
         <div class="flex items-center gap-x-11 gap-y-2 flex-wrap">
           <label class="checkbox-labels">
-            <input type="checkbox" class="checkbox" v-model="day.isClose">
+            <input type="checkbox" class="checkbox" v-model="day.isClose" :true-value=1 :false-value=0>
             Cerrado
           </label>
-          <div class="flex items-center gap-1.5" v-if="!day.isClose">
+          <div class="flex items-center gap-1.5" v-if="day.isClose === 0">
             <label for="openHour" class="whitespace-nowrap">Abre a las(s)</label>
             <div class="hour-select-container">
               <input type="time" v-model="day.open" min="00:00" max="12:50">
@@ -183,7 +180,7 @@ function save_data() {
               </select>
             </div>
           </div>
-          <div class="flex items-center gap-1.5" v-if="!day.isClose">
+          <div class="flex items-center gap-1.5" v-if="day.isClose === 0">
             <label for="openHour" class="whitespace-nowrap">Cierra a las(s)</label>
             <div class="hour-select-container">
               <input type="time" v-model="day.close" min="00:00" max="12:50">

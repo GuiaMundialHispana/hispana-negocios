@@ -6,12 +6,13 @@ import { usePostsStore } from '~/stores/Post';
 const use_posts = usePostsStore();
 const user_store = useUserStore();
 const config = useRuntimeConfig();
-let step = ref(3);
+let step = ref(1);
 
 async function createAdvertisement() {
   Swal.showLoading();
   const form = new FormData();
   form.append('plan_id', use_posts.plan_id);
+  form.append('category', use_posts.category_id);
   form.append('title', use_posts.title);
   form.append('address', use_posts.address);
   form.append('description', use_posts.description);
@@ -20,9 +21,20 @@ async function createAdvertisement() {
   form.append('country_id', use_posts.country_id);
   form.append('latitude', use_posts.lat);
   form.append('longitude', use_posts.log);
-  form.append('image', use_posts.saved_images[0]);
+  form.append('phone', use_posts.phone);
+  form.append('whatsapp', use_posts.whatsapp);
+  form.append('website', use_posts.website);
+  form.append('instagram', use_posts.instagram);
+  form.append('facebook', use_posts.facebook);
+  form.append('image', use_posts.image);
   use_posts.saved_images.forEach((element, index)=>{
     form.append('images[' + index + ']',element);
+  });
+  use_posts.day_of_week.forEach((element, index)=> {
+    form.append('day_of_week[' + index + ']', element.day);
+    form.append('is_closed[' + index + ']', element.isClose);
+    form.append('open_time[' + index + ']', element.open);
+    form.append('close_time[' + index + ']', element.close);
   });
 
   await useFetch('advertisements',{
@@ -36,7 +48,6 @@ async function createAdvertisement() {
     onResponse({ response }) {
       Swal.hideLoading();
       const res = response._data;
-      console.log(res)
       if(res.code === 200 ) {
         Swal.fire({
           icon: 'success',
