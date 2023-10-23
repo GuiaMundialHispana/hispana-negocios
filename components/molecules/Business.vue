@@ -2,7 +2,7 @@
   <article class="flex border-b-2 rounded-2xl p-6 gap-12 border-b-gray-300">
     <NuxtLink
       :to="{
-        path: `edit-vehicle`,
+        path: `edit-business`,
         query: {
           property_id: advertisement.advertisement_id
         }
