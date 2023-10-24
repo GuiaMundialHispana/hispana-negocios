@@ -74,7 +74,6 @@ function send_plan(id,pictures) {
   </div>
   <ul v-if="plans && !pending" class="plans-list">
     <li v-for="plan in plans.results" :key="plan">
-      <!-- {{ plan }} -->
       <MoleculesPlanCard
         class="h-full"
         @pay="send_plan"

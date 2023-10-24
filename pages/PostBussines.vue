@@ -12,34 +12,29 @@ async function createAdvertisement() {
   Swal.showLoading();
   const form = new FormData();
   form.append('plan_id', use_posts.plan_id);
-  form.append('auto_category_id', use_posts.auto_category_id);
+  form.append('category', use_posts.category_id);
   form.append('title', use_posts.title);
-  form.append('price', use_posts.price);
-  form.append('price_us', use_posts.price_us);
-  // form.append('address', use_posts.address);
+  form.append('address', use_posts.address);
   form.append('description', use_posts.description);
   form.append('town_id', use_posts.town_id);
   form.append('city_id', use_posts.city_id);
   form.append('country_id', use_posts.country_id);
   form.append('latitude', use_posts.lat);
   form.append('longitude', use_posts.log);
-  form.append('exterior_color', use_posts.exterior_color);
-  form.append('interior_color', use_posts.interior_color);
-  form.append('air_conditioned', use_posts.air_conditioned);
-  form.append('traction', use_posts.traction);
-  form.append('transmission', use_posts.transmission);
-  form.append('engine', use_posts.engine);
-  form.append('mileage', use_posts.mileage);
-  form.append('kilometer', use_posts.kilometer);
-  form.append('condition', use_posts.condition);
-  form.append('make_id', use_posts.make_id);
-  form.append('model_id', use_posts.model_id);
-  form.append('air_bag', use_posts.air_bag);
-  form.append('fuel_type', use_posts.fuel_type);
-  form.append('year', use_posts.year);
-  form.append('image', use_posts.saved_images[0]);
+  form.append('phone', use_posts.phone);
+  form.append('whatsapp', use_posts.whatsapp);
+  form.append('website', use_posts.website);
+  form.append('instagram', use_posts.instagram);
+  form.append('facebook', use_posts.facebook);
+  form.append('image', use_posts.image);
   use_posts.saved_images.forEach((element, index)=>{
     form.append('images[' + index + ']',element);
+  });
+  use_posts.day_of_week.forEach((element, index)=> {
+    form.append('day_of_week[' + index + ']', element.day);
+    form.append('is_closed[' + index + ']', element.isClose);
+    form.append('open_time[' + index + ']', element.open);
+    form.append('close_time[' + index + ']', element.close);
   });
 
   await useFetch('advertisements',{
@@ -53,7 +48,6 @@ async function createAdvertisement() {
     onResponse({ response }) {
       Swal.hideLoading();
       const res = response._data;
-      console.log(res)
       if(res.code === 200 ) {
         Swal.fire({
           icon: 'success',

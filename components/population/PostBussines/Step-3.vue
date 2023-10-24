@@ -1,45 +1,21 @@
 <script setup>
 import {ref, watch} from 'vue';
 import { usePostsStore } from '~/stores/Post';
+import { useUserStore } from '~/stores/User';
 
 const use_posts = usePostsStore();
+const user = useUserStore();
 const config = useRuntimeConfig();
-const currencyTab = ref(true);
-const mileageTab = ref(true);
 const title = ref('');
-const make_id = ref(null);
-const year = ref(null);
-const makes = ref([]);
-const models = ref([]);
-const model_id = ref(null);
-const exterior_color = ref(null);
-const interior_color = ref(null);
-const air_conditioned = ref(Number);
-const traction = ref("");
-const transmission = ref("");
-const engine = ref("");
-const air_bag = ref(Number);
-const fuel_type = ref("");
-let price = ref(Number);
-let price_us = ref(Number);
-let price_temp = ref(Number);
-let mileage_temp = ref(Number);
-let mileage_km = ref(Number);
-let mileage_m = ref(Number);
 const description = ref('');
-// const condition = ref('');
-// const vehicleStatus = [
-//   {
-//     name: 'Nuevo',
-//     value: 'New'
-//   },
-//   {
-//     name: 'Usado',
-//     value: 'Used'
-//   },
-// ];
-let countries = [];
-let country = ref(0);
+const phone = ref("");
+const whatsapp = ref("");
+const website = ref("");
+const instagram = ref("");
+const facebook = ref("");
+const countries = useGetCountry().countries;
+const country = ref("");
+const profile_pic = ref(null);
 let sectors = reactive([]);
 let sector = ref(0);
 let displaySector = ref(false);
@@ -50,20 +26,69 @@ let categories = [];
 let lat = null;
 let log = null;
 let address = ref('');
-let pricePlaceholder = ref('pesos dominicanos');
-let mileagePlaceholder = ref('Kilómetros (KM)');
-let priceInput = ref('');
-const workSchedule = ['01:00', '01:30', '02:00', '02:30', '03:00', '03:30', '04:00', '04:30', '05:00', '05:30', '06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30']
-const weekdays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
-let countriesApi = await $fetch('generals/countries', {
-  baseURL: config.public.API
-});
-countriesApi.results.data.forEach(element => {
-  if(element.id === 63 || element.id === 236) {
-    countries.push(element)
+const week = ref([
+  {
+    day: "Domingo",
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
+    franja: "AM",
+    franjaClose: "PM"
+  },
+  {
+    day: "Lunes",
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
+    franja: "AM",
+    franjaClose: "PM"
+  },
+  {
+    day: "Martes",
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
+    franja: "AM",
+    franjaClose: "PM"
+  },
+  {
+    day: "Miercoles",
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
+    franja: "AM",
+    franjaClose: "PM"
+  },
+  {
+    day: "Jueves",
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
+    franja: "AM",
+    franjaClose: "PM"
+  },
+  {
+    day: "Viernes",
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
+    franja: "AM",
+    franjaClose: "PM"
+  },
+  {
+    day: "Sabado",
+    open: "00:00",
+    close: "00:00",
+    isClose: 0,
+    franja: "AM",
+    franjaClose: "PM"
   }
-});
+]);
+
+for(let i = 0; i < week.value.length; i++) {
+  use_posts.day_of_week.push(week.value[i]);
+}
 
 async function getStates(country_id) {
   const statesApi = await $fetch(`generals/states/${country_id}`, {
@@ -83,60 +108,7 @@ function getAddress(lant, long, location) {
   lat = lant;
   log = long;
   address.value = location;
-  console.log(lat, log, address.value)
 };
-
-function currencyFormat() {
-  let valor = priceInput.value.replace(/[^\d.]/g, '');
-  let numero = parseFloat(valor);
-  if (!isNaN(numero)) {
-    priceInput.value = numero.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    });
-    price_temp.value = numero;
-  }
-}
-function validateInput(event) {
-  const inputValue = event.target.value;
-  const regex = /^[0-9.]*$/;
-  if (inputValue === '' || event.inputType === 'deleteContentBackward') {
-    priceInput.value = inputValue;
-    return;
-  }
-  if (!regex.test(inputValue)) {
-    priceInput.value = inputValue.replace(/[^\d.]/g, '');
-  };
-  return {
-    priceInput,
-    validateInput,
-  };
-}
-function toggle(value) {
-  if (value === true) {
-    console.log("de true a false");
-    day.value = false;
-  } else {
-    console.log("de false a true");
-    day.value = true;
-  }
-}
-// Marcas
-const { data: makes_data } = useFetch('generals/makes', {
-  baseURL: config.public.API,
-  transform(makes_data) {
-    makes.value = makes_data.results;
-  }
-});
-
-watch(make_id,() => {
-  const { data: models_data } = useFetch(`generals/models/${make_id.value}`, {
-    baseURL: config.public.API,
-    transform(models_data) {
-      models.value.push(models_data.results);
-    }
-  });
-});
 
 watch(country,(country_id) => {
   getStates(country_id);
@@ -151,74 +123,31 @@ watch(sector,(sector_id) => {
   displayCity.value = true;
 });
 
-watch(currencyTab,(new_value) => {
-  priceInput.value = '';
-  price_temp.value = 0;
-  price.value = 0;
-  price_us.value = 0;
-  if (new_value === true) {
-    pricePlaceholder = "pesos dominicanos DOP";
-  } else{
-    pricePlaceholder = "dólares USD";
-  }
-});
+const images = ref(null);
+const profilePic = ref("");
+const isNewImage = ref(false);
 
-watch(mileageTab,(new_value) => {
-  mileage_temp.value = 0;
-  mileage_km.value = 0;
-  mileage_m.value = 0;
-  if (new_value === true) {
-    mileagePlaceholder = "Kilómetros (KM)";
-  } else{
-    mileagePlaceholder = "Millas (M)";
-  }
-});
-
-watch(mileage_temp,(new_mileage) => {
-  if (mileageTab.value === true) {
-    mileage_km.value = parseInt(new_mileage);
-    mileage_m.value = parseInt(new_mileage / 1.6);
-  } else {
-    mileage_m.value = parseInt(new_mileage);
-    mileage_km.value = parseInt(new_mileage * 1.6);
-  }
-});
-
-watch(price_temp,(new_price) => {
-  if (currencyTab.value === true) {
-    price.value = parseInt(new_price);
-    price_us.value = parseInt(new_price / 58);
-  } else {
-    price_us.value = parseInt(new_price);
-    price.value = parseInt(new_price * 58);
-  }
-});
+function previewFiles(event) {
+  images.value = event.target.files[0]
+  profilePic.value = URL.createObjectURL(images.value);
+  isNewImage.value = true;
+};
 
 function save_data() {
   use_posts.title = title.value;
-  use_posts.price = price.value;
-  use_posts.price_us = price_us.value;
+  use_posts.description = description.value;
+  use_posts.phone = phone.value;
+  use_posts.whatsapp = whatsapp.value;
+  use_posts.website = website.value;
+  use_posts.instagram = instagram.value;
+  use_posts.facebook = facebook.value;
   use_posts.lat = lat;
   use_posts.log = log;
-  // use_posts.address = address.value;
-  // use_posts.country_id = country.value;
-  // use_posts.town_id = sector.value;
-  // use_posts.city_id = city.value;
-  // use_posts.condition = condition.value;
-  use_posts.description = description.value;
-  use_posts.make_id = parseInt(make_id.value);
-  use_posts.model_id = parseInt(model_id.value);
-  use_posts.exterior_color = exterior_color.value;
-  use_posts.interior_color = interior_color.value;
-  use_posts.air_conditioned = air_conditioned.value;
-  use_posts.traction = traction.value;
-  use_posts.transmission = transmission.value;
-  use_posts.engine = engine.value;
-  use_posts.air_bag = air_bag.value;
-  use_posts.fuel_type = fuel_type.value;
-  use_posts.year = year.value;
-  use_posts.mileage = parseInt(mileage_m.value);
-  use_posts.kilometer = parseInt(mileage_km.value);
+  use_posts.address = address.value;
+  use_posts.country_id = country.value;
+  use_posts.town_id = sector.value;
+  use_posts.city_id = city.value;
+  use_posts.image = images.value;
 };
 </script>
 
@@ -239,34 +168,30 @@ function save_data() {
     <!-- Horario -->
     <ul class="col-span-2 flex flex-col gap-5 text-sm leading-[22px] mb-5">
       <p>Horario</p>
-      <li v-for="day in weekdays">
+      <li v-for="day in week" :key="day.day">
         <p class="mb-3.5 font-medium">
-          {{day}}
+          {{day.day}}
         </p>
         <div class="flex items-center gap-x-11 gap-y-2 flex-wrap">
           <label class="checkbox-labels">
-            <input type="checkbox" class="checkbox">
+            <input type="checkbox" class="checkbox" v-model="day.isClose" :true-value=1 :false-value=0>
             Cerrado
           </label>
-          <div class="flex items-center gap-1.5">
+          <div class="flex items-center gap-1.5" v-if="day.isClose === 0">
             <label for="openHour" class="whitespace-nowrap">Abre a las(s)</label>
-            <div  class="hour-select-container ">
-              <select name="openHour" id="openHour">
-                <option v-for="hour in workSchedule">{{ hour }}</option>
-              </select>
-              <select>
+            <div class="hour-select-container">
+              <input type="time" v-model="day.open" min="00:00" max="12:50">
+              <select v-model="day.franja">
                 <option value="AM">A.M.</option>
                 <option value="PM">P.M.</option>
               </select>
             </div>
           </div>
-          <div class="flex items-center gap-1.5">
+          <div class="flex items-center gap-1.5" v-if="day.isClose === 0">
             <label for="openHour" class="whitespace-nowrap">Cierra a las(s)</label>
-            <div  class="hour-select-container ">
-              <select name="openHour" id="openHour">
-                <option v-for="hour in workSchedule">{{ hour }}</option>
-              </select>
-              <select>
+            <div class="hour-select-container">
+              <input type="time" v-model="day.close" min="00:00" max="12:50">
+              <select v-model="day.franjaClose">
                 <option value="AM">A.M.</option>
                 <option value="PM">P.M.</option>
               </select>
@@ -279,27 +204,27 @@ function save_data() {
     <div class="flex gap-4 mt-2">
       <label for="phone" class="title-label mb-5">
         Número telefónico
-        <input type="tel" name="phone" id="phone" placeholder="(829) 123-4567" class="form-control">
+        <input type="tel" name="phone" id="phone" v-model="phone" placeholder="(829) 123-4567" class="form-control">
       </label>
       <label for="whatsapp" class="title-label mb-5">
         WhatsApp
-        <input type="tel" name="whatsapp" id="whatsapp" placeholder="(829) 123-4567"  class="form-control">
+        <input type="tel" name="whatsapp" id="whatsapp" v-model="whatsapp" placeholder="(829) 123-4567"  class="form-control">
       </label>
     </div>
     <!-- Web -->
     <label for="website" class="title-label mb-5 col-span-2">
       Página Web
-      <input type="text" name="website" id="website" placeholder="ej: https://hispana-negocios.com" class="form-control">
+      <input type="text" name="website" id="website" v-model="website" placeholder="ej: https://hispana-negocios.com" class="form-control">
     </label>
     <!-- Instagram -->
     <label for="instagram" class="title-label mb-5 col-span-2">
       Instagram
-      <input type="text" name="instagram" id="instagram" placeholder="ej: https://instagram.com/hispana-negocios" class="form-control">
+      <input type="text" name="instagram" id="instagram" v-model="instagram" placeholder="ej: https://instagram.com/hispana-negocios" class="form-control">
     </label>
     <!-- Facebook -->
     <label for="facebook" class="title-label col-span-2">
       Facebook
-      <input type="text" name="facebook" id="facebook" placeholder="ej: https://facebook.com/hispana-negocios" class="form-control">
+      <input type="text" name="facebook" id="facebook" v-model="facebook" placeholder="ej: https://facebook.com/hispana-negocios" class="form-control">
     </label>
 
     <!-- Foto de perfil -->
@@ -307,10 +232,12 @@ function save_data() {
       <div class="flex md:mr-14 mb-6">
         <div class="flex flex-col items-center">
           <p class="whitespace-nowrap text-sm">Foto de perfil</p>
-          <figure class="w-[107px] h-[107px] rounded-full border-[5px] border-secondary-100 mt-5 flex items-center justify-center z-10">
+          <figure class="w-[107px] h-[107px] rounded-full border-[5px] border-secondary-100 mt-5 flex items-center justify-center z-10 overflow-hidden">
+            <span class="font-bold text-5xl text-primary-100" v-if="!isNewImage">{{user.userData.name.charAt(0)}}{{ user.userData.lastname.charAt(0) }}</span>
             <img
-              src="/img/business.png"
-              class=" w-full object-cover"
+              v-if="isNewImage"
+              :src="`${profilePic}`"
+              class="w-full h-full object-cover"
             >
           </figure>
         </div>
@@ -323,7 +250,7 @@ function save_data() {
           <span class="text-primary-100">Click para subir</span>
           o arrastra y suelta SVG, PNG, <br> JPG or GIF (max. 800px400px)
         </p>
-        <input type="file" class="absolute left-0 top-0 scale-[9] cursor-pointer opacity-0">
+        <input type="file" @change="previewFiles" class="absolute left-0 top-0 scale-[9] cursor-pointer opacity-0">
       </div>
     </div>
 
@@ -345,8 +272,8 @@ function save_data() {
     <label class="w-full sm:mb-2 mb-5 title-label">
       País
       <select class="form-control" v-model="country">
-        <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-        {{ country.name }}
+        <option v-for="country in countries" :key="country" :value="country.id" class="option-label">
+          {{ country.name }}
         </option>
       </select>
     </label>
@@ -369,8 +296,7 @@ function save_data() {
       </select>
     </label>
   </div>
-  
-  
+ 
   <nav class="control-steps-PostBussines">
     <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
       Atras

@@ -9,9 +9,9 @@ const { data, pending } = useLazyFetch('generals/categories', {
   baseURL: config.public.API
 });
 
-categorySelected.value = use_posts.auto_category_id;
+categorySelected.value = use_posts.category_id;
 watch(categorySelected,(value) => {
-  use_posts.auto_category_id = value;
+  use_posts.category_id = value;
 });
 
 const emit = defineEmits(['back', 'nexts'])
@@ -19,7 +19,7 @@ const emit = defineEmits(['back', 'nexts'])
 
 <template>
   <h4>
-    Selecciona la categoría de tu<span class="text-secondary-100"> vehículo</span>
+    Selecciona la categoría de tu <span class=" text-secondary-100"> negocio </span>
   </h4>
   <div class="wrapper" v-if="pending">
     <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>

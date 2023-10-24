@@ -14,6 +14,7 @@ Swal.showLoading()
 const { data: property, pending, error} = await useLazyFetch(`advertisements/${useRoute().query.property_id}`, {
   method: 'GET',
   baseURL: config.public.API,
+  server: false,
   transform:(_property) => _property.results,
   onResponse({response}){
     Swal.close()
@@ -21,33 +22,27 @@ const { data: property, pending, error} = await useLazyFetch(`advertisements/${u
       return navigateTo('/notFound')
     }
     if(response.status === 200 ) {
-      const auto_response = response._data.results;
+      const business_response = response._data.results;
+      console.log(business_response)
       
-      use_posts.plan_id = auto_response.plan_id;
-      use_posts.auto_category_id = auto_response.auto.auto_category_id;
-      use_posts.title = auto_response.auto.title;
-      use_posts.price = auto_response.auto.price;
-      use_posts.price_us = auto_response.auto.price_us;
-      use_posts.country_id = auto_response.auto.country_id;
-      use_posts.town_id = auto_response.auto.town_id;
-      use_posts.city_id = auto_response.auto.city_id;
-      use_posts.condition = auto_response.auto.condition;
-      use_posts.description = auto_response.auto.description;
-      use_posts.saved_images = auto_response.auto.images;
-      use_posts.interior_color = auto_response.auto.interior_color;
-      use_posts.exterior_color = auto_response.auto.exterior_color;
-      use_posts.air_conditioned = auto_response.auto.air_conditioned;
-      use_posts.traction = auto_response.auto.traction;
-      use_posts.transmission = auto_response.auto.transmission;
-      use_posts.engine = auto_response.auto.engine;
-      use_posts.mileage = auto_response.auto.mileage,
-      use_posts.kilometer = auto_response.auto.kilometer,
-      use_posts.condition = auto_response.auto.condition,
-      use_posts.make_id = auto_response.auto.make_id,
-      use_posts.model_id = auto_response.auto.model_id,
-      use_posts.air_bag = auto_response.auto.air_bag,
-      use_posts.fuel_type = auto_response.auto.fuel_type,
-      use_posts.year = auto_response.auto.year;
+      use_posts.plan_id = business_response.plan_id;
+      use_posts.category_id = business_response.business.business_category_id;
+      use_posts.title = business_response.business.name;
+      use_posts.description = business_response.business.description;
+      use_posts.country_id = business_response.business.country_id;
+      use_posts.town_id = business_response.business.town_id;
+      use_posts.city_id = business_response.business.city_id;
+      use_posts.saved_images = business_response.business.images;
+      use_posts.phone = business_response.business.phone;
+      use_posts.whatsapp = business_response.business.whatsapp;
+      use_posts.website = business_response.business.webpage;
+      use_posts.instagram = business_response.business.instagram;
+      use_posts.facebook = business_response.business.facebook;
+      use_posts.address = business_response.business.address;
+      use_posts.lat = business_response.business.latitude;
+      use_posts.log = business_response.business.longitude;
+      use_posts.image = business_response.business.image;
+      use_posts.day_of_week = business_response.business.schedule;
     }
   }
 });
@@ -55,33 +50,30 @@ const { data: property, pending, error} = await useLazyFetch(`advertisements/${u
 async function createAdvertisement() {
   Swal.showLoading();
   const form = new FormData();
-  form.append('plan_id', use_posts.plan_id);
   form.append('advertisement_id', useRoute().query.property_id);
-  form.append('auto_category_id', parseInt(use_posts.auto_category_id));
+  form.append('plan_id', use_posts.plan_id);
+  form.append('category', use_posts.category_id);
   form.append('title', use_posts.title);
-  form.append('price', use_posts.price);
-  form.append('price_us', use_posts.price_us);
+  form.append('address', use_posts.address);
   form.append('description', use_posts.description);
   form.append('town_id', use_posts.town_id);
   form.append('city_id', use_posts.city_id);
   form.append('country_id', use_posts.country_id);
   form.append('latitude', use_posts.lat);
   form.append('longitude', use_posts.log);
-  form.append('exterior_color', use_posts.exterior_color);
-  form.append('interior_color', use_posts.interior_color);
-  form.append('air_conditioned', use_posts.air_conditioned);
-  form.append('traction', use_posts.traction);
-  form.append('transmission', use_posts.transmission);
-  form.append('engine', use_posts.engine);
-  form.append('mileage', use_posts.mileage);
-  form.append('kilometer', use_posts.kilometer);
-  form.append('condition', use_posts.condition);
-  form.append('make_id', use_posts.make_id);
-  form.append('model_id', use_posts.model_id);
-  form.append('air_bag', use_posts.air_bag);
-  form.append('fuel_type', use_posts.fuel_type);
-  form.append('year', use_posts.year);
-  form.append('image', use_posts.saved_images[0]);
+  form.append('phone', use_posts.phone);
+  form.append('whatsapp', use_posts.whatsapp);
+  form.append('website', use_posts.website);
+  form.append('instagram', use_posts.instagram);
+  form.append('facebook', use_posts.facebook);
+  use_posts.day_of_week.forEach((element, index)=> {
+    form.append('day_of_week[' + index + ']', element.day_of_week);
+    form.append('is_closed[' + index + ']', element.is_closed);
+    form.append('open_time[' + index + ']', element.open_time);
+    form.append('close_time[' + index + ']', element.close_time);
+  });
+
+  form.append('image', use_posts.image);
   use_posts.saved_images.forEach((element, index)=>{
     form.append('images[' + index + ']',element);
   });
@@ -175,12 +167,12 @@ async function createAdvertisement() {
           <p>Categoría</p>
         </div>
         <hr class="progress-bar" :class="[{progress: step >= 2}]">
-        <div  :class="[{active: step >= 2}]">
+        <div :class="[{active: step >= 3}]">
           <span>2</span>
           <p>Paquete</p>
         </div>
         <hr class="progress-bar" :class="[{progress: step >= 3}]">
-        <div :class="[{active: step >= 3}]">
+        <div :class="[{active: step >= 4}]">
           <span>3</span>
           <p>Detalles</p>
         </div>
@@ -194,7 +186,7 @@ async function createAdvertisement() {
           <AtomsIcon name="general/slim-check" />
           <p>Finalizado</p>
           <hr class="hidden lg:block border-secondary-100 border w-12 ml-2" :class="[{'w-20': step === 5}]">
-          <img v-if="step < 5" class="hidden lg:block w-[177px]" :src="`/img/PostBussines/step-${step}.png`" alt="Vehicle">
+          <img v-if="step < 5" class="hidden lg:block w-[177px]" :src="`/img/PostBussines/step-${step}.png`" alt="Property">
         </div>
       </div>
     </nav>
@@ -211,9 +203,9 @@ async function createAdvertisement() {
       <PopulationEditVehiclesStep3 v-if="step === 3"
         @nexts="step = 4"
         @back="step--"
-        :countryId="property.auto.country_id"
-        :sectorId="property.auto.town_id"
-        :cityId="property.auto.city_id"
+        :countryId="use_posts.country_id"
+        :sectorId="use_posts.town_id"
+        :cityId="use_posts.city_id"
       />
     </KeepAlive>
     <!-- 4 -->
