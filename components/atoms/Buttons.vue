@@ -125,6 +125,9 @@ export default {
 .solid-primary {
   @apply bg-primary-100 border hover:border-secondary-100 hover:bg-secondary-100 text-neutral-white;
 }
+.solid-secondary {
+  @apply bg-secondary-100 border hover:border-primary-100 hover:bg-secondary-100 text-neutral-white;
+}
 
 .outline-primary {
   @apply border border-solid border-primary-100 hover:bg-primary-100 text-primary-100 hover:text-neutral-white;
