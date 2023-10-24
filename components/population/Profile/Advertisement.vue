@@ -14,43 +14,55 @@
       <p class="text-sm text-neutral-black text-center">¡No dejes pasar esta oportunidad de mostrar tu propiedad al mundo!</p>
     </div>
     <!-- Tablita -->
-    <table class="w-full" >
-      <thead>
-        <th><input type="checkbox" class="checkbox"></th>
-        <th class="text-left">Nombre del negocio</th>
-        <th>Estado</th>
-        <th>Editar</th>
-        <th>Acciones</th>
-        <th>Ver</th>
-      </thead>
-      <tbody class="rounded-t-lg">
-        <tr v-for="business in testBusinessArray">
-          <td><input type="checkbox" class="checkbox" v-model="business.seleccion"></td>
-          <td>
-            <p>{{ business.nombre }}</p>
-            <p class="text-xs text-secondary-100 leading-[22px]">{{business.direccion}}</p>
-          </td>
-          <td>
-            <p class="flex items-center justify-center gap-2"><span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{active: business.estado}"></span> {{ business.estado ? "Activo" : "Inactivo"  }}</p> 
-          </td>
-          <td>
-            <AtomsButtons btnStyle="solid-secondary" class="whitespace-nowrap" >Editar Negocio</AtomsButtons>
-          </td>
-          <td>
-            <AtomsButtons class="action-btn" >
-              Acciones 
-              <AtomsIcon name="general/arrow-down" />
-            </AtomsButtons>
-          </td>
-          <td>
-            <NuxtLink class="flex gap-2.5" to="/">
-              <AtomsIcon name="general/eye" class="text-secondary-100" :size=24 />
-              Ver Perfil
-            </NuxtLink>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="overflow-x-auto md:overflow-visible h-full">
+      <table class="w-full text-sm" >
+        <thead>
+          <th><input type="checkbox" class="checkbox"></th>
+          <th class="text-left">Nombre del negocio</th>
+          <th>Estado</th>
+          <th>Editar</th>
+          <th>Acciones</th>
+          <th>Ver</th>
+        </thead>
+        <tbody class="rounded-xl">
+          <tr v-for="(business, index) in testBusinessArray">
+            <td><input type="checkbox" class="checkbox" v-model="business.seleccion"></td>
+            <td>
+              <p>{{ business.nombre }}</p>
+              <p class="text-xs text-secondary-100 leading-[22px]">{{business.direccion}}</p>
+            </td>
+            <td>
+              <p class="flex items-center justify-center gap-2"><span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': business.estado}"></span> {{ business.estado ? "Activo" : "Inactivo"  }}</p> 
+            </td>
+            <td>
+              <AtomsButtons btnStyle="solid-secondary" class="whitespace-nowrap" >Editar Negocio</AtomsButtons>
+            </td>
+            <td class="relative">
+              <OnClickOutside @trigger="actionsIndex = null, actionsDropdown = false">
+                <AtomsButtons class="action-btn" @click="actionsIndex = index, actionsDropdown = !actionsDropdown" >
+                Acciones 
+                <AtomsIcon name="general/arrow-down" :class="[{arrow: index === actionsIndex && actionsDropdown }]" />
+              </AtomsButtons>
+                <ul class="actions-dropdown"
+                  v-if="index === actionsIndex && actionsDropdown">
+                  <li 
+                    v-for="action in actions" 
+                    class="actions-options">
+                    {{action}}
+                  </li>
+                </ul>
+              </OnClickOutside>
+            </td>
+            <td>
+              <NuxtLink class="flex gap-2.5 whitespace-nowrap" to="/">
+                <AtomsIcon name="general/eye" class="text-secondary-100" :size=24 />
+                <span hidden class="md:block">Ver Perfil</span>
+              </NuxtLink>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <!-- End of tablita -->
 
     <!-- Results -->
@@ -280,6 +292,8 @@ export default {
     return {
       tab: 0,
       selectedTab: 'activos',
+      actionsIndex: null,
+      actionsDropdown: false,
       status: [
         {
           name:'activos',
@@ -360,7 +374,8 @@ export default {
           estado: true,
           accion: "Accion 5"
         }
-      ]
+      ],
+      actions: [ "Estadística", "Cambiar plan", "Cerrar temporalmente", "Eliminar empresa" ],
     }
   },
   methods: {
@@ -486,7 +501,8 @@ h3 {
   }
 }
 .checkbox {
-  @apply relative appearance-none flex-none w-4 h-4 border border-gray-300 rounded-sm mr-2 cursor-pointer hover:bg-primary-100 hover:border-none checked:bg-secondary-100 checked:hover:bg-gray-300 checked:border-none
+  @apply relative appearance-none flex-none w-4 h-4 border border-gray-300 rounded-sm mr-2 cursor-pointer 
+  hover:bg-primary-100 hover:border-none checked:bg-secondary-100 checked:hover:bg-gray-300 checked:border-none
   after:w-full
   after:h-full
   after:absolute
@@ -496,24 +512,36 @@ h3 {
   after:bg-[url('~/assets/icons/general/check.svg')];
 }
 .action-btn {
-  @apply flex w-full justify-between
+  @apply flex w-full justify-between gap-2;
+  .arrow{
+    @apply rotate-180 transition-all ease-in-out duration-200;
+  }
 }
 
 th {
-  @apply p-4 text-center [&:nth-child(2)]:text-left font-semibold
+  @apply p-4 text-center [&:nth-child(2)]:text-left font-semibold whitespace-nowrap
 }
 tr {
   @apply border rounded-t-lg
 }
 
 td {
-  @apply text-center [&:nth-child(2)]:text-left p-4 border border-neutral-20
+  @apply text-center [&:nth-child(2)]:text-left p-3 md:p-4 border border-neutral-20
 }
 
 tbody {
   @apply p-4 
 }
-.active{
+.state-active{
   @apply bg-[#4CAF50] 
 }
+
+.actions-options{
+  @apply py-2.5 px-3.5 border-t-2 border-neutral-10 first:border-none last:text-[#FF2625] last:hover:text-neutral-white last:hover:font-semibold last:hover:bg-[#FF2625] whitespace-nowrap hover:bg-neutral-10 last:rounded-b-lg transition-all ease-in-out duration-300
+}
+
+.actions-dropdown{
+  @apply absolute w-fit bg-neutral-white left-2/4 -translate-x-2/4 mt-2 z-50 border-2 border-neutral-10 rounded-lg shadow-2xl text-left text-sm;
+}
+
 </style>
