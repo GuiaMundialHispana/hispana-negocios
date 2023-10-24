@@ -1,7 +1,7 @@
 <template>
   <section>
     <!-- No results -->
-    <div v-if="!advertisement">
+    <div v-if="pending">
       <figure class="mb-4">
         <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
       </figure>
@@ -29,10 +29,39 @@
               <p>{{ business.business.name }}</p>
               <p class="text-xs text-secondary-100 leading-[22px]">{{ business.business.address }}</p>
             </td>
-            <td>
+            <td v-if="business.status === 'inactive'">
               <p class="flex items-center justify-center gap-2">
-                <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': business.estado}"></span>
-                <!-- {{ business.status === "active" ? "Activo" : "Inactivo"  }} -->
+                <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': false }"></span>
+                {{ business.status }}
+              </p> 
+            </td>
+            <td v-if="business.status === 'active'">
+              <p class="flex items-center justify-center gap-2">
+                <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': true }"></span>
+                {{ business.status }}
+              </p> 
+            </td>
+            <td v-if="business.status === 'revision'">
+              <p class="flex items-center justify-center gap-2">
+                <span class="w-2.5 h-2.5 bg-[#FFCC00] rounded-full block"></span>
+                {{ business.status }}
+              </p> 
+            </td>
+            <td v-if="business.status === 'trashed'">
+              <p class="flex items-center justify-center gap-2">
+                <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': false }"></span>
+                {{ business.status }}
+              </p> 
+            </td>
+            <td v-if="business.status === 'refused'">
+              <p class="flex items-center justify-center gap-2">
+                <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': false }"></span>
+                {{ business.status }}
+              </p> 
+            </td>
+            <td v-if="business.status === 'expired'">
+              <p class="flex items-center justify-center gap-2">
+                <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': false }"></span>
                 {{ business.status }}
               </p> 
             </td>
@@ -493,8 +522,8 @@ const { data, pending } = await useFetch('advertisements', {
     return data.results;
   }
 });
-</script>
 
+</script>
 
 <style lang="postcss" scoped>
 
