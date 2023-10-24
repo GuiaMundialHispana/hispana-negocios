@@ -31,13 +31,6 @@
         </NuxtLink>
         <NuxtLink
           class="btn-tab"
-          :to="{ path: 'profile', query: { tab: 'favorite' }}"
-          :class="{ active: $route.fullPath === '/profile?tab=favorite'} "
-        >
-          Mis favoritos
-        </NuxtLink>
-        <NuxtLink
-          class="btn-tab"
           :to="{ path: 'profile', query: { tab: 'plan' }}"
           :class="{ active: $route.fullPath === '/profile?tab=plan'} "
         >
@@ -45,7 +38,6 @@
         </NuxtLink>
       </nav>
       <PopulationProfileAdvertisement v-show="$route.query.tab === 'anuncio'" />
-      <PopulationProfileFavorite v-show="$route.query.tab === 'favorite'" />
       <PopulationProfilePlans v-show="$route.query.tab === 'plan'" /> 
     </div>
   </section>

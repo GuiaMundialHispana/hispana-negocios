@@ -52,12 +52,6 @@
                       </NuxtLink>
                     </li>
                     <li>
-                      <NuxtLink to="/profile?tab=favorite" @click="showMenu = false">
-                        <AtomsIcon name="general/favorite" class="mr-2.5" />
-                        Mis favoritos
-                      </NuxtLink>
-                    </li>
-                    <li>
                       <NuxtLink to="/profile?tab=plan" @click="showMenu = false">
                         <AtomsIcon name="general/user-document" class="mr-2.5" />
                         Mis planes

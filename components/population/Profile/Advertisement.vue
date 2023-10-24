@@ -14,47 +14,49 @@
       <p class="text-sm text-neutral-black text-center">¡No dejes pasar esta oportunidad de mostrar tu propiedad al mundo!</p>
     </div>
     <!-- Tablita -->
-    <div class="overflow-x-auto md:overflow-visible h-full">
-      <table class="w-full text-sm" >
+    <div v-if="!pending" class="overflow-x-auto md:overflow-visible h-full">
+      <table class="w-full text-sm">
         <thead>
-          <th><input type="checkbox" class="checkbox"></th>
-          <th class="text-left">Nombre del negocio</th>
+          <th>Nombre del negocio</th>
           <th>Estado</th>
           <th>Editar</th>
           <th>Acciones</th>
           <th>Ver</th>
         </thead>
         <tbody class="rounded-xl">
-          <tr v-for="(business, index) in testBusinessArray">
-            <td><input type="checkbox" class="checkbox" v-model="business.seleccion"></td>
+          <tr v-for="(business, index) in data" :key="index">
             <td>
-              <p>{{ business.nombre }}</p>
-              <p class="text-xs text-secondary-100 leading-[22px]">{{business.direccion}}</p>
+              <p>{{ business.business.name }}</p>
+              <p class="text-xs text-secondary-100 leading-[22px]">{{ business.business.address }}</p>
             </td>
             <td>
-              <p class="flex items-center justify-center gap-2"><span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': business.estado}"></span> {{ business.estado ? "Activo" : "Inactivo"  }}</p> 
+              <p class="flex items-center justify-center gap-2">
+                <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': business.estado}"></span>
+                <!-- {{ business.status === "active" ? "Activo" : "Inactivo"  }} -->
+                {{ business.status }}
+              </p> 
             </td>
             <td>
-              <AtomsButtons btnStyle="solid-secondary" class="whitespace-nowrap" >Editar Negocio</AtomsButtons>
+              <NuxtLink :to="{ path: `edit-business`, query: { property_id: business.business_id }}" class="xsmall btn solid-secondary whitespace-nowrap w-full">
+                Editar negocio
+              </NuxtLink>
             </td>
             <td class="relative">
               <OnClickOutside @trigger="actionsIndex = null, actionsDropdown = false">
                 <AtomsButtons class="action-btn" @click="actionsIndex = index, actionsDropdown = !actionsDropdown" >
-                Acciones 
-                <AtomsIcon name="general/arrow-down" :class="[{arrow: index === actionsIndex && actionsDropdown }]" />
-              </AtomsButtons>
+                  Acciones 
+                  <AtomsIcon name="general/arrow-down" :class="[{arrow: index === actionsIndex && actionsDropdown }]" />
+                </AtomsButtons>
                 <ul class="actions-dropdown"
                   v-if="index === actionsIndex && actionsDropdown">
-                  <li 
-                    v-for="action in actions" 
-                    class="actions-options">
+                  <li v-for="action in actions" class="actions-options" :key="action">
                     {{action}}
                   </li>
                 </ul>
               </OnClickOutside>
             </td>
             <td>
-              <NuxtLink class="flex gap-2.5 whitespace-nowrap" to="/">
+              <NuxtLink class="flex gap-2.5 whitespace-nowrap" :to="{path: `/search/${ business.business.name}`,query: { property_id: business.business_id}}">
                 <AtomsIcon name="general/eye" class="text-secondary-100" :size=24 />
                 <span hidden class="md:block">Ver Perfil</span>
               </NuxtLink>
@@ -67,7 +69,7 @@
 
     <!-- Results -->
     <div v-if="advertisement" class="ads">
-      <nav class="flex gap-3 mb-14 flex-wrap md:flex-row flex-col">
+      <!-- <nav class="flex gap-3 mb-14 flex-wrap md:flex-row flex-col">
         <AtomsButtons
           v-for="(item, index) in status"
           :key="item"
@@ -79,8 +81,8 @@
         >
           Anuncios {{item.name}} <span v-if="item.size !== 0 || item.size !== null || item.size != ''">{{item.size}}</span>
         </AtomsButtons>
-      </nav>
-      <div v-if="tab === 0">
+      </nav> -->
+      <!-- <div v-if="tab === 0">
         <div v-if="actives.length > 0">
           <h3>Anuncios Activos</h3>
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -124,9 +126,9 @@
           </figure>
           <h6 class="text-xl text-primary-100 font-bold mb-4 text-center">No tienes anuncios activos</h6>
         </div>
-      </div>
+      </div> -->
       <!-- Expirados -->
-      <div v-if="tab === 1">
+      <!-- <div v-if="tab === 1">
         <div v-if="expired.length > 0">
           <h3>Anuncios Expirados</h3>
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -146,9 +148,9 @@
           </figure>
           <h6 class="text-xl text-primary-100 font-bold mb-4 text-center">No tienes anuncios expirados</h6>
         </div>
-      </div>
+      </div> -->
       <!-- Revision -->
-      <div v-if="tab === 2">
+      <!-- <div v-if="tab === 2">
         <div v-if="revision.length > 0">
           <h3>Anuncios en revision</h3>
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -166,9 +168,9 @@
           </figure>
           <h6 class="text-xl text-primary-100 font-bold mb-4 text-center">No tienes anuncios en revision</h6>
         </div>
-      </div>
+      </div> -->
       <!-- Rechazados -->
-      <div v-if="tab === 3">
+      <!-- <div v-if="tab === 3">
         <div v-if="rejected.length > 0">
           <h3>Anuncios rechazados</h3>
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -188,9 +190,9 @@
           </figure>
           <h6 class="text-xl text-primary-100 font-bold mb-4 text-center">No tienes anuncios rechazados</h6>
         </div>
-      </div>
+      </div> -->
       <!-- Inactivos -->
-      <div v-if="tab === 4">
+      <!-- <div v-if="tab === 4">
         <div v-if="inactive.length > 0">
           <h3>Anuncios Inactivos</h3>
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -230,9 +232,9 @@
           </figure>
           <h6 class="text-xl text-primary-100 font-bold mb-4 text-center">No tienes anuncios inactivos</h6>
         </div>
-      </div>
+      </div> -->
       <!-- Borrados -->
-      <div v-if="tab === 5">
+      <!-- <div v-if="tab === 5">
         <div v-if="trashed.length > 0">
           <h3>Anuncios borrados</h3>
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -274,7 +276,7 @@
           </figure>
           <h6 class="text-xl text-primary-100 font-bold mb-4 text-center">No tienes anuncios borrados</h6>
         </div>
-      </div>
+      </div> -->
       <div class="flex justify-center my-8">
         <AtomsLink link-to="/PostBussines" class="mx-auto">Crear un anuncio</AtomsLink>
       </div>
@@ -282,7 +284,7 @@
   </section>
 </template>
 
-<script>
+<!-- <script>
 import { useUserStore } from '~/stores/User';
 import Swal from 'sweetalert2';
 
@@ -471,10 +473,26 @@ export default {
     this.getAdvertisement();
   }
 }
-</script>
+</script> -->
 
 <script setup>
 import { OnClickOutside } from '@vueuse/components';
+
+const config = useRuntimeConfig();
+
+const { data, pending } = await useFetch('advertisements', {
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  },
+  server: false,
+  baseURL: config.public.API,
+  transform(data) {
+    return data.results;
+  }
+});
 </script>
 
 
@@ -519,14 +537,14 @@ h3 {
 }
 
 th {
-  @apply p-4 text-center [&:nth-child(2)]:text-left font-semibold whitespace-nowrap
+  @apply p-4 lg:text-left text-center [&:nth-child(2)]:text-left font-semibold whitespace-nowrap
 }
 tr {
   @apply border rounded-t-lg
 }
 
 td {
-  @apply text-center [&:nth-child(2)]:text-left p-3 md:p-4 border border-neutral-20
+  @apply lg:text-left text-center [&:nth-child(2)]:text-left p-3 md:p-4 border border-neutral-20
 }
 
 tbody {
@@ -542,6 +560,17 @@ tbody {
 
 .actions-dropdown{
   @apply absolute w-fit bg-neutral-white left-2/4 -translate-x-2/4 mt-2 z-50 border-2 border-neutral-10 rounded-lg shadow-2xl text-left text-sm;
+}
+
+
+.btn {
+  @apply rounded-lg inline-flex justify-center items-center no-underline cursor-pointer duration-300 focus:outline-none;
+
+  &.solid-secondary {
+    @apply bg-secondary-100 border hover:border-primary-100 hover:bg-secondary-100 text-neutral-white;
+  }
+
+  &.xsmall { @apply h-8; }
 }
 
 </style>
