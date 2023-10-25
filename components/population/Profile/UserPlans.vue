@@ -21,6 +21,9 @@
         <div class="bg-primary-100 text-neutral-white text-center w-full text-sm rounded-lg mt-4 py-1" v-if="plan.quantity > 0">
           Cantidad disponible: <b>{{ plan.quantity }}</b>
         </div>
+        <NuxtLink to="plans" class=" block bg-primary-100 text-neutral-white text-center w-full text-sm rounded-lg mt-4 py-1" v-else>
+          plan agotado, <b>Compra mas ahora!</b>
+        </NuxtLink>
       </li>
     </ul>
     <div v-if="pending" class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
