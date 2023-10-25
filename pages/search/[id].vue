@@ -10,7 +10,7 @@
         </figure>
         <h2 class="lg:ml-[200px] mt-[90px] lg:mt-0 xl:text-5xl text-4xl font-semibold text-primary-100 mr-4 whitespace-nowrap">{{ advertisement.business.name}}</h2>
         <div class="flex gap-3.5 text-sm mt-4 lg:mt-0 flex-wrap md:justify-end justify-center">
-          <p class="hour" :class="[ shedule.isOpen ? 'closed' : 'open']">
+          <p class="hour" :class="[ shedule.isOpen ? '' : 'closed']">
             <AtomsIcon name="general/clock" :size=32 class="absolute left-0 "/>
             {{ shedule.schedule_message }}
           </p>

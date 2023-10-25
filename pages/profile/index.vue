@@ -6,7 +6,7 @@
           <div class="skeleton w-[117px] h-[117px] rounded-full"></div>
         </figure>
         <figure class="profile-image overflow-hidden" v-else>
-          <img v-if="user.userData.profile_pic != null" :src="`https://seal-app-4mhut.ondigitalocean.app/${user.userData.profile_pic}`" :alt="user.userData.name">
+          <img v-if="user.userData.profile_pic != null" :src="useRuntimeConfig().public.IMAGE_ROUTE+user.userData.profile_pic" :alt="user.userData.name">
           <!--  -->
           <span v-if="user.userData.profile_pic === null" class="w-[117px] h-[117px] uppercase flex items-center justify-center font-bold text-primary-100 text-6xl rounded-full border-2 border-primary-100 bg-secondary-100">
             {{user.userData.name.charAt(0)}}{{ user.userData.lastname.charAt(0) }}
@@ -31,13 +31,6 @@
         </NuxtLink>
         <NuxtLink
           class="btn-tab"
-          :to="{ path: 'profile', query: { tab: 'favorite' }}"
-          :class="{ active: $route.fullPath === '/profile?tab=favorite'} "
-        >
-          Mis favoritos
-        </NuxtLink>
-        <NuxtLink
-          class="btn-tab"
           :to="{ path: 'profile', query: { tab: 'plan' }}"
           :class="{ active: $route.fullPath === '/profile?tab=plan'} "
         >
@@ -45,7 +38,6 @@
         </NuxtLink>
       </nav>
       <PopulationProfileAdvertisement v-show="$route.query.tab === 'anuncio'" />
-      <PopulationProfileFavorite v-show="$route.query.tab === 'favorite'" />
       <PopulationProfilePlans v-show="$route.query.tab === 'plan'" /> 
     </div>
   </section>
