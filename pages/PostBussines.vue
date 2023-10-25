@@ -23,7 +23,7 @@ async function createAdvertisement() {
   form.append('longitude', use_posts.log);
   form.append('phone', use_posts.phone);
   form.append('whatsapp', use_posts.whatsapp);
-  form.append('website', use_posts.website);
+  form.append('webpage', use_posts.website);
   form.append('instagram', use_posts.instagram);
   form.append('facebook', use_posts.facebook);
   form.append('image', use_posts.image);
