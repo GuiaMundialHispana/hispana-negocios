@@ -84,11 +84,14 @@
                 </ul>
               </OnClickOutside>
             </td>
-            <td>
-              <NuxtLink class="flex gap-2.5 whitespace-nowrap" :to="{path: `/search/${ business.business.name}`,query: { property_id: business.business_id}}">
+            <td v-if="business.status != 'revision'">
+              <NuxtLink disabled="true" class="flex gap-2.5 whitespace-nowrap" :to="{path: `/search/${ business.business.name}`,query: { property_id: business.business_id}}">
                 <AtomsIcon name="general/eye" class="text-secondary-100" :size=24 />
                 <span hidden class="md:block">Ver Perfil</span>
               </NuxtLink>
+            </td>
+            <td v-if="business.status === 'revision'" class=" text-[red] align-middle text-center">
+              No disponible
             </td>
           </tr>
         </tbody>
