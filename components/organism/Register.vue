@@ -40,6 +40,7 @@ let password = ref('');
 let password_confirmation = ref('');
 
 async function register() {
+  Swal.showLoading()
   const {pending, data} = await useFetch('auth/register',{
     method: 'POST',
     body: {
@@ -51,6 +52,7 @@ async function register() {
     },
     baseURL: config.public.API,
     onResponse({response}) {
+      Swal.hideLoading();
       // console.log(response._data)
       if(response.status === 400) {
         let errors = response._data.message;
