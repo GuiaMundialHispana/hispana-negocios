@@ -32,25 +32,25 @@
             <td v-if="business.status === 'inactive'">
               <p class="flex items-center justify-center gap-2">
                 <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': false }"></span>
-                {{ business.status }}
+                Inactivo
               </p> 
             </td>
             <td v-if="business.status === 'active'">
               <p class="flex items-center justify-center gap-2">
                 <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': true }"></span>
-                {{ business.status }}
+                Activo
               </p> 
             </td>
             <td v-if="business.status === 'revision'">
               <p class="flex items-center justify-center gap-2">
                 <span class="w-2.5 h-2.5 bg-[#FFCC00] rounded-full block"></span>
-                {{ business.status }}
+                En revision
               </p> 
             </td>
             <td v-if="business.status === 'trashed'">
               <p class="flex items-center justify-center gap-2">
                 <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': false }"></span>
-                {{ business.status }}
+                Eliminado
               </p> 
             </td>
             <td v-if="business.status === 'refused'">
@@ -62,24 +62,32 @@
             <td v-if="business.status === 'expired'">
               <p class="flex items-center justify-center gap-2">
                 <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': false }"></span>
-                {{ business.status }}
+                Expirado
               </p> 
             </td>
             <td>
-              <NuxtLink :to="{ path: `edit-business`, query: { property_id: business.business_id }}" class="xsmall btn solid-secondary whitespace-nowrap w-full">
+              <NuxtLink v-if="business.status != 'revision'" :to="{ path: `edit-business`, query: { property_id: business.business_id }}" class="xsmall btn solid-secondary whitespace-nowrap w-full">
                 Editar negocio
               </NuxtLink>
+              <AtomsButtons v-if="business.status === 'revision'" :disabled="business.status === 'revision'" class="xsmall btn w-full">
+                Editar negocio
+              </AtomsButtons>
             </td>
             <td class="relative">
               <OnClickOutside @trigger="actionsIndex = null, actionsDropdown = false">
-                <AtomsButtons class="action-btn" @click="actionsIndex = index, actionsDropdown = !actionsDropdown" >
+                <AtomsButtons class="action-btn" :disabled="business.status === 'revision'" @click="actionsIndex = index, actionsDropdown = !actionsDropdown" >
                   Acciones 
                   <AtomsIcon name="general/arrow-down" :class="[{arrow: index === actionsIndex && actionsDropdown }]" />
                 </AtomsButtons>
-                <ul class="actions-dropdown"
-                  v-if="index === actionsIndex && actionsDropdown">
-                  <li v-for="action in actions" class="actions-options" :key="action">
-                    {{action}}
+                <ul class="actions-dropdown" v-if="index === actionsIndex && actionsDropdown">
+                  <li class="actions-options">
+                    Estadística
+                  </li>
+                  <li class="actions-options" v-if="business.status != 'inactive'" @click="api_status = 'inactive', changeStatus(business.id)">
+                    Cerrar temporalmente
+                  </li>
+                  <li class="actions-options" v-if="business.status != 'trashed'" @click="api_status = 'trashed', changeStatus(business.id)">
+                    Eliminar empresa
                   </li>
                 </ul>
               </OnClickOutside>
@@ -90,7 +98,7 @@
                 <span hidden class="md:block">Ver Perfil</span>
               </NuxtLink>
             </td>
-            <td v-if="business.status === 'revision'" class=" text-[red] align-middle text-center">
+            <td v-else class="text-[red] align-middle text-center">
               No disponible
             </td>
           </tr>
@@ -101,19 +109,6 @@
 
     <!-- Results -->
     <div v-if="advertisement" class="ads">
-      <!-- <nav class="flex gap-3 mb-14 flex-wrap md:flex-row flex-col">
-        <AtomsButtons
-          v-for="(item, index) in status"
-          :key="item"
-          btn-size="small"
-          btn-style="outline-gray"
-          :class="[{ active: tab === index}]"
-          class="md:w-full md:max-w-[230px]"
-          @click="checkAdvertisement(item,index)"
-        >
-          Anuncios {{item.name}} <span v-if="item.size !== 0 || item.size !== null || item.size != ''">{{item.size}}</span>
-        </AtomsButtons>
-      </nav> -->
       <!-- <div v-if="tab === 0">
         <div v-if="actives.length > 0">
           <h3>Anuncios Activos</h3>
@@ -509,10 +504,13 @@ export default {
 
 <script setup>
 import { OnClickOutside } from '@vueuse/components';
+import Swal from 'sweetalert2';
 
 const config = useRuntimeConfig();
+const actionsIndex = ref(0);
+const api_status = ref('');
 
-const { data, pending } = await useFetch('advertisements', {
+const { data, pending, refresh } = await useLazyFetch('advertisements', {
   method: 'GET',
   headers: {
     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -525,6 +523,35 @@ const { data, pending } = await useFetch('advertisements', {
     return data.results;
   }
 });
+
+async function changeStatus(id) {
+  const {data} = await useFetch(`advertisements/change-status/${id}/${this.api_status}?_method=PUT`,{
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    },
+    server: false,
+    baseURL: config.public.API,
+    onResponse({response}) {
+      if(response.status === 200 ) {
+        Swal.fire({
+          icon: 'success',
+          text: 'Hemos actualizado el estado del anuncio',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        refresh();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          text: 'En estos momentos tenemos un error',
+          showConfirmButton: false,
+          timer: 2000
+        });
+      }
+    }
+  });
+}
 
 </script>
 
@@ -587,7 +614,7 @@ tbody {
 }
 
 .actions-options{
-  @apply py-2.5 px-3.5 border-t-2 border-neutral-10 first:border-none last:text-[#FF2625] last:hover:text-neutral-white last:hover:font-semibold last:hover:bg-[#FF2625] whitespace-nowrap hover:bg-neutral-10 last:rounded-b-lg transition-all ease-in-out duration-300
+  @apply py-2.5 px-3.5 border-t-2 cursor-pointer border-neutral-10 first:border-none last:text-[#FF2625] last:hover:text-neutral-white last:hover:font-semibold last:hover:bg-[#FF2625] whitespace-nowrap hover:bg-neutral-10 last:rounded-b-lg transition-all ease-in-out duration-300
 }
 
 .actions-dropdown{

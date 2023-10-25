@@ -125,7 +125,7 @@ async function createAdvertisement() {
     </nav>
     <!-- 1 -->
     <KeepAlive>
-      <PopulationPostBussinesStep1 v-if="step === 1" @nexts="step = 2" />
+      <PopulationPostBussinesStep1 v-if="step === 1" @nexts="step = 2" @back="useRouter().push('/profile?tab=anuncio')" />
     </KeepAlive>
     <!-- 2 -->
     <KeepAlive>
