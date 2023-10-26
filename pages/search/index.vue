@@ -99,36 +99,51 @@
         </figure>
         <h6 class="text-4xl text-primary-100 font-bold mb-4 text-center">No hemos encontramos propiedades <br/>con estos resultados</h6>
       </div>
-      <div v-if="pending" class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div v-if="pending">
         <div class="skeleton">
           <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
+          <div class="flex-grow">
+            <div class="skeleton-date"></div>
+            <div class="skeleton-body"></div>
+            <div class="skeleton-date"></div>
+            <div class="skeleton-body"></div>
+          </div>
         </div>
         <div class="skeleton">
           <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
+          <div class="flex-grow">
+            <div class="skeleton-date"></div>
+            <div class="skeleton-body"></div>
+            <div class="skeleton-date"></div>
+            <div class="skeleton-body"></div>
+          </div>
         </div>
         <div class="skeleton">
           <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
+          <div class="flex-grow">
+            <div class="skeleton-date"></div>
+            <div class="skeleton-body"></div>
+            <div class="skeleton-date"></div>
+            <div class="skeleton-body"></div>
+          </div>
         </div>
         <div class="skeleton">
           <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
+          <div class="flex-grow">
+            <div class="skeleton-date"></div>
+            <div class="skeleton-body"></div>
+            <div class="skeleton-date"></div>
+            <div class="skeleton-body"></div>
+          </div>
         </div>
         <div class="skeleton">
           <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
-        </div>
-        <div class="skeleton">
-          <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
+          <div class="flex-grow">
+            <div class="skeleton-date"></div>
+            <div class="skeleton-body"></div>
+            <div class="skeleton-date"></div>
+            <div class="skeleton-body"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -208,10 +223,10 @@ function clearFilter() {
 }
 
 .skeleton {
-  @apply border border-neutral-10 rounded-lg p-3;
-  & .skeleton-image { @apply w-full md:h-72 h-[230px] bg-neutral-10 mb-3; }
-  & .skeleton-date { @apply w-32 h-4 bg-neutral-10 mb-2; }
-  & .skeleton-body { @apply w-4/5 h-4 bg-neutral-10; }
+  @apply border flex items-start border-neutral-10 rounded-lg p-3 gap-3 w-full;
+  & .skeleton-image { @apply w-36 h-36 bg-neutral-10 mb-3; }
+  & .skeleton-date { @apply w-full h-4 bg-neutral-10 mb-2 ; }
+  & .skeleton-body { @apply w-4/5 h-4 bg-neutral-10 mb-2; }
 }
 
 
