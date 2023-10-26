@@ -1,84 +1,63 @@
 <template>
   <section class="lg:px-16 md:px-8 px-4 md:min-h-screen">
-    <AtomsButtons
-      v-show="viewport.isLessThan('xl')"
-      class="mt-5 font-semibold w-full"
-      icon-position="right"
-      btn-style="solid-primary" 
-      icon-name="general/search"
-      btn-size="large"
-      :icon-size=18
-      @click="showFilters = !showFilters"
-      >Filtrar propiedades
-    </AtomsButtons>
-    <OnClickOutside @trigger="showFilters = false" :class="{'hidden': !showFilters, 'flex' : showFilters}" class="filters-overflow">
-      <AtomsButtons
-        v-show="viewport.isLessThan('xl')"
-        btn-type="btn-icon"
-        icon-name="general/close"
-        :icon-size=20
-        btn-size="small"
-        class="mr-0 ml-auto flex-none"
-        @click="showFilters = false"
-      />
-      <div class="flex flex-wrap gap-2 xl:flex-row flex-col">
-        <div class="filters-container relative">
-          <label class="form-control">
-            <AtomsIcon name="general/search" :size=24 class="text-secondary-100" />
-            <input type="text" v-model="title" placeholder="¿Qué buscas?">
-          </label>
-          <label class="form-control relative">
-            <AtomsIcon name="general/location" :size=24 class="text-secondary-100" />
-            <button class="categories-btn" @click="displayCountry = !displayCountry">
-              {{ checkedCountry.length < 1 ? 'Pais' : countryName }}
-            </button>
-            <OnClickOutside @trigger="displayCountry = false" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md" v-if="displayCountry">
-              <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-                <label class="checkbox-labels" v-for="country in countries" :key="country">
-                  <input
-                    type="radio"
-                    class="checkbox"
-                    :name="country.name"
-                    :id="country.name"
-                    :value="country.id"
-                    v-model="checkedCountry"
-                    @click="countryName = country.name"
-                  >
-                  {{ country.name }}
-                </label>
-              </div>
-				</OnClickOutside>
-          </label>
-          <div class="form-control relative">
-            <button class="categories-btn" @click="displayCategories = !displayCategories">
-              {{ checkedCategories.length < 1 ? 'Categorías' : categoryName }}
-            </button>
-            <OnClickOutside @trigger="displayCategories = false" v-if="displayCategories" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md">
-              <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-                <label class="checkbox-labels" v-for="category in categories" :key="category">
-                  <input
-                    type="radio"
-                    class="checkbox"
-                    :name="category.name"
-                    :id="category.name"
-                    :value="category.id"
-                    v-model="checkedCategories"
-                    @click="categoryName = category.name"
-                  >
-                  {{ category.name }}
-                </label>
-              </div>
-            </OnClickOutside>
-          </div>
-          <AtomsButtons
-            icon-name="general/close"
-            btn-type="btn-icon"
-            class="close-btn flex-none"
-            @click="clearFilter()"
-          />
-        </div>
+    <div class="flex flex-wrap gap-2 xl:flex-row flex-col">
+      <div class="filters-container">
+        <label class="form-control min-w-[250px]">
+          <AtomsIcon name="general/search" :size=22 class="text-secondary-100" />
+          <input type="text" v-model="title" placeholder="¿Qué buscas?">
+        </label>
+        <label class="form-control relative " :class="{'bg-[#e2ecf7]': displayCountry}">
+          <AtomsIcon name="general/location" :size=26 class="text-secondary-100" />
+          <button class="whitespace-nowrap" @click="displayCountry = !displayCountry">
+            {{ checkedCountry.length < 1 ? 'Pais' : countryName }}
+          </button>
+          <OnClickOutside @trigger="displayCountry = false" class="absolute lg:top-12 top-11 left-0 sm:w-full h-fit z-10" v-if="displayCountry">
+            <div class="dropdown-wrapper scrollbar h-fit w-[200px] shadow-md">
+              <label class="checkbox-labels" v-for="country in countries" :key="country">
+                <input
+                  type="radio"
+                  class="checkbox"
+                  :name="country.name"
+                  :id="country.name"
+                  :value="country.id"
+                  v-model="checkedCountry"
+                  @click="countryName = country.name"
+                >
+                {{ country.name }}
+              </label>
+            </div>
+          </OnClickOutside>
+        </label>
+        <label class="form-control relative min-w-[100px] cursor-pointer" :class="{'bg-[#e2ecf7]': displayCategories}">
+          <button class="flex gap-2 whitespace-nowrap" @click="displayCategories = !displayCategories">
+            <AtomsIcon name="general/tune" :size=22 class="text-secondary-100" />
+            {{ checkedCategories.length < 1 ? 'Categorías' : categoryName }}
+          </button>
+          <OnClickOutside @trigger="displayCategories = false" v-if="displayCategories" class="absolute lg:top-12 top-11 left-0 sm:w-full h-fit">
+            <div class="dropdown-wrapper scrollbar h-fit w-[200px] shadow-md absolute z-30">
+              <label class="checkbox-labels" v-for="category in categories" :key="category">
+                <input
+                  type="radio"
+                  class="checkbox"
+                  :name="category.name"
+                  :id="category.name"
+                  :value="category.id"
+                  v-model="checkedCategories"
+                  @click="categoryName = category.name"
+                >
+                {{ category.name }}
+              </label>
+            </div>
+          </OnClickOutside>
+        </label>
+        <AtomsButtons
+          icon-name="general/close"
+          btn-type="btn-icon"
+          class="close-btn flex-none clearFilter-btn"
+          @click="clearFilter()"
+        />
       </div>
-    </OnClickOutside>
+    </div>
     <div v-if="properties.length > 0" class="flex items-center justify-between mt-8 2xl:mt-11 text-sm font-normal">
       <p class="text-neutral-black">
         <span class="text-primary-100 font-semibold">
@@ -183,30 +162,6 @@ function clearFilter() {
 </script>
 
 <style lang="postcss" scoped>
-.swiper-slide {
-  @apply flex-none w-[350px] !important;
-}
-
-.search-button {
-  @apply flex bg-primary-100 w-full sm:w-[230px] p-2 h-12 xl:w-10 xl:h-10 rounded-full items-center justify-center hover:bg-secondary-100 border-primary-100 border flex-none text-neutral-white;
-}
-
-/* .navigation-button {
-  @apply rounded-sm cursor-pointer hover:text-neutral-white hover:font-bold hover:bg-primary-100 !important;
-  &.active { @apply text-neutral-white font-bold bg-primary-100 !important; }
-} */
-
-.filters-overflow {
-  @apply w-full sm:w-fit xl:mt-12 2xl:h-fit top-0 fixed xl:relative xl:flex flex-col 2xl:flex-row gap-4 2xl:gap-1.5 md:items-end bg-neutral-white right-0 2xl:mr-0 mt-0 px-4 md:px-6 md:py-12 xl:p-0 py-4 xl:py-0 z-[80] xl:z-10;
-  @media (max-width:1280px) {
-    @apply overflow-y-auto overflow-hidden border-l-2 border-l-gray-300 h-screen;
-  }
-
-  @media (max-width:720px) {
-    @apply border-l-0;
-  }
-}
-
 .skeleton {
   @apply border border-neutral-10 rounded-lg p-3;
   & .skeleton-image { @apply w-full md:h-72 h-[230px] bg-neutral-10 mb-3; }
@@ -214,16 +169,18 @@ function clearFilter() {
   & .skeleton-body { @apply w-4/5 h-4 bg-neutral-10; }
 }
 
-
 .filters-container{
-	@apply lg:bg-neutral-white max-w-[950px] w-full rounded-full p-3 mx-4 mt-3 flex flex-col items-center lg:flex-row lg:justify-between relative z-20 gap-5 lg:gap-0;
+	@apply w-full p-3 mx-4 flex items-center relative z-10 gap-4 flex-wrap mt-5;
 }
-
 .form-control{
-	@apply 
-	bg-neutral-white rounded-full lg:rounded-none p-4 py-4 lg:py-0 w-[400px] items-center justify-between lg:w-full lg:first:pl-0 lg:border-l border-l-neutral-black first:border-none text-neutral-black flex gap-2.5;
+	@apply p-4 py-1.5 items-center w-full sm:w-fit border-2 rounded-lg text-neutral-black flex gap-2;
 	& input {
-		@apply  outline-none appearance-none w-full;
+		@apply outline-none appearance-none w-full;
 	}
+}
+.clearFilter-btn{
+  @media (max-width:640px) {
+    @apply after:content-['Borrar_filtros'] w-full flex gap-2 !important
+  }
 }
 </style>
