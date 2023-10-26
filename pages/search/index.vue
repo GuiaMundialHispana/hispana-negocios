@@ -223,7 +223,7 @@ function clearFilter() {
 }
 
 .skeleton {
-  @apply border flex items-start border-neutral-10 rounded-lg p-3 gap-3 w-full;
+  @apply border flex items-start border-neutral-10 rounded-lg p-3 gap-3 w-full mb-3;
   & .skeleton-image { @apply w-36 h-36 bg-neutral-10 mb-3; }
   & .skeleton-date { @apply w-full h-4 bg-neutral-10 mb-2 ; }
   & .skeleton-body { @apply w-4/5 h-4 bg-neutral-10 mb-2; }
