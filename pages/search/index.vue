@@ -185,7 +185,7 @@ function clearFilter() {
 }
 
 .filters-container{
-	@apply w-full p-3 mx-4 flex items-center relative z-10 gap-4 flex-wrap mt-5;
+	@apply w-full p-3 md:mx-4 flex items-center relative z-10 gap-4 flex-wrap mt-5;
 }
 .form-control{
 	@apply p-4 py-1.5 items-center w-full sm:w-fit border-2 rounded-lg text-neutral-black flex gap-2;

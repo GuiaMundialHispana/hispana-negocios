@@ -1,9 +1,8 @@
 <template>
+  <div v-if="!pending" class="flex flex-nowrap items-center justify-center relative overflow-x-scroll bg-primary-100 bg-opacity-30">
+    <img v-for="image in advertisement.business.images" :key="image" :src="config.public.IMAGE_ROUTE+image.image" :alt="advertisement.business.name" class="w-auto h-[290px] object-cover">
+  </div>
   <main v-if="!pending" class="lg:px-20 md:px-8 px-5">
-    <div class="flex flex-nowrap items-center justify-center relative overflow-x-scroll" v-for="image in advertisement.business.images" :key="image">
-      <!-- {{ image.image }} -->
-      <img :src="config.public.IMAGE_ROUTE+image.image" :alt="advertisement.business.name" class="w-auto object-cover h-full">
-    </div>
     <section class="max-w-[1250px] mx-auto flex flex-col lg:px-5">
       <div class="relative flex lg:mb-[60px] mb-8 lg:flex-row flex-col pt-10 justify-between items-center">
         <figure class="bg-neutral-white p-6 w-[170px] h-[170px] border-2 rounded-lg flex items-center justify-center border-[#F5F5F5] absolute lg:-top-2/3 -top-1/4 ">
@@ -30,6 +29,7 @@
         :email="advertisement.business.email"
         :instagram="advertisement.business.instagram"
         :website	="advertisement.business.webpage"
+        :id="advertisement.id"
         class="contact-info"
       />
     </section>
@@ -69,6 +69,7 @@ const renderMap = ref(null);
 const { data: advertisement, pending, error} = await useLazyFetch(`advertisements/${route.query.property_id}`, {
   method: 'GET',
   baseURL: config.public.API,
+  server: false,
   transform:(_advertisement) => _advertisement.results,
   onResponse({response}) {
     if(response.status === 400) {
@@ -86,6 +87,11 @@ watchEffect(()=> {
       days.push(element);
     });
     days.find((elex,i) => i === shedule.actual_day ? shedule.checkearDisponibilidad(elex) : '')
+
+    useFetch(`statistics/lead/${advertisement.value.id}/profile_views`, {
+      method: 'POST',
+      baseURL: config.public.API,
+    });
   }
 })
 
