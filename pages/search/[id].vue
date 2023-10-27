@@ -30,6 +30,7 @@
         :email="advertisement.business.email"
         :instagram="advertisement.business.instagram"
         :website	="advertisement.business.webpage"
+        :id="advertisement.id"
         class="contact-info"
       />
     </section>
@@ -69,6 +70,7 @@ const renderMap = ref(null);
 const { data: advertisement, pending, error} = await useLazyFetch(`advertisements/${route.query.property_id}`, {
   method: 'GET',
   baseURL: config.public.API,
+  server: false,
   transform:(_advertisement) => _advertisement.results,
   onResponse({response}) {
     if(response.status === 400) {
@@ -86,6 +88,11 @@ watchEffect(()=> {
       days.push(element);
     });
     days.find((elex,i) => i === shedule.actual_day ? shedule.checkearDisponibilidad(elex) : '')
+
+    useFetch(`statistics/lead/${advertisement.value.id}/profile_views`, {
+      method: 'POST',
+      baseURL: config.public.API,
+    });
   }
 })
 
