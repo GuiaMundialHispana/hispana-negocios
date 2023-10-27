@@ -1,9 +1,8 @@
 <template>
+  <div v-if="!pending" class="flex flex-nowrap items-center justify-center relative overflow-x-scroll bg-primary-100 bg-opacity-30">
+    <img v-for="image in advertisement.business.images" :key="image" :src="config.public.IMAGE_ROUTE+image.image" :alt="advertisement.business.name" class="w-auto h-[290px] object-cover">
+  </div>
   <main v-if="!pending" class="lg:px-20 md:px-8 px-5">
-    <div class="flex flex-nowrap items-center justify-center relative overflow-x-scroll" v-for="image in advertisement.business.images" :key="image">
-      <!-- {{ image.image }} -->
-      <img :src="config.public.IMAGE_ROUTE+image.image" :alt="advertisement.business.name" class="w-auto object-cover h-full">
-    </div>
     <section class="max-w-[1250px] mx-auto flex flex-col lg:px-5">
       <div class="relative flex lg:mb-[60px] mb-8 lg:flex-row flex-col pt-10 justify-between items-center">
         <figure class="bg-neutral-white p-6 w-[170px] h-[170px] border-2 rounded-lg flex items-center justify-center border-[#F5F5F5] absolute lg:-top-2/3 -top-1/4 ">
