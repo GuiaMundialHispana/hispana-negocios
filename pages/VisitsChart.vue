@@ -1,112 +1,137 @@
 <template>
-  <div class="bg-neutral-10 h-[450px] w-[450px] rounded-full mx-auto flex items-center justify-center"
-  :style="{background: 'repeating-conic-gradient('+cambiarColor+')'}">
-    <span class="rounded-full w-[300px] h-[300px] bg-neutral-white flex items-center justify-center">{{ totalVisits }}</span>
+  <h2 class="text-[28px] font-medium w-full border-b border-b-[#EBEBEB7D] py-2.5 px-16">Estadísticas del perfil</h2>
+  <div class="flex w-full flex-col lg:flex-row">
+    <div class="w-full lg:w-1/2 pb-24">
+      <h3 class="text-[32px] font-normal text-center lg:text-start text-secondary-100 px-16 py-14">Farmacia Carol</h3>
+      <div class="bg-neutral-10 sm:h-[456px] sm:w-[456px] h-[250px] w-[250px] rounded-full mx-auto flex items-center justify-center"
+        :style="{background: 'repeating-conic-gradient('+changeChartColors+')'}">
+        <span class="rounded-full sm:w-[280px] sm:h-[280px] w-[160px] h-[160px] bg-neutral-white flex items-center justify-center flex-col text-sm gap-2.5"> 
+          Visitas totales
+          <span class="bg-primary-100 text-neutral-white px-4 py-2.5 rounded-lg sm:text-2xl">
+            {{ formatNumber(totalVisits) }}
+          </span>
+        </span>
+    </div>
+    </div> 
+    <div class="bg-[#EBEBEB7D] w-full lg:w-1/2 flex flex-col items-center justify-center">
+      <div class="px-8 py-20">
+        <h3 class="text-2xl">Leads generados</h3>
+        <div class="border-2 sm:w-[550px] xl:w-[550px] lg:w-[400px] flex mx-auto mt-5 rounded-xl overflow-hidden border-neutral-20 text-sm bg-neutral-white">
+          <table class="w-full">
+            <tr v-for="visit in visits" class="border-b-2 last:border-none border-neutral-20 [*&>td]:px-4 [*&>td]:py-2.5">
+              <td>{{ visit.source }}</td>
+              <td>
+                <span class="block w-4 h-4 rounded-full ml-auto mr-3" :style="{backgroundColor: visit.chartColor}"></span>
+              </td>
+              <td class="bg-neutral-10 text-center">{{ visit.visitsCount }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="border-2 w-[550px] mx-auto mt-9 rounded-xl overflow-hidden border-neutral-20 text-sm">
-    <table class="w-full">
-      <tr v-for="(visits, index) in visitsStatistics" class="border-b-2 last:border-none border-neutral-20 [*&>td]:px-4 [*&>td]:py-2.5">
-        <td>{{ visits.nombre }}</td>
-        <td>
-          <span class="block w-4 h-4 rounded-full ml-auto mr-3" :style="{backgroundColor: chartColors[index]}"></span>
-        </td>
-        <td class="bg-neutral-10 text-center">{{ visits.visitas }}</td>
-      </tr>
-    </table>
-  </div>
-      Estos son los valores que pintan:
-
-      {{fbVisitPercent}}
-      {{IgVisitPercent}}
-      {{WsVisitPercent}}
-      {{WebVisitPercent}}
-      {{locVisitPercent}}
-      {{telVisitPercent}}
+  
 </template>
 <script>
 export default {
   name: 'Advertisement',
   data() {
     return {
-      visitsStatistics: [
+      result: { //this is an example object
+        id: 1,
+        adv_id: 1,
+        profile_view:338,
+        facebook: 500,
+        instagram: 400,
+        whatsApp:321,
+        web: 450,
+        location: 250,
+        phone: 731,
+        moreprop: 0
+      },
+      totalVisits: 0,
+      visits: [
       {
-        nombre: "Facebook",
-        visitas: 500,
+        source: "Visitas al perfil",
+        chartColor: "#293451",
+        visitsCount: 0,
+        visitPercent:0
       },
       {
-        nombre: "Instagram",
-        visitas: 600
+        source: "Facebook",
+        chartColor: "#3d5490",
+        visitsCount: 0,
+        visitPercent:0
       },
       {
-        nombre: "WhatsApp",
-        visitas: 350
+        source: "Instagram",
+        chartColor: "#4566b0",
+        visitsCount: 0,
+        visitPercent:0
       },
       {
-        nombre: "Página Web",
-        visitas: 450
+        source: "WhatsApp",
+        chartColor: "#6391ce",
+        visitsCount: 0,
+        visitPercent:0
       },
       {
-        nombre: "Ubicación",
-        visitas: 250
+        source: "Página Web",
+        chartColor: "#81acd9",
+        visitsCount: 0,
+        visitPercent:0
       },
       {
-        nombre: "Teléfono Fijo",
-        visitas: 700
+        source: "Ubicación",
+        chartColor: "#aac9e6",
+        visitsCount: 0,
+        visitPercent:0
+      },
+      {
+        source: "Teléfono Fijo",
+        chartColor: "#ccdef1",
+        visitsCount: 0,
+        visitPercent:0
       }
-      ],
-      chartColors: ["#293451", "#3d5490", "#4566b0", "#6391ce", "#81acd9", "#aac9e6"],
-      totalVisits: 0, //sumar las de los demas
-      fbVisitPercent: 0,
-      IgVisitPercent: 0,
-      WsVisitPercent: 0,
-      WebVisitPercent: 0,
-      locVisitPercent: 0,
-      telVisitPercent: 0,
+    ]
     }
   },
   computed: {
-    test() {
-      return 'red'
+    changeChartColors() {
+      return ` #293451 0deg calc(3.6deg * ${this.visits[0].visitPercent}), #3d5490 calc(3.6deg * ${this.visits[0].visitPercent}) calc(3.6deg * ${this.visits[0].visitPercent+this.visits[1].visitPercent}), #4566b0 calc(3.6deg * ${this.visits[0].visitPercent+this.visits[1].visitPercent}) calc(3.6deg * ${this.visits[0].visitPercent+this.visits[1].visitPercent+this.visits[2].visitPercent}), #6391ce calc(3.6deg * ${this.visits[0].visitPercent+this.visits[1].visitPercent+this.visits[2].visitPercent}) calc(3.6deg * ${this.visits[0].visitPercent+this.visits[1].visitPercent+this.visits[2].visitPercent+this.visits[3].visitPercent}), #81acd9 calc(3.6deg * ${this.visits[0].visitPercent+this.visits[1].visitPercent+this.visits[2].visitPercent+this.visits[3].visitPercent}) calc(3.6deg * ${this.visits[0].visitPercent+this.visits[1].visitPercent+this.visits[2].visitPercent+this.visits[3].visitPercent+this.visits[4].visitPercent}), #aac9e6 calc(3.6deg * ${this.visits[0].visitPercent+this.visits[1].visitPercent+this.visits[2].visitPercent+this.visits[3].visitPercent+this.visits[4].visitPercent}) calc(3.6deg * ${this.visits[0].visitPercent+this.visits[1].visitPercent+this.visits[2].visitPercent+this.visits[3].visitPercent+this.visits[4].visitPercent+this.visits[5].visitPercent}), #ccdef1 calc(3.6deg * ${this.visits[0].visitPercent+this.visits[1].visitPercent+this.visits[2].visitPercent+this.visits[3].visitPercent+this.visits[4].visitPercent}) calc(3.6deg * ${this.visits[0].visitPercent+this.visits[1].visitPercent+this.visits[2].visitPercent+this.visits[3].visitPercent+this.visits[4].visitPercent+this.visits[5].visitPercent+this.visits[6].visitPercent}`
     },
-    getVisitsPercentage(){
-      visitsStatistics.forEach(object => {
-        return this.totalVisits += object.visitas;
-      });
-      // this.fbVisitPercent = (this.visitsStatistics[0].visitas / this.totalVisits) * 100,
-      // this.IgVisitPercent = (this.visitsStatistics[1].visitas / this.totalVisits) * 100,
-      // this.WsVisitPercent = (this.visitsStatistics[2].visitas / this.totalVisits) * 100,
-      // this.WebVisitPercent = (this.visitsStatistics[3].visitas / this.totalVisits) * 100,
-      // this.locVisitPercent = (this.visitsStatistics[4].visitas / this.totalVisits) * 100,
-      // this.telVisitPercent = (this.visitsStatistics[5].visitas / this.totalVisits) * 100
+  },
+  methods: {
+    getTotalVisits(){
+      let index = 0;
+      for (let key in this.result) {
+        if (index > 1) {
+          if (index < 9) {
+            this.totalVisits += this.result[key],
+            this.visits[index - 2].visitsCount = this.result[key]
+          }
+        }
+        index++      
+      }
+        this.visits[0].visitPercent = ((this.result["profile_view"] / this.totalVisits) * 100),
+        this.visits[1].visitPercent = ((this.result.facebook / this.totalVisits) * 100),
+        this.visits[2].visitPercent = ((this.result.instagram / this.totalVisits) * 100),
+        this.visits[3].visitPercent = ((this.result.whatsApp / this.totalVisits) * 100),
+        this.visits[4].visitPercent = ((this.result.web / this.totalVisits) * 100),
+        this.visits[5].visitPercent = ((this.result.location / this.totalVisits) * 100),
+        this.visits[6].visitPercent = ((this.result.phone / this.totalVisits) * 100)
+        
     },
-    cambiarColor() {
-      return `#293451 0deg calc(3.6deg * ${this.fbVisitPercent}), #3d5490 calc(3.6deg * ${this.fbVisitPercent}) calc(3.6deg * ${this.fbVisitPercent+this.IgVisitPercent}), #4566b0 calc(3.6deg * ${this.fbVisitPercent+this.IgVisitPercent}) calc(3.6deg * ${this.fbVisitPercent+this.IgVisitPercent+this.WsVisitPercent}), #6391ce calc(3.6deg * ${this.fbVisitPercent+this.IgVisitPercent+this.WsVisitPercent}) calc(3.6deg * ${this.fbVisitPercent+this.IgVisitPercent+this.WsVisitPercent+this.WebVisitPercent}), #81acd9 calc(3.6deg * ${this.fbVisitPercent+this.IgVisitPercent+this.WsVisitPercent+this.WebVisitPercent}) calc(3.6deg * ${this.fbVisitPercent+this.IgVisitPercent+this.WsVisitPercent+this.WebVisitPercent+this.locVisitPercent}), #aac9e6 calc(3.6deg * ${this.fbVisitPercent+this.IgVisitPercent+this.WsVisitPercent+this.WebVisitPercent+this.locVisitPercent}) calc(3.6deg * ${this.fbVisitPercent+this.IgVisitPercent+this.WsVisitPercent+this.WebVisitPercent+this.locVisitPercent+this.telVisitPercent})`
+    formatNumber(number){
+      return String(number).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
+  },
+  mounted() {
+    this.getTotalVisits()
   }
 }
 </script>
-
 <style scoped>
-.pie-chart{
-  background: repeating-conic-gradient(
-    from 0deg,
-    #293451 0deg calc(3.6deg * 25),
-    #3d5490 calc(3.6deg * 25) calc(3.6deg * 25),
-    #4566b0 calc(3.6deg * 25) calc(3.6deg * 25),
-    #6391ce calc(3.6deg * 25) calc(3.6deg * 25),
-    #81acd9 calc(3.6deg * 25) calc(3.6deg * 25),
-    #aac9e6 calc(3.6deg * 25) calc(3.6deg * 25)
-  );
-}
+
 </style>
-
-cacl(3.6 * porcentaje)
-
-0,1
-1, 1+2
-1+2, 1+2+3
-1+2+3, 1+2+3+4.....
-
-
-eto + eto
