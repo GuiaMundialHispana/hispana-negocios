@@ -80,8 +80,11 @@
                   <AtomsIcon name="general/arrow-down" :class="[{arrow: index === actionsIndex && actionsDropdown }]" />
                 </AtomsButtons>
                 <ul class="actions-dropdown" v-if="index === actionsIndex && actionsDropdown">
-                  <li class="actions-options">
+                  <!-- <li class="actions-options" @click="useRouter().push(`/visitsChart?id=${business.id}?name=${business.business.name}`)">
                     Estadística
+                  </li> -->
+                  <li  class="actions-options">
+                    <NuxtLink :to="{path: `/visitsChart`,query: { id: business.business_id, name: business.business.name}}">Estadística</NuxtLink>
                   </li>
                   <li class="actions-options" v-if="business.status != 'inactive'" @click="api_status = 'inactive', changeStatus(business.id)">
                     Cerrar temporalmente

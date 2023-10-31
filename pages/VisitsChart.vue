@@ -1,8 +1,8 @@
 <template>
-  <h2 class="text-[28px] font-medium w-full border-b border-b-[#EBEBEB7D] py-2.5 px-16">Estadísticas del perfil</h2>
+  <h2 class="text-[28px] font-medium w-full border-b border-b-[#EBEBEB7D] py-8 px-16">Estadísticas del perfil</h2>
   <div class="flex w-full flex-col lg:flex-row">
     <div class="w-full lg:w-1/2 pb-24">
-      <h3 class="text-[32px] font-normal text-center lg:text-start text-secondary-100 px-16 py-14">Farmacia Carol</h3>
+      <h3 class="text-[32px] font-normal text-center lg:text-start text-secondary-100 px-16 py-14">{{ slug }}</h3>
       <div class="bg-neutral-10 sm:h-[456px] sm:w-[456px] h-[250px] w-[250px] rounded-full mx-auto flex items-center justify-center"
         :style="{background: 'repeating-conic-gradient('+changeChartColors+')'}">
         <span class="rounded-full sm:w-[280px] sm:h-[280px] w-[160px] h-[160px] bg-neutral-white flex items-center justify-center flex-col text-sm gap-2.5"> 
@@ -18,7 +18,7 @@
         <h3 class="text-2xl">Leads generados</h3>
         <div class="border-2 sm:w-[550px] xl:w-[550px] lg:w-[400px] flex mx-auto mt-5 rounded-xl overflow-hidden border-neutral-20 text-sm bg-neutral-white">
           <table class="w-full">
-            <tr v-for="visit in visits" class="border-b-2 last:border-none border-neutral-20 [*&>td]:px-4 [*&>td]:py-2.5">
+            <tr v-for="visit in visits" :key="visit" class="border-b-2 last:border-none border-neutral-20 [*&>td]:px-4 [*&>td]:py-2.5">
               <td>{{ visit.source }}</td>
               <td>
                 <span class="block w-4 h-4 rounded-full ml-auto mr-3" :style="{backgroundColor: visit.chartColor}"></span>
@@ -38,63 +38,54 @@ export default {
   name: 'Advertisement',
   data() {
     return {
-      result: { //this is an example object
-        id: 1,
-        adv_id: 1,
-        profile_view:338,
-        facebook: 500,
-        instagram: 400,
-        whatsApp:321,
-        web: 450,
-        location: 250,
-        phone: 731,
-        moreprop: 0
-      },
+      result: null,
       totalVisits: 0,
       visits: [
-      {
-        source: "Visitas al perfil",
-        chartColor: "#293451",
-        visitsCount: 0,
-        visitPercent:0
-      },
-      {
-        source: "Facebook",
-        chartColor: "#3d5490",
-        visitsCount: 0,
-        visitPercent:0
-      },
-      {
-        source: "Instagram",
-        chartColor: "#4566b0",
-        visitsCount: 0,
-        visitPercent:0
-      },
-      {
-        source: "WhatsApp",
-        chartColor: "#6391ce",
-        visitsCount: 0,
-        visitPercent:0
-      },
-      {
-        source: "Página Web",
-        chartColor: "#81acd9",
-        visitsCount: 0,
-        visitPercent:0
-      },
-      {
-        source: "Ubicación",
-        chartColor: "#aac9e6",
-        visitsCount: 0,
-        visitPercent:0
-      },
-      {
-        source: "Teléfono Fijo",
-        chartColor: "#ccdef1",
-        visitsCount: 0,
-        visitPercent:0
-      }
-    ]
+        {
+          source: "Visitas al perfil",
+          chartColor: "#293451",
+          visitsCount: 0,
+          visitPercent:0
+        },
+        {
+          source: "Facebook",
+          chartColor: "#3d5490",
+          visitsCount: 0,
+          visitPercent:0
+        },
+        {
+          source: "Instagram",
+          chartColor: "#4566b0",
+          visitsCount: 0,
+          visitPercent:0
+        },
+        {
+          source: "WhatsApp",
+          chartColor: "#6391ce",
+          visitsCount: 0,
+          visitPercent:0
+        },
+        {
+          source: "Página Web",
+          chartColor: "#81acd9",
+          visitsCount: 0,
+          visitPercent:0
+        },
+        {
+          source: "Ubicación",
+          chartColor: "#aac9e6",
+          visitsCount: 0,
+          visitPercent:0
+        },
+        {
+          source: "Teléfono Fijo",
+          chartColor: "#ccdef1",
+          visitsCount: 0,
+          visitPercent:0
+        }
+      ],
+      id: null,
+      slug: ''
     }
   },
   computed: {
@@ -114,21 +105,37 @@ export default {
         }
         index++      
       }
-        this.visits[0].visitPercent = ((this.result["profile_view"] / this.totalVisits) * 100),
-        this.visits[1].visitPercent = ((this.result.facebook / this.totalVisits) * 100),
-        this.visits[2].visitPercent = ((this.result.instagram / this.totalVisits) * 100),
-        this.visits[3].visitPercent = ((this.result.whatsApp / this.totalVisits) * 100),
-        this.visits[4].visitPercent = ((this.result.web / this.totalVisits) * 100),
-        this.visits[5].visitPercent = ((this.result.location / this.totalVisits) * 100),
-        this.visits[6].visitPercent = ((this.result.phone / this.totalVisits) * 100)
-        
+      this.visits[0].visitPercent = ((this.result["profile_views"] / this.totalVisits) * 100),
+      this.visits[1].visitPercent = ((this.result.facebook / this.totalVisits) * 100),
+      this.visits[2].visitPercent = ((this.result.instagram / this.totalVisits) * 100),
+      this.visits[3].visitPercent = ((this.result.whatsApp / this.totalVisits) * 100),
+      this.visits[4].visitPercent = ((this.result.web / this.totalVisits) * 100),
+      this.visits[5].visitPercent = ((this.result.location / this.totalVisits) * 100),
+      this.visits[6].visitPercent = ((this.result.phone / this.totalVisits) * 100)
     },
     formatNumber(number){
       return String(number).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
+    getAds(id) {
+      const { data } = useFetch(`statistics/${id}`, {
+        method: 'GET',
+        server: false,
+        baseURL: useRuntimeConfig().public.API,
+        onResponse({response}) {
+          if(response.status === 200 ) {
+            this.result = response._data.results;
+            console.log(this.result)
+            this.getTotalVisits();
+          }
+        },
+      });
+    }
   },
   mounted() {
-    this.getTotalVisits()
+    // this.getTotalVisits();
+    this.id = useRoute().query.id;
+    this.slug = useRoute().query.name;
+    this.getAds(this.id);
   }
 }
 </script>
