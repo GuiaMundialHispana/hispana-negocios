@@ -80,11 +80,8 @@
                   <AtomsIcon name="general/arrow-down" :class="[{arrow: index === actionsIndex && actionsDropdown }]" />
                 </AtomsButtons>
                 <ul class="actions-dropdown" v-if="index === actionsIndex && actionsDropdown">
-                  <!-- <li class="actions-options" @click="useRouter().push(`/visitsChart?id=${business.id}?name=${business.business.name}`)">
-                    Estadística
-                  </li> -->
                   <li  class="actions-options">
-                    <NuxtLink :to="{path: `/visitsChart`,query: { id: business.business_id, name: business.business.name}}">Estadística</NuxtLink>
+                    <NuxtLink :to="{path: `/visitsChart`,query: { id: business.id, name: business.business.name}}">Estadística</NuxtLink>
                   </li>
                   <li class="actions-options" v-if="business.status != 'inactive'" @click="api_status = 'inactive', changeStatus(business.id)">
                     Cerrar temporalmente
@@ -96,7 +93,7 @@
               </OnClickOutside>
             </td>
             <td v-if="business.status != 'revision'">
-              <NuxtLink disabled="true" class="flex gap-2.5 whitespace-nowrap" :to="{path: `/search/${ business.business.name}`,query: { property_id: business.business_id}}">
+              <NuxtLink disabled="true" class="flex gap-2.5 whitespace-nowrap" :to="{path: `/search/${ business.business.name}`,query: { property_id: business.id}}">
                 <AtomsIcon name="general/eye" class="text-secondary-100" :size=24 />
                 <span hidden class="md:block">Ver Perfil</span>
               </NuxtLink>
