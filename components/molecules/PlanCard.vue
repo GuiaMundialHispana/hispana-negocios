@@ -117,9 +117,12 @@ export default {
     payment() {
       if(this.auth.isLoggedIn) {
         let planInformation =  {
-          plans: encodeURIComponent(JSON.stringify(this.plan)),
           newPrice: this.updatePrice,
-          quantity: this.planQuantity
+          quantity: this.planQuantity,
+          price: this.plan.price,
+          name:this.plan.name,
+          pictures: this.plan.pictures,
+          planId: this.plan.id
         }
         this.$swal.fire({
           title: '¿Deseas pagar este plan?',
@@ -143,7 +146,7 @@ export default {
           timer: 2000
         });
       }
-    }
+    },
   }
 }
 </script>
