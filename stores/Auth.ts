@@ -46,6 +46,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     async logOut() {
+      Swal.showLoading()
       await useFetch('auth/logout',{
         method: 'POST',
         baseURL: this.config.public.API,
@@ -55,8 +56,15 @@ export const useAuthStore = defineStore('auth', {
       });
       this.isLoggedIn = false;
       localStorage.removeItem('token');
-      
-      useRouter().push("/")
+
+      try {
+        Swal.hideLoading();
+        Swal.close();
+        useRouter().push("/")
+      } 
+      catch (error) {
+       console.log(error);
+      }
     }
   }
 })

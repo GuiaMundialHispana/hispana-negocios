@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '/profile': { ssr: false },
     '/edit-business': { ssr: false },
     '/PostBussines': { ssr: false },
+    '/payment': {ssr: false}
   },
   app: {
     head: {
@@ -54,7 +55,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       API: process.env.BASE_URL,
-      IMAGE_ROUTE: process.env.IMAGE_ROUTE
+      IMAGE_ROUTE: process.env.IMAGE_ROUTE,
+      PUBLISH_KEY: process.env.PUBLISH_KEY
     }
   }
 })

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="grid lg:grid-cols-2 h-full">
+    <div class="grid lg:grid-cols-2 min-h-screen">
       <div class="w-full lg:px-8 px-4 lg:py-16 py-8">
         <h4 class="flex items-center">
           <AtomsButtons @click="useRouter().back()" btn-type="btn-icon" class="mr-2" iconName="arrows/arrow-left"></AtomsButtons>
@@ -9,118 +9,88 @@
         <ul class="payment-plan-resume">
           <li class="plan-price-card">
             <div class="plan-name-card" :class="[renderPlanText]">
-              <p>{{plan.name}}</p>
+              <p>{{useRoute().query.name}}</p>
             </div>
             <div class="plan-information">
-              <p class="capitalize">Plan {{ plan.name }}</p>
+              <p class="capitalize">Plan {{ useRoute().query.name }}</p>
               <select readonly="readonly">
-                <option :value="parseInt($route.query.quantity)">Cantidad: {{$route.query.quantity}}</option>
+                <option :value="parseInt(useRoute().query.quantity)">Cantidad: {{useRoute().query.quantity}}</option>
               </select>
             </div>
-            <h6 class="plan-price" v-if="plan.price > 0">
-              RD$ {{ plan.price }}
+            <h6 class="plan-price" v-if="useRoute().query.price > 0">
+              RD$ {{ converPrice(useRoute().query.price) }}
             </h6>
             <h6 class="plan-price uppercase" v-else>gratis</h6>
           </li>
         </ul>
         <p class="total-price max-w-max md:w-full md:ml-auto md:mr-0 mr-auto">
           <span class="text-sm font-normal block text-left mt-8">Pago total</span>
-          RD$ {{ test($route.query.newPrice) }}
+          RD$ {{ converPrice($route.query.newPrice) }}
         </p>
       </div>
       <!--  -->
       <div class="payment-wrapper">
         <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" v-model="name">
+        </div>
+        <div class="form-group my-4">
           <label>Correo</label>
-          <input v-if="user.token" type="email" :value="user.userData.email">
-          <input v-else type="email">
+          <input type="email" v-model="email">
         </div>
-        <div class="form-group card-information">
-          <label>Información de la tarjeta</label>
-          <input type="text" class="border-b-0" placeholder="1234 4567 1234 4567">
-          <div class="flex items-center">
-            <input type="text" placeholder="MM/YY7">
-            <input type="text" placeholder="CVC">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Nombre de la tarjeta</label>
-          <input type="text">
-        </div>
-        <AtomsButtons @click="processPayment()" class="w-full">Pagar</AtomsButtons>
+        <div id="card-form" ref="cardRef" class="h-10 mt-8"></div>
+        <p v-if="stripeError.length > 0" class="font-semibold text-primary-100 my-3">{{stripeError}}</p>
+        <AtomsButtons btnSize="medium" @click="processPayment()" class="w-full mt-4" :disabled="name.length === 0 || email.length === 0">Pagar</AtomsButtons>
       </div>
     </div>
+    <OrganismPaymentConfirmation v-if="modal" />
   </section>
 </template>
 
-<script>
-import { useUserStore } from '~/stores/User';
-export default {
-  data() {
-    return {
-      plan: {},
-      config: useRuntimeConfig(),
-      user: useUserStore(),
-      route: useRoute()
-    }
-  },
-  methods: {
-    decodeInnerObject() {
-      const decodedValue = decodeURIComponent(this.route.query.plans);
-      const innerObject = JSON.parse(decodedValue);
-      return this.plan = innerObject;
-    },
-    async processPayment() {
-      const form = new FormData();
-      form.append('plan_id', this.plan.id);
-      form.append('quantity', this.route.query.quantity)
-      const { data }  = await useFetch('user-plans',{
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        baseURL: this.config.public.API,
-        body: form,
-      });
+<script setup>
+const isDataFilled = ref(false);
+const stripeCardElement = ref(null);
+const stripe = useStripe();
+const cardRef = ref(null);
+const email = ref("");
+const name = ref("");
+const modal = stripe.successPayment;
+const stripeError = stripe.stripeMessage;
 
-      try {
-        const res = data.value.results;
-        this.$swal.fire({
-          icon: 'success',
-          text: 'Su pago ha sido realizado con exito',
-          timer: 2000
-        })
-        useRouter().push('/profile?tab=plan')
-      } catch (error) {
-        this.$swal.fire({
-          icon: 'error',
-          text: 'En estos momentos estamos presentando un error, intente mas tarde'
-        })
-      }
-    },
-    test(price) {
-      return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-  },
-  computed: {
-    renderPlanText() {
-      if(this.plan.name === 'VIP') {
-        return 'vip';
-      } else if (this.plan.name === 'SILVER') {
-        return 'silver';
-      } else if (this.plan.name === 'EXCLUSIVO') {
-        return 'exclusive';
-      } else if(this.plan.name === 'DESTACADOS') {
-        return '';
-      } else if(this.plan.name === 'BÁSICO') {
-        return 'basic';
-      }
-    },
-  },
-  mounted() {
-    this.decodeInnerObject();
+definePageMeta({
+  middleware: 'check-auth'
+});
+
+onMounted( async () => {
+  await stripe.initStripe();
+  stripeCardElement.value = await stripe.setCardElement("#card-form");
+  stripeCardElement.value.on('change', (event) => {
+    isDataFilled.value = !event.empty;
+  });
+});
+
+async function processPayment() {
+  await stripe.submitPayment(stripeCardElement.value, email.value, name.value, useRoute().query.quantity, useRoute().query.planId );
+};
+
+function converPrice(price) {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+const renderPlanText = computed(()=> {
+  if(useRoute().query.name === 'VIP') {
+    return 'vip';
+  } else if (useRoute().query.name === 'SILVER') {
+    return 'silver';
+  } else if (useRoute().query.name === 'EXCLUSIVO') {
+    return 'exclusive';
+  } else if(useRoute().query.name === 'DESTACADOS') {
+    return '';
+  } else if(useRoute().query.name === 'BÁSICO') {
+    return 'basic';
   }
-}
+});
+
 </script>
 
 <style lang="postcss" scoped>

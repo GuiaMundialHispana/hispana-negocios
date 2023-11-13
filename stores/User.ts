@@ -91,12 +91,44 @@ export const useUserStore = defineStore('user', {
         onResponse({response}) {
           let responseApi = response._data.message;
 
-          if(responseApi === "Token invalid or not provided.") {
+          if(response.status === 404 || responseApi === "Token invalid or not provided." || response.status === 500) {
+            localStorage.removeItem('token');
+            Swal.showLoading();
+            useRouter().push("/").then(() => {
+              Swal.fire({
+                icon: 'error',
+                text: 'Por favor inicia sesion nuevamente',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                timer: 5000
+              });
+              navigateTo('/')
+              location.reload();
+            });
+          }
+
+          if(response._data.status === false) {
             localStorage.removeItem('token');
             Swal.fire({
               icon: 'error',
               text: 'Confirma que tus datos esten correctos',
               timer: 2000
+            });
+          }
+        },
+        onResponseError({response}) {
+          let responseApi = response._data.message;
+          if(response.status === 404 || responseApi === "Token invalid or not provided.") {
+            localStorage.removeItem('token');
+            Swal.showLoading();
+            useRouter().push("/").then(() => {
+              Swal.fire({
+                icon: 'error',
+                text: 'Por favor inicia sesion nuevamente',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                timer: 5000
+              });
             });
           }
         }
@@ -118,6 +150,22 @@ export const useUserStore = defineStore('user', {
         headers: {
           'Authorization': `Bearer ${this.token}`
         },
+        onResponseError({response}) {
+          let responseApi = response._data.message;
+          if(response.status === 404 || responseApi === "Token invalid or not provided.") {
+            localStorage.removeItem('token');
+            Swal.showLoading();
+            useRouter().push("/").then(() => {
+              Swal.fire({
+                icon: 'error',
+                text: 'Por favor inicia sesion nuevamente',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                timer: 5000
+              });
+            });
+          }
+        }
       });
 
       if(data) {
@@ -132,7 +180,3 @@ export const useUserStore = defineStore('user', {
     }
   }
 });
-
-// if (import.meta.hot) {
-//   import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))
-// }

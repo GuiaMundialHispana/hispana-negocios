@@ -20,7 +20,6 @@ export default {
     const user_store = useUserStore();
     const auth_store = useAuthStore();
     const miFuncionGlobal = () => {
-      // Tu lógica aquí
       if(auth_store.isLoggedIn) {
         user_store.refresh_token();
       }
