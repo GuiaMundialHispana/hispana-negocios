@@ -29,31 +29,30 @@
 <script setup>
 import Swal from 'sweetalert2';
 import { useAuthStore } from '~/stores/Auth';
-import { useUserStore  } from '~/stores/User';
+
 const config = useRuntimeConfig();
 const auth = useAuthStore();
-const user = useUserStore();
 let name = ref('');
 let lastname = ref('');
 let email = ref('');
 let password = ref('');
 let password_confirmation = ref('');
+const emit = defineEmits(['close']);
 
 async function register() {
   Swal.showLoading()
-  const {pending, data} = await useFetch('auth/register',{
+  await useFetch('auth/register',{
     method: 'POST',
-    body: {
-      name: name,
-      lastname: lastname,
-      email: email,
-      password: password,
-      password_confirmation: password_confirmation
-    },
     baseURL: config.public.API,
+    body: {
+      name: name.value,
+      lastname: lastname.value,
+      email: email.value,
+      password: password.value,
+      password_confirmation: password_confirmation.value
+    },
     onResponse({response}) {
       Swal.hideLoading();
-      // console.log(response._data)
       if(response.status === 400) {
         let errors = response._data.message;
         Swal.fire({
@@ -78,20 +77,8 @@ async function register() {
         });
         localStorage.setItem('token', response._data.results.access_token.original.access_token);
         auth.isLoggedIn = true;
-        // let isAuthenticated = window.localStorage.getItem('token');
-        // async function getProfile() {
-        //   const data = await $fetch('auth/profile', {
-        //     method: 'GET',
-        //     headers: {
-        //       'Authorization': 'Bearer ' + isAuthenticated
-        //     },
-        //     baseURL: config.public.API
-        //   });
-        //   const res = data.results.user;
-        //   user.userData = res;
-        // }
-        // getProfile();
         useRouter().push('/profile?tab=plan');
+        emit('close');
       }
     }
   });

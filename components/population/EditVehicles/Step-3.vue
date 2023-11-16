@@ -234,7 +234,7 @@ function previewFiles(event) {
           <p class="whitespace-nowrap text-sm">Foto de perfil</p>
           <figure v-if="use_posts.image.length > 0 && !isNewImage" class="w-[107px] h-[107px] rounded-full border-[5px] border-secondary-100 mt-5 flex items-center justify-center z-10 overflow-hidden">
             <img
-              :src="`${config.public.IMAGE_ROUTE+use_posts.image}`"
+              :src="`${use_posts.image}`"
               class="w-full h-full object-cover"
             >
           </figure>

@@ -55,7 +55,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       API: process.env.BASE_URL,
-      IMAGE_ROUTE: process.env.IMAGE_ROUTE,
       PUBLISH_KEY: process.env.PUBLISH_KEY
     }
   }

@@ -1,12 +1,12 @@
 <template>
   <div v-if="!pending" class="flex flex-nowrap items-center justify-center relative overflow-x-scroll bg-primary-100 bg-opacity-30">
-    <img v-for="image in advertisement.business.images" :key="image" :src="config.public.IMAGE_ROUTE+image.image" :alt="advertisement.business.name" class="w-auto h-[290px] object-cover">
+    <img v-for="image in advertisement.business.images" :key="image" :src="image.image" :alt="advertisement.business.name" class="w-auto h-[290px] object-cover">
   </div>
   <main v-if="!pending" class="lg:px-20 md:px-8 px-5">
     <section class="max-w-[1250px] mx-auto flex flex-col lg:px-5">
       <div class="relative flex lg:mb-[60px] mb-8 lg:flex-row flex-col pt-10 justify-between items-center">
         <figure class="bg-neutral-white p-6 w-[170px] h-[170px] border-2 rounded-lg flex items-center justify-center border-[#F5F5F5] absolute lg:-top-2/3 -top-1/4 ">
-          <img :src="config.public.IMAGE_ROUTE+advertisement.business.image" :alt="advertisement.business.name">
+          <img :src="advertisement.business.image" :alt="advertisement.business.name">
         </figure>
         <h2 class="lg:ml-[200px] mt-[90px] lg:mt-0 xl:text-5xl text-4xl font-semibold text-primary-100 mr-4 whitespace-nowrap">{{ advertisement.business.name}}</h2>
         <div class="flex gap-3.5 text-sm mt-4 lg:mt-0 flex-wrap md:justify-end justify-center">
@@ -66,7 +66,14 @@ const shedule = useRenderSchedule();
 const category_type = ref(null);
 const renderMap = ref(null);
 
-const { data: advertisement, pending, error} = await useLazyFetch(`advertisements/${route.query.property_id}`, {
+const propertyId = ref('');
+
+if(process.client) {
+  propertyId.value = sessionStorage.getItem('propertyId');
+}
+
+
+const { data: advertisement, pending, error} = await useLazyFetch(`advertisements/${propertyId.value}`, {
   method: 'GET',
   baseURL: config.public.API,
   server: false,

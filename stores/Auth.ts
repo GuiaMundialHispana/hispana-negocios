@@ -39,6 +39,7 @@ export const useAuthStore = defineStore('auth', {
       } 
       catch (error) {
         Swal.hideLoading();
+        $emit('close')
         Swal.fire({
           icon: 'error',
           text: 'Confirma que tus datos esten correctos'
