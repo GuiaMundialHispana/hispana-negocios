@@ -8,6 +8,10 @@ const user_store = useUserStore();
 const config = useRuntimeConfig();
 let step = ref(1);
 
+definePageMeta({
+  middleware: 'check-auth'
+});
+
 async function createAdvertisement() {
   Swal.showLoading();
   const form = new FormData();

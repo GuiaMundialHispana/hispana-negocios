@@ -91,7 +91,7 @@ export const useUserStore = defineStore('user', {
         onResponse({response}) {
           let responseApi = response._data.message;
 
-          if(response.status === 404 || responseApi === "Token invalid or not provided." || response.status === 500) {
+          if(response.status === 404 || responseApi === "Token invalid or not provided." || response.status === 500 || response.status === 302) {
             localStorage.removeItem('token');
             Swal.showLoading();
             useRouter().push("/").then(() => {
@@ -106,7 +106,6 @@ export const useUserStore = defineStore('user', {
               location.reload();
             });
           }
-
           if(response._data.status === false) {
             localStorage.removeItem('token');
             Swal.fire({
