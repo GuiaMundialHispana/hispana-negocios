@@ -27,8 +27,7 @@
         Exclusividad en página de inicio
       </li>
     </ul>
-    <!-- plan.id != 4 &&   -->
-    <div class="action-buttons" v-if="$route.path === '/profile' || $route.path === '/plans'">
+    <div class="action-buttons" v-if="plan.id !== 4">
       <div class="plan-quantity">
         <button :disabled="planQuantity < 2" @click="planQuantity--">-</button>
         <input type="number" readonly :value="planQuantity">
@@ -43,7 +42,8 @@
     </div>
     <div class="my-4 w-full">
       <slot v-if="seleccionado && $route.path != '/PostBussines'"></slot>
-      <AtomsButtons
+      <AtomsButtons 
+        v-if="plan.id != 4"
         @click="payment()"
         btn-style="outline-gray"
         class="w-full">
