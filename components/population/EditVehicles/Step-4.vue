@@ -106,7 +106,7 @@ watch(newPreview.value, (newx) => {
       </figure>
       <!-- estas son las que traigo del api -->
       <figure v-for="(img, index) in previewImages" :key="index">
-        <img :src="useRuntimeConfig().public.IMAGE_ROUTE+img.image" class="w-full h-full object-cover">
+        <img :src="img.image" class="w-full h-full object-cover">
         <AtomsButtons
           class="absolute top-2 right-2"
           icon-name="general/trash-can"

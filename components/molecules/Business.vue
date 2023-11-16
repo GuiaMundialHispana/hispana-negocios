@@ -7,7 +7,7 @@
       }
     }">
       <figure class="bg-neutral-white lg:w-[170px] w-full h-[170px] flex items-center justify-center">
-        <img :src="useRuntimeConfig().public.IMAGE_ROUTE+advertisement.business.image" :alt="advertisement.business.name" class="w-full h-full object-cover object-top">
+        <img :src="advertisement.business.image" :alt="advertisement.business.name" class="w-full h-full object-cover object-top">
       </figure>
     </NuxtLink>
     <div class="flex flex-col gap-[18px] flex-grow">
