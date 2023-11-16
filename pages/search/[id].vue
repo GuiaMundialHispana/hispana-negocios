@@ -66,7 +66,14 @@ const shedule = useRenderSchedule();
 const category_type = ref(null);
 const renderMap = ref(null);
 
-const { data: advertisement, pending, error} = await useLazyFetch(`advertisements/${route.query.property_id}`, {
+const propertyId = ref('');
+
+if(process.client) {
+  propertyId.value = sessionStorage.getItem('propertyId');
+}
+
+
+const { data: advertisement, pending, error} = await useLazyFetch(`advertisements/${propertyId.value}`, {
   method: 'GET',
   baseURL: config.public.API,
   server: false,
