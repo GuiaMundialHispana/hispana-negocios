@@ -7,7 +7,7 @@
     </NuxtLink>
     <div class="flex flex-col gap-[18px] flex-grow">
       <div class="flex justify-between w-full lg:flex-row flex-col">
-        <NuxtLink :to="`/search/${advertisement.business.name}`" @click="saveId(advertisement.advertisement_id)" class="text-primary-100 font-semibold text-xl h-fit">
+        <NuxtLink :to="`/search/${advertisement.business.slug}`" class="text-primary-100 font-semibold text-xl h-fit">
           {{ advertisement.business.name }}
         </NuxtLink>
         <div class="flex gap-3.5 text-sm">
@@ -54,9 +54,6 @@ const props = defineProps({
   }
 });
 
-function saveId(propertyId) {
-  sessionStorage.setItem('propertyId', propertyId);
-};
 </script>
 
 <style lang="postcss" scoped>

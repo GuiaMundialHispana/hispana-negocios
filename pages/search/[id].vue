@@ -58,22 +58,13 @@
 </template>
 
 <script setup>
-const open = ref(true);
-const route = useRoute();
 const config = useRuntimeConfig();
 const categories = useCategories().categories;
 const shedule = useRenderSchedule();
 const category_type = ref(null);
 const renderMap = ref(null);
 
-const propertyId = ref('');
-
-if(process.client) {
-  propertyId.value = sessionStorage.getItem('propertyId');
-}
-
-
-const { data: advertisement, pending, error} = await useLazyFetch(`advertisements/${propertyId.value}`, {
+const { data: advertisement, pending, error} = await useLazyFetch(`advertisements/${useRoute().params.id}`, {
   method: 'GET',
   baseURL: config.public.API,
   server: false,
