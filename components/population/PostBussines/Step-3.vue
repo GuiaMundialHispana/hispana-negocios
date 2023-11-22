@@ -265,7 +265,7 @@ function save_data() {
       <!-- ubicacion -->
       <label class="w-full sm:mb-2 mb-5 col-span-2 title-label">
         Dirección
-        <input class="form-control hover:cursor-not-allowed" readonly v-model="address" placeholder="Direccion" type="text">
+        <input class="form-control" v-model="address" placeholder="Direccion" type="text">
       </label>
     </div>   
     <!-- Pais -->

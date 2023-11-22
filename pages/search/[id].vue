@@ -10,7 +10,7 @@
         </figure>
         <h2 class="lg:ml-[200px] mt-[90px] lg:mt-0 xl:text-5xl text-4xl font-semibold text-primary-100 mr-4 whitespace-nowrap">{{ advertisement.business.name}}</h2>
         <div class="flex gap-3.5 text-sm mt-4 lg:mt-0 flex-wrap md:justify-end justify-center">
-          <p class="hour" :class="[ shedule.isOpen === true ? '' : 'closed']">
+          <p class="hour" :class="[ toggleClass ? 'open' : 'closed']">
             <AtomsIcon name="general/clock" :size=32 class="absolute left-0 "/>
             {{ shedule.schedule_message }}
           </p>
@@ -63,6 +63,7 @@ const categories = useCategories().categories;
 const shedule = useRenderSchedule();
 const category_type = ref(null);
 const renderMap = ref(null);
+let toggleClass = ref(false);
 
 const { data: advertisement, pending, error} = await useLazyFetch(`advertisements/${useRoute().params.id}`, {
   method: 'GET',
@@ -91,7 +92,13 @@ watchEffect(()=> {
       baseURL: config.public.API,
     });
   }
-})
+
+  if(shedule.isOpen) {
+    toggleClass.value = true;
+  } else {
+    toggleClass.value = false;
+  }
+});
 
 definePageMeta({
   middleware: ["not-found"]
@@ -100,9 +107,12 @@ definePageMeta({
 
 <style lang="postcss" scoped>
 .hour{
-  @apply flex bg-[#D3FFD5] text-[#4CAF50] relative items-center justify-center rounded-lg h-8 pl-8 pr-2 before:mr-1 whitespace-nowrap;
+  @apply flex  relative items-center justify-center rounded-lg h-8 pl-8 pr-2 before:mr-1 whitespace-nowrap;
   &.closed {
     @apply bg-[#FFE4E3] text-[#FF2625];
+  }
+  &.open {
+    @apply bg-[#D3FFD5] text-[#4CAF50];
   }
 }
 .bussines-category{

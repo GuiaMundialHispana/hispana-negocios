@@ -170,7 +170,7 @@ nav {
 
       & ul {
         @apply flex flex-col overflow-hidden lg:border border-gray-100 rounded-lg;
-        & li > a, & li:last-child { @apply px-4 py-2 flex items-center border-b border-gray-100 text-sm text-neutral-black font-normal hover:bg-[#bafbff] hover:text-primary-100 bg-neutral-white; }
+        & li > a, & li:last-child { @apply px-4 py-2 flex items-center border-b border-gray-100 text-sm text-neutral-black font-normal hover:bg-[#8994AF] hover:text-neutral-white bg-neutral-white; }
         & li:last-child { @apply border-b-0 }
       }
     }
