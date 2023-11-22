@@ -84,11 +84,11 @@ export const useUserStore = defineStore('user', {
     async get_user() {
       const { data, error } = await useFetch('auth/profile',{
         method: 'GET',
-        baseURL: this.config.public.API,
+        baseURL: useRuntimeConfig().public.API,
         headers: {
           'Authorization': `Bearer ${this.token}`
         },
-        onResponse({response}) {
+        onResponse({ response }) {
           let responseApi = response._data.message;
 
           if(response.status === 404 || responseApi === "Token invalid or not provided." || response.status === 500 || response.status === 302) {
@@ -106,6 +106,7 @@ export const useUserStore = defineStore('user', {
               location.reload();
             });
           }
+
           if(response._data.status === false) {
             localStorage.removeItem('token');
             Swal.fire({
@@ -115,21 +116,20 @@ export const useUserStore = defineStore('user', {
             });
           }
         },
-        onResponseError({response}) {
-          let responseApi = response._data.message;
-          if(response.status === 404 || responseApi === "Token invalid or not provided.") {
-            localStorage.removeItem('token');
-            Swal.showLoading();
-            useRouter().push("/").then(() => {
-              Swal.fire({
-                icon: 'error',
-                text: 'Por favor inicia sesion nuevamente',
-                showConfirmButton: false,
-                allowOutsideClick: false,
-                timer: 5000
-              });
+        onResponseError() {
+          localStorage.removeItem('token');
+          Swal.showLoading();
+          useRouter().push("/").then(() => {
+            Swal.fire({
+              icon: 'error',
+              text: 'Por favor inicia sesion nuevamente',
+              showConfirmButton: false,
+              allowOutsideClick: false,
+              timer: 5000
             });
-          }
+            navigateTo('/')
+            location.reload();
+          });
         }
       });
       
@@ -145,7 +145,7 @@ export const useUserStore = defineStore('user', {
     async refresh_token() {
       const {data, error} = await useFetch('auth/refresh',{
         method: 'POST',
-        baseURL: this.config.public.API,
+        baseURL: useRuntimeConfig().public.API,
         headers: {
           'Authorization': `Bearer ${this.token}`
         },

@@ -27,7 +27,8 @@ export default defineNuxtConfig({
     'nuxt-icons',
     'nuxt-viewport',
     'nuxt-swiper',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@vee-validate/nuxt',
   ],
   viewport: {
     breakpoints: {
@@ -57,5 +58,8 @@ export default defineNuxtConfig({
       API: process.env.BASE_URL,
       PUBLISH_KEY: process.env.PUBLISH_KEY
     }
+  },
+  experimental: {
+    renderJsonPayloads: false
   }
 })

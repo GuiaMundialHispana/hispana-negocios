@@ -18,16 +18,15 @@
             Nombre:
             <input
               type="text"
-              v-model="editUser.editUserData.name"
+              v-model="name"
               class="lg:mr-4 mr-0"
             >
-            <!-- :placeholder="user.userData.name" -->
           </label>
           <label>
             Apellido:
             <input
               type="text"
-              v-model="editUser.editUserData.lastname"
+              v-model="lastName"
             >
           </label>
         </div>
@@ -36,15 +35,15 @@
             Fecha de nacimiento:
             <input
               type="date"
-              v-model="editUser.editUserData.birthdate"
+              v-model="birthdate"
               class="datePicker uppercase text-[#727272] lg:mr-4 mr-0"
             >
           </label>
           <label>
             País:
-            <select class="form-control" v-model="editUser.editUserData.country_id">
-              <option v-for="country in countries[0]" :value="country.id" :key="country.id" class="option-label">
-              {{ country.name }}
+            <select class="form-control" v-model="country">
+              <option v-for="item in countries" :value="item.id" :key="item.id" class="option-label">
+              {{ item.name }}
               </option>
             </select>
           </label>
@@ -57,17 +56,15 @@
           <input
             type="tel"
             class="lg:mr-4 mr-0"
-            v-model="editUser.editUserData.phone"
+            v-model="cellphone"
           >
-          <!-- :placeholder="user.userData.cellphone" -->
         </label>
         <label>
           Teléfono residencial:
           <input
             type="tel"
-            v-model="editUser.editUserData.cellphone"
+            v-model="phone"
           >
-          <!-- v-model="editUser.editUserData.cellphone" -->
         </label>
       </div>
       <div>
@@ -75,21 +72,20 @@
           Correo electrónico:
           <input
             type="email"
-            v-model="editUser.editUserData.email"
+            v-model="email"
           >
-          <!-- :placeholder="user.userData.email" -->
         </label>
       </div>
       <div class="flex flex-col mt-8">
         <h4>Contraseña</h4>
         <p class="mt-3 mb-6">Una contraseña segura que te ayuda a proteger tu cuenta de Hispana Home</p>
         <p>*************************</p>
-        <button class="flex items-center gap-2 text-primary-100 mb-4 mt-4" @click="showChangePasswd = !showChangePasswd">
+        <button class="flex items-center gap-2 text-primary-100 mb-4 mt-4" @click="togglePassword = !togglePassword">
           Cambiar contraseña 
-          <AtomsIcon name="arrows/arrow-right" :size=15 v-if="!showChangePasswd"/>
-          <AtomsIcon name="arrows/arrow-down" :size=15 v-if="showChangePasswd"/>
+          <AtomsIcon name="arrows/arrow-right" :size=15 v-if="!togglePassword"/>
+          <AtomsIcon name="arrows/arrow-down" :size=15 v-if="togglePassword"/>
         </button>
-        <div class="flex-col md:w-[500px]" v-if="showChangePasswd">
+        <div class="flex-col md:w-[500px]" v-if="togglePassword">
           <label>
             Contraseña actual:
             <input
@@ -123,26 +119,26 @@
         <div class="flex flex-col md:mr-14 mb-6 md:mb-0">
           <div class="flex flex-col items-center">
             <p class="whitespace-nowrap">Actualiza tu foto de perfil</p>
-            <figure class="w-[107px] h-[107px] rounded-full border-[5px] border-secondary-100 mt-5">
-              <img v-if="!isNewImage"
-                :src="`https://seal-app-4mhut.ondigitalocean.app/${editUser.editUserData.profile_pic}`"
-                :alt="editUser.editUserData.name"
+            <figure class="w-[107px] h-[107px] rounded-full border-[5px] border-primary-50 mt-5">
+              <img v-if="!isNewImage && userStore.userData.profile_pic != null"
+                :src="`${userStore.userData.profile_pic}`"
+                :alt="userStore.userData.name"
                 class="rounded-full w-full h-full object-cover"
               >
-              <img
-                v-if="isNewImage && editUser.editUserData != null"
-                :src="`${editUser.editUserData.profile_pic}`"
-                :alt="editUser.editUserData.name"
-                class="rounded-full w-full h-full object-cover"
-              >
-              <span v-if="isNewImage && editUser.editUserData === null" class="w-full h-full flex items-center justify-center font-bold text-primary-100 text-6xl rounded-full border-2 border-primary-100 bg-secondary-100">
-                {{user.userData.name.charAt(0)}}{{ user.userData.lastname.charAt(0) }}
+              <span v-if="!isNewImage && userStore.userData.profile_pic === null" class="w-full h-full flex items-center justify-center font-bold text-primary-100 uppercase text-6xl rounded-full">
+                {{userStore.userData.name.charAt(0)}}{{ userStore.userData.lastname.charAt(0) }}
               </span>
+              <img
+                v-if="isNewImage"
+                :src="`${profilePic}`"
+                :alt="userStore.userData.name"
+                class="rounded-full w-full h-full object-cover"
+              >
             </figure>
           </div>
         </div>
         <div class="flex flex-col relative items-center justify-center border border-gray-300 rounded-md w-full h-40 overflow-hidden text-center">
-          <div class="flex items-center justify-center rounded-full bg-secondary-100 w-14 h-14">
+          <div class="flex items-center justify-center rounded-full bg-primary-50 w-14 h-14">
             <AtomsIcon name="general/upload" :size=28 class="text-primary-100" />
           </div>
           <p class="text-[#707070]">
@@ -153,13 +149,13 @@
         </div>
       </div>
       <div class="flex gap-2.5 ml-auto mt-12">
-        <AtomsButton
+        <AtomsButtons
           class="cancel-btn"
           btn-size="xsmall"
           btn-style="outline-gray"
-          @click="isNewImage = false, editUser.$reset(), useRouter().back()"
+          @click="isNewImage = false, useRouter().back()"
           >Cancelar
-        </AtomsButton>
+        </AtomsButtons>
         <AtomsButtons
           btn-size="xsmall"
           btn-style="solid-primary"
@@ -171,170 +167,151 @@
   </section>
 </template>
 
-<script>
-import { useUserEditStore } from '~/stores/EditUser';
+<script setup>
 import Swal from 'sweetalert2';
-export default {
-  data() {
-    return {
-      editUser:useUserEditStore (),
-      config: useRuntimeConfig(),
-      showChangePasswd: false,
-      profilePic: '',
-      images: null,
-      countries: [],
-      country: [],
-      form: new FormData(),
-      password: '',
-      password_confirmation: '',
-      current_password: '',
-      isNewImage: false
-    }
-  },
-  watch:{
-    profilePic() {
-      this.editUser.editUserData.profile_pic = this.profilePic;
-      this.isNewImage = true;
-    },
-    images() {
-      this.form.append('profile_pic', this.editUser.images);
-    }
-  },
-  methods: {
-    previewFiles(event) {
-      this.images = event.target.files[0]
-      this.profilePic = URL.createObjectURL(this.images);
-      this.editUser.images = this.images;
-    },
-    async getCountries() {
-      const { data } = await useFetch('generals/countries', {
-        baseURL: this.config.public.API
-      })
-      const res = data._value.results.data;
-      this.countries.push(res);
-    },
-    async changesPassword(){
-      Swal.showLoading();
-      this.form.append('email', this.editUser.editUserData.email);
-      this.form.append('current_password', this.current_password);
-      this.form.append('password', this.password);
-      this.form.append('password_confirmation', this.password_confirmation);
-      await useFetch('users/update?_method=PUT',{
-        method: 'POST',
-        body: this.form,
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Accept': 'application/json'
-        },
-        baseURL: this.config.public.API,
-        onResponse({response}) {
-          Swal.hideLoading();
-          if(response.status === 400) {
-            let errors = response._data.message;
-            Swal.fire({
-              icon: 'error',
-              html: '<ul></ul>',
-              didOpen: () => {
-                const b = Swal.getHtmlContainer().querySelector('ul');
-                Object.keys(errors).forEach(clave => {
-                  const li = document.createElement('li');
-                  li.classList.add('text-primary-100', 'text-left', 'text-sm', 'mb-2')
-                  li.textContent = errors[clave];
-                  b.appendChild(li);
-                });
-              },
-            });
-          }
+import { useUserStore } from '~/stores/User';
 
-          if(response.status === 200) {
-            Swal.fire({
-              icon: 'success',
-              text: 'Sus datos han sido actualizados',
-              showConfirmButton: false,
-              timer: 2000
-            });
-            // useRouter().go()
-            useRouter().push("/profile?tab=anuncio");
-          }
-        }
-      });
-    },
-    async updateUser() {
-      Swal.showLoading();
-      this.form.append('user_id', this.editUser.editUserData.user_id);
-      this.form.append('email', this.editUser.editUserData.email)
-      this.form.append('name', this.editUser.editUserData.name);
-      this.form.append('lastname', this.editUser.editUserData.lastname);
-      if(this.editUser.editUserData.phone === '' || this.editUser.editUserData.phone === null ) {
-        this.form.append('phone', 123456789);
-      } else {
-        this.form.append('phone', this.editUser.editUserData.phone);
-      }
+definePageMeta({
+  middleware: 'check-auth'
+});
 
-      if(this.editUser.editUserData.birthdate === '' ||this.editUser.editUserData.birthdate === null ) {
-        this.form.append('birthdate', '');
-      } else {
-        this.form.append('birthdate', this.editUser.editUserData.birthdate);
-      }
+const name = ref('');
+const lastName = ref('');
+const birthdate = ref(null);
+const country = ref(null);
+const phone = ref('');
+const cellphone = ref('');
+const email = ref('');
+const password = ref('');
+const current_password = ref('');
+const password_confirmation = ref('');
+const userStore = useUserStore();
+const form = new FormData();
+const togglePassword = ref(false);
+const images = ref(null);
+const profilePic = ref('');
+const isNewImage = ref(false);
 
-      if(this.editUser.editUserData.cellphone === '' || this.editUser.editUserData.cellphone === null ) {
-        this.form.append('cellphone', 12345678);
-      } else {
-        this.form.append('cellphone', this.editUser.editUserData.cellphone);
-      }
-
-      if(this.editUser.editUserData.country_id === '' || this.editUser.editUserData.country_id === null || this.editUser.editUserData.country_id === 0) {
-        this.form.append('country_id', 12345678);
-      } else {
-        this.form.append('country_id', this.editUser.editUserData.country_id);
-      }
-
-      await useFetch('users/update?_method=PUT',{
-        method: 'POST',
-        body: this.form,
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Accept': 'application/json'
-        },
-        baseURL: this.config.public.API,
-        onResponse({response}) {
-          Swal.hideLoading();
-          if(response.status === 400) {
-            let errors = response._data.message;
-            Swal.fire({
-              icon: 'error',
-              html: '<ul></ul>',
-              didOpen: () => {
-                const b = Swal.getHtmlContainer().querySelector('ul');
-                Object.keys(errors).forEach(clave => {
-                  const li = document.createElement('li');
-                  li.classList.add('text-primary-100', 'text-left', 'text-sm', 'mb-2')
-                  li.textContent = errors[clave];
-                  b.appendChild(li);
-                });
-              },
-            });
-          }
-
-          if(response.status === 200) {
-            Swal.fire({
-              icon: 'success',
-              text: 'Sus datos han sido actualizados',
-              showConfirmButton: false,
-              timer: 2000
-            });
-            // useRouter().go()
-            useRouter().push("/profile?tab=anuncio");
-            editUserData.$reset();
-          }
-        }
-      });
-    }
-  },
-  created() {
-    this.getCountries();
+const { data: countries } = await useFetch('generals/countries', {
+  baseURL: useRuntimeConfig().public.API,
+  transform(data) {
+    return data.results.data;
   }
+});
+
+async function changesPassword(){
+  Swal.showLoading();
+  email.value === '' ? form.append('email', userStore.userData.email) : form.append('email', email.value);
+  form.append('current_password', current_password.value);
+  form.append('password', password.value);
+  form.append('password_confirmation', password_confirmation.value);
+  await useFetch('users/update?_method=PUT',{
+    method: 'POST',
+    body: form,
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Accept': 'application/json'
+    },
+    baseURL: useRuntimeConfig().public.API,
+    onResponse({response}) {
+      Swal.hideLoading();
+      if(response.status === 400) {
+        let errors = response._data.message;
+        Swal.fire({
+          icon: 'error',
+          html: '<ul></ul>',
+          didOpen: () => {
+            const b = Swal.getHtmlContainer().querySelector('ul');
+            Object.keys(errors).forEach(clave => {
+              const li = document.createElement('li');
+              li.classList.add('text-primary-100', 'text-left', 'text-sm', 'mb-2')
+              li.textContent = errors[clave];
+              b.appendChild(li);
+            });
+          },
+        });
+      }
+
+      if(response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          text: 'Sus datos han sido actualizados',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        useRouter().push("/profile?tab=anuncio");
+      }
+    }
+  });
+};
+
+async function updateUser() {
+  Swal.showLoading();
+  form.append('user_id', userStore.userData.id);
+  form.append('email', email.value);
+
+  name.value === '' ? form.append('name', userStore.userData.name) : form.append('name', name.value);
+  lastName.value === '' ? form.append('lastname', userStore.userData.lastname) : form.append('lastname', lastName.value);
+  email.value === '' ? form.append('email', userStore.userData.email) : form.append('email', email.value);
+  phone.value === '' ? form.append('phone', 123456789) : form.append('phone', phone.value);
+  birthdate.value === null ? form.append('birthdate', '') : form.append('birthdate', birthdate.value);
+  cellphone.value === '' ? form.append('cellphone', 12345678) : form.append('cellphone', cellphone.value);
+  country.value === null ? form.append('country_id', 12345678) :  form.append('country_id', country.value);
+
+  await useFetch('users/update?_method=PUT',{
+    method: 'POST',
+    body: form,
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Accept': 'application/json'
+    },
+    baseURL: useRuntimeConfig().public.API,
+    onResponse({response}) {
+      Swal.hideLoading();
+      if(response.status === 400) {
+        let errors = response._data.message;
+        Swal.fire({
+          icon: 'error',
+          html: '<ul></ul>',
+          didOpen: () => {
+            const b = Swal.getHtmlContainer().querySelector('ul');
+            Object.keys(errors).forEach(clave => {
+              const li = document.createElement('li');
+              li.classList.add('text-primary-100', 'text-left', 'text-sm', 'mb-2')
+              li.textContent = errors[clave];
+              b.appendChild(li);
+            });
+          },
+        });
+      }
+
+      if(response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          text: 'Sus datos han sido actualizados',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        useRouter().push("/profile?tab=anuncio");
+      }
+    }
+  });
 }
+
+function previewFiles(event) {
+  images.value = event.target.files[0]
+  profilePic.value = URL.createObjectURL(images.value);
+};
+
+watch(profilePic,() => {
+  form.append('profile_pic', images.value);
+  isNewImage.value = true;
+})
+
+watch(images,() => {
+  form.append('profile_pic', images.value);
+});
+
 </script>
 
 <style lang="postcss" scoped>

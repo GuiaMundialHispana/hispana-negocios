@@ -1,13 +1,13 @@
 <template>
   <article class="flex lg:flex-row flex-col border-b-2 rounded-2xl rounded-br-none rounded-bl-none p-6 gap-12 border-b-gray-300 w-full">
-    <NuxtLink :to="`/search/${advertisement.business.name}`" @click="saveId(advertisement.advertisement_id)">
+    <NuxtLink :to="`/search/${advertisement.business.slug}`">
       <figure class="bg-neutral-white lg:w-[170px] w-full h-[170px] flex items-center justify-center">
         <img :src="advertisement.business.image" :alt="advertisement.business.name" class="w-full h-full object-cover object-top">
       </figure>
     </NuxtLink>
     <div class="flex flex-col gap-[18px] flex-grow">
       <div class="flex justify-between w-full lg:flex-row flex-col">
-        <NuxtLink :to="`/search/${advertisement.business.name}`" @click="saveId(advertisement.advertisement_id)" class="text-primary-100 font-semibold text-xl h-fit">
+        <NuxtLink :to="`/search/${advertisement.business.slug}`" class="text-primary-100 font-semibold text-xl h-fit">
           {{ advertisement.business.name }}
         </NuxtLink>
         <div class="flex gap-3.5 text-sm">
@@ -44,6 +44,8 @@
 <script setup>
 const open = ref(true);
 const categories = useCategories().categories;
+const shedule = useRenderSchedule();
+let toggleClass = ref(false);
 
 const category_type = categories.value.find(element => element.id === props.advertisement.business.business_category_id)
 
@@ -54,9 +56,14 @@ const props = defineProps({
   }
 });
 
-function saveId(propertyId) {
-  sessionStorage.setItem('propertyId', propertyId);
-};
+const days = [];
+console.log(props.advertisement)
+// props.advertisement.business.schedule.forEach(element => {
+//   console.log(element)
+//   days.push(element);
+// });
+// days.find((elex,i) => i === shedule.actual_day ? shedule.checkearDisponibilidad(elex) : '')
+
 </script>
 
 <style lang="postcss" scoped>

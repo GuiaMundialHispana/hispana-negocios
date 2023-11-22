@@ -1,8 +1,11 @@
 <script setup>
+import { useForm } from "vee-validate";
+import * as yup from "yup";
 import {ref, watch} from 'vue';
 import { usePostsStore } from '~/stores/Post';
 import { useUserStore } from '~/stores/User';
 
+const emit = defineEmits(['nexts']);
 const use_posts = usePostsStore();
 const user = useUserStore();
 const config = useRuntimeConfig();
@@ -16,15 +19,13 @@ const facebook = ref("");
 const countries = useGetCountry().countries;
 const country = ref("");
 const profile_pic = ref(null);
-let sectors = reactive([]);
 let sector = ref(0);
 let displaySector = ref(false);
-let cities = reactive([]);
 let city = ref([]);
 let displayCity = ref(false);
 let categories = [];
-let lat = null;
-let log = null;
+let lat = ref(null);
+let log = ref(null);
 let address = ref('');
 
 const week = ref([
@@ -90,37 +91,39 @@ for(let i = 0; i < week.value.length; i++) {
   use_posts.day_of_week.push(week.value[i]);
 }
 
-async function getStates(country_id) {
-  const statesApi = await $fetch(`generals/states/${country_id}`, {
-    baseURL: config.public.API
-  });
-  sectors.push(statesApi.results.data);
-};
-
-async function getCities(sector_id) {
-  const citiesApi = await $fetch(`generals/cities/${sector_id}`, {
-    baseURL: config.public.API
-  });
-  cities.push(citiesApi.results.data);
-};
-
 function getAddress(lant, long, location) {
-  lat = lant;
-  log = long;
+  lat.value = lant;
+  log.value = long;
   address.value = location;
+  setFieldValue('address', location);
 };
 
+let sectors = ref([])
 watch(country,(country_id) => {
-  getStates(country_id);
-  sectors = reactive([]);
-  cities = reactive([]);
   displaySector.value = true;
+  sectors.value = [];
+  const { data } = useFetch(`generals/states/${country_id}`, {
+    method: 'GET',
+    baseURL: config.public.API,
+    server: false,
+    transform(data) {
+      sectors.value.push(data.results.data)
+    }
+  })
 });
 
+let cities = ref([]);
 watch(sector,(sector_id) => {
-  getCities(sector_id);
-  cities = reactive([]);
   displayCity.value = true;
+  cities.value = [];
+  const { data } = useFetch(`generals/cities/${sector_id}`, {
+    method: 'GET',
+    baseURL: config.public.API,
+    server: false,
+    transform(data) {
+      cities.value.push(data.results.data)
+    }
+  })
 });
 
 const images = ref(null);
@@ -132,6 +135,28 @@ function previewFiles(event) {
   profilePic.value = URL.createObjectURL(images.value);
   isNewImage.value = true;
 };
+
+const schema = yup.object({
+  title: yup.string().required("El nombre es requrido"),
+  description: yup.string().required("La descripcion es requerida"),
+  country: yup.string().required("El pais es requerido"),
+  sector: yup.number().required("El sector es requerido"),
+  city: yup.number().required("La ciudad es requerida"),
+  phone: yup.number().required("Este campo es requerido"),
+  whatsapp: yup.number(),
+  web: yup.string(),
+  instagram: yup.string(),
+  facebook: yup.string(),
+  address: yup.string().required("Este campo es requerido"),
+});
+
+// openDay: yup.object().required(),
+//   closeDay: yup.object().required(),
+//   profilePic: yup.string().required()
+
+const { handleSubmit, setFieldValue} = useForm({
+  validationSchema: schema,
+});
 
 function save_data() {
   use_posts.title = title.value;
@@ -149,23 +174,44 @@ function save_data() {
   use_posts.city_id = city.value;
   use_posts.image = images.value;
 };
+
+const onSubmit = handleSubmit((values) => {
+  use_posts.title = values.title;
+  use_posts.lat = lat.value;
+  use_posts.log = log.value;
+  use_posts.country_id = values.country;
+  use_posts.town_id = values.sector;
+  use_posts.city_id = values.city;
+  use_posts.condition = values.condition;
+  use_posts.description = values.description;
+  use_posts.phone = values.phone;
+  use_posts.whatsapp = values.whatsapp;
+  use_posts.website = values.website;
+  use_posts.instagram = values.instagram;
+  use_posts.facebook = values.facebook;
+  use_posts.address = values.address;
+  use_posts.image = images.value;
+  emit('nexts');
+});
 </script>
 
 <template>
   <h4 class="mt-11 mb-7 text-center">
     Cuéntanos sobre tu <span class="text-secondary-100">negocio </span>
   </h4>
-  <div class="mx-4 px-4 md:px-8 sm:grid sm:grid-cols-2 sm:mx-auto gap-4 max-w-[995px]">
+  <form @submit="onSubmit" :validation-schema="schema" class="mx-4 px-4 md:px-8  sm:mx-auto gap-4 max-w-[995px]">
     <!-- Nombre -->
     <label class="col-span-2 sm:mb-2 title-label mb-5">
       Nombre del negocio
-      <input class="form-control" v-model="title" placeholder="Nombre del negocio" type="text">
+      <Field class="form-control" name="title" type="text" placeholder="Nombre del negocio" />
+      <ErrorMessage name="title" />
     </label>
     <!-- Descripcion -->
     <label for="description" class="col-span-2 title-label mb-5">Descripción
-      <textarea id="description" type="text" v-model="description" placeholder="Descripción del negocio"></textarea>
+      <Field as="textarea" name="description" type="text" placeholder="Descripcion de la propiedad" />
+      <ErrorMessage name="description" />
     </label>
-    <!-- Horario -->
+    <!--TODO  Horario -->
     <ul class="col-span-2 flex flex-col gap-5 text-sm leading-[22px] mb-5">
       <p>Horario</p>
       <li v-for="day in week" :key="day.day">
@@ -204,30 +250,31 @@ function save_data() {
     <div class="flex gap-4 mt-2">
       <label for="phone" class="title-label mb-5">
         Número telefónico
-        <input type="tel" name="phone" id="phone" v-model="phone" placeholder="(829) 123-4567" class="form-control">
+        <Field class="form-control" name="phone" type="text" placeholder="(829) 123-4567" />
+        <ErrorMessage name="phone" />
       </label>
       <label for="whatsapp" class="title-label mb-5">
         WhatsApp
-        <input type="tel" name="whatsapp" id="whatsapp" v-model="whatsapp" placeholder="(829) 123-4567"  class="form-control">
+        <Field class="form-control" name="whatsapp" type="text" placeholder="(829) 123-4567" />
       </label>
     </div>
     <!-- Web -->
     <label for="website" class="title-label mb-5 col-span-2">
       Página Web
-      <input type="text" name="website" id="website" v-model="website" placeholder="ej: https://hispana-negocios.com" class="form-control">
+      <Field class="form-control" name="website" type="text" placeholder="ej: https://hispana-negocios.com" />
     </label>
     <!-- Instagram -->
     <label for="instagram" class="title-label mb-5 col-span-2">
       Instagram
-      <input type="text" name="instagram" id="instagram" v-model="instagram" placeholder="ej: https://instagram.com/hispana-negocios" class="form-control">
+      <Field class="form-control" name="instagram" type="text" placeholder="ej: https://instagram.com/hispana-negocios" />
     </label>
     <!-- Facebook -->
     <label for="facebook" class="title-label col-span-2">
       Facebook
-      <input type="text" name="facebook" id="facebook" v-model="facebook" placeholder="ej: https://facebook.com/hispana-negocios" class="form-control">
+      <Field class="form-control" name="facebook" type="text" placeholder="ej: https://facebook.com/hispana-negocios" />
     </label>
 
-    <!-- Foto de perfil -->
+    <!-- TODO Foto de perfil -->
     <div class="mt-8 md:h-40 flex flex-col md:flex-row col-span-2 items-center md:items-start">
       <div class="flex md:mr-14 mb-6">
         <div class="flex flex-col items-center">
@@ -265,46 +312,49 @@ function save_data() {
       <!-- ubicacion -->
       <label class="w-full sm:mb-2 mb-5 col-span-2 title-label">
         Dirección
-        <input class="form-control hover:cursor-not-allowed" readonly v-model="address" placeholder="Direccion" type="text">
+        <Field class="form-control" v-model="address" name="address" type="text" placeholder="Direccion" />
+        <ErrorMessage name="address" />
       </label>
     </div>   
     <!-- Pais -->
     <label class="w-full sm:mb-2 mb-5 title-label">
       País
-      <select class="form-control" v-model="country">
+      <Field name="country" as="select" v-model="country" class="form-control">
         <option v-for="country in countries" :key="country" :value="country.id" class="option-label">
           {{ country.name }}
         </option>
-      </select>
+      </Field>
+      <ErrorMessage name="country" />
     </label>
     <!-- Ciudad -->
     <label class="w-full sm:mb-2 mb-5 title-label" >
       Ciudad
-      <select class="form-control" v-model="sector" :disabled="!displaySector">
+      <Field name="sector" as="select" v-model="sector" class="form-control">
         <option v-for="sector in sectors[0]" :value="sector.id" :key="sector.id" class="option-label">
-        {{ sector.name }}
+          {{ sector.name }}
         </option>
-      </select>
+      </Field>
+      <ErrorMessage name="sector" />
     </label>
     <!-- Sector -->
     <label class="w-full sm:mb-2 mb-5 title-label">
       Sector
-      <select class="form-control" v-model="city" :disabled="!displayCity">
+      <Field name="city" as="select" class="form-control">
         <option v-for="item in cities[0]" :value="item.id" :key="item.id" class="option-label">
-        {{ item.name }}
+          {{ item.name }}
         </option>
-      </select>
+      </Field>
+      <ErrorMessage name="city" />
     </label>
-  </div>
- 
-  <nav class="control-steps-PostBussines">
-    <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
-      Atras
-    </AtomsButtons>
-    <AtomsButtons @click="$emit('nexts'), save_data()">
-      Continuar
-    </AtomsButtons>
-  </nav>
+    <div class="col-span-3 flex justify-center w-full gap-4">
+      <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
+        Atras
+      </AtomsButtons>
+      <AtomsButtons @click="onSubmit">
+        Continuar
+      </AtomsButtons>
+    </div>
+  </form>
 </template>
 
 <style lang="postcss" scoped>
@@ -365,6 +415,10 @@ textarea {
   &::-webkit-scrollbar-thumb {
     @apply border-[6px] border-solid border-neutral-white rounded-full bg-[#C1C1C1];
   }
+}
+
+span[role=alert] {
+  @apply text-[red] font-medium text-sm;
 }
 
 </style>

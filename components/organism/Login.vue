@@ -17,7 +17,7 @@
       />
     </div>
     <NuxtLink to="/forgotPassword" @click="$emit('close')" class="text-primary-100 ml-auto w-max block">Olvidé la contraseña</NuxtLink>
-    <AtomsButtons btn-size="medium" @click="auth.login();">
+    <AtomsButtons btn-size="medium" @click="login();">
       Entrar
     </AtomsButtons>
   </div>
