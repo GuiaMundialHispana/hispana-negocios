@@ -13,8 +13,20 @@
       </div>
       <p class="text-sm text-neutral-black text-center">¡No dejes pasar esta oportunidad de mostrar tu propiedad al mundo!</p>
     </div>
+    <div v-if="!pending && data.length === 0">
+      <figure class="mb-4">
+        <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
+      </figure>
+      <h6 class="text-4xl text-primary-100 font-bold mb-4 text-center">Aún no publicas
+        <span class="text-primary-100">nada.</span>
+      </h6>
+      <div class="flex justify-center mb-4">
+        <AtomsLink link-to="/PostBussines" class="mx-auto">Crear un anuncio</AtomsLink>
+      </div>
+      <p class="text-sm text-neutral-black text-center">¡No dejes pasar esta oportunidad de mostrar tu propiedad al mundo!</p>
+    </div>
     <!-- Tablita -->
-    <div v-if="!pending" class="overflow-x-auto md:overflow-visible h-full">
+    <div v-if="!pending && data.length > 0" class="overflow-x-auto md:overflow-visible h-full">
       <table class="w-full text-sm">
         <thead>
           <th>Nombre del negocio</th>
@@ -66,7 +78,7 @@
               </p> 
             </td>
             <td>
-              <NuxtLink v-if="business.status != 'revision'" :to="{ path: `edit-business`, query: { property_id: business.business_id }}" class="xsmall btn solid-secondary whitespace-nowrap w-full">
+              <NuxtLink v-if="business.status != 'revision'" :to="{ path: `edit-business`, query: { slug: business.business.slug }}" class="xsmall btn solid-secondary whitespace-nowrap w-full">
                 Editar negocio
               </NuxtLink>
               <AtomsButtons v-if="business.status === 'revision'" :disabled="business.status === 'revision'" class="xsmall btn w-full">

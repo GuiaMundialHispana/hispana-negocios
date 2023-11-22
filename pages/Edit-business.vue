@@ -12,10 +12,8 @@ definePageMeta({
   middleware: 'check-auth'
 });
 
-//Obtener anuncio
-// Swal.showLoading();
 Swal.showLoading()
-const { data: property, pending, error} = await useLazyFetch(`advertisements/${useRoute().query.property_id}`, {
+const { data: property, pending, error} = await useLazyFetch(`advertisements/${useRoute().query.slug}`, {
   method: 'GET',
   baseURL: config.public.API,
   server: false,
@@ -27,7 +25,6 @@ const { data: property, pending, error} = await useLazyFetch(`advertisements/${u
     }
     if(response.status === 200 ) {
       const business_response = response._data.results;
-      console.log(business_response)
       
       use_posts.plan_id = business_response.plan_id;
       use_posts.category_id = business_response.business.business_category_id;
@@ -54,7 +51,7 @@ const { data: property, pending, error} = await useLazyFetch(`advertisements/${u
 async function createAdvertisement() {
   Swal.showLoading();
   const form = new FormData();
-  form.append('advertisement_id', useRoute().query.property_id);
+  form.append('advertisement_id', property.value.business.id);
   form.append('plan_id', use_posts.plan_id);
   form.append('category', use_posts.category_id);
   form.append('title', use_posts.title);
@@ -86,10 +83,6 @@ async function createAdvertisement() {
     form.append('images[' + index + ']',element.image);
   });
 
-  // images = arreglode string de las imagenes que recibo
-  // image = campo donde mando la imagen como portada
-  // new_images = array de FILES de las nuevas imagenes
-  // new_image = la imagen de portada que debe ser un FILE cuando cambian la imagen de portada
 
   if(use_posts.new_images.length > 0) {
     // arreglo de las nuevas imagenes
@@ -117,7 +110,6 @@ async function createAdvertisement() {
     onResponse({ response }) {
       Swal.hideLoading();
       const res = response._data;
-      console.log(res)
       if(res.code === 200 ) {
         use_posts.$reset();
         Swal.fire({

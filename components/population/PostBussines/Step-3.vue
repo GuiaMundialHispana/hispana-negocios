@@ -177,8 +177,6 @@ function save_data() {
 
 const onSubmit = handleSubmit((values) => {
   use_posts.title = values.title;
-  use_posts.price = price.value;
-  use_posts.price_us = price_us.value;
   use_posts.lat = lat.value;
   use_posts.log = log.value;
   use_posts.country_id = values.country;
@@ -186,19 +184,13 @@ const onSubmit = handleSubmit((values) => {
   use_posts.city_id = values.city;
   use_posts.condition = values.condition;
   use_posts.description = values.description;
-  use_posts.make_id = parseInt(values.make);
-  use_posts.model_id = parseInt(values.model);
-  use_posts.exterior_color = values.ext_color;
-  use_posts.interior_color = values.inter_color;
-  use_posts.air_conditioned = values.air_conditioned;
-  use_posts.traction = values.traction;
-  use_posts.transmission = values.transmission;
-  use_posts.engine = values.engine;
-  use_posts.air_bag = values.air_bag;
-  use_posts.fuel_type = values.fuel_type;
-  use_posts.year = values.year;
-  use_posts.mileage = parseInt(mileage_m.value);
-  use_posts.kilometer = parseInt(mileage_km.value);
+  use_posts.phone = values.phone;
+  use_posts.whatsapp = values.whatsapp;
+  use_posts.website = values.website;
+  use_posts.instagram = values.instagram;
+  use_posts.facebook = values.facebook;
+  use_posts.address = values.address;
+  use_posts.image = images.value;
   emit('nexts');
 });
 </script>
@@ -264,26 +256,22 @@ const onSubmit = handleSubmit((values) => {
       <label for="whatsapp" class="title-label mb-5">
         WhatsApp
         <Field class="form-control" name="whatsapp" type="text" placeholder="(829) 123-4567" />
-        <ErrorMessage name="whatsapp" />
       </label>
     </div>
     <!-- Web -->
     <label for="website" class="title-label mb-5 col-span-2">
       Página Web
       <Field class="form-control" name="website" type="text" placeholder="ej: https://hispana-negocios.com" />
-      <ErrorMessage name="wbsite" />
     </label>
     <!-- Instagram -->
     <label for="instagram" class="title-label mb-5 col-span-2">
       Instagram
       <Field class="form-control" name="instagram" type="text" placeholder="ej: https://instagram.com/hispana-negocios" />
-      <ErrorMessage name="instagram" />
     </label>
     <!-- Facebook -->
     <label for="facebook" class="title-label col-span-2">
       Facebook
       <Field class="form-control" name="facebook" type="text" placeholder="ej: https://facebook.com/hispana-negocios" />
-      <ErrorMessage name="facebook" />
     </label>
 
     <!-- TODO Foto de perfil -->
