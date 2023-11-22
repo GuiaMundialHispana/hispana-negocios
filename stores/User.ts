@@ -116,21 +116,20 @@ export const useUserStore = defineStore('user', {
             });
           }
         },
-        onResponseError({response}) {
-          let responseApi = response._data.message;
-          if(response.status === 404 || responseApi === "Token invalid or not provided.") {
-            localStorage.removeItem('token');
-            Swal.showLoading();
-            useRouter().push("/").then(() => {
-              Swal.fire({
-                icon: 'error',
-                text: 'Por favor inicia sesion nuevamente',
-                showConfirmButton: false,
-                allowOutsideClick: false,
-                timer: 5000
-              });
+        onResponseError() {
+          localStorage.removeItem('token');
+          Swal.showLoading();
+          useRouter().push("/").then(() => {
+            Swal.fire({
+              icon: 'error',
+              text: 'Por favor inicia sesion nuevamente',
+              showConfirmButton: false,
+              allowOutsideClick: false,
+              timer: 5000
             });
-          }
+            navigateTo('/')
+            location.reload();
+          });
         }
       });
       
