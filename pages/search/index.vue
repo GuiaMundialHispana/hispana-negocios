@@ -69,7 +69,7 @@
     <div class="mt-8 pb-14">
       <ul class="property-list" v-if="!pending">
         <li v-for="property in properties" :key="property">
-          <MoleculesBusiness :advertisement="property" />
+          <MoleculesBusiness :advertisement="property" :schedule="property.business.schedule" :category="property.business.business_category_id" />
         </li>
       </ul>
       <div v-if="properties.length === 0 && !pending" class="pt-20">

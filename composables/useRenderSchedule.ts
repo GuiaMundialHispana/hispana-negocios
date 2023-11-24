@@ -18,22 +18,15 @@ export default function useRenderSchedule() {
     const business_hora_open = business_open.substring(0, 2);
     const business_minutes_open = business_open.substring(3,5);
 
-    console.log(business_hora_open)
-
     if(actual_hour > parseInt(business_hora_open) && actual_minutes >  parseInt(business_minutes_open)){
       schedule_message.value = `Abierto: ${business_open} ${getFranja(business_open)} - ${business_close} ${getFranja(business_close)}`;
       isOpen.value = true;
+      console.log(getFranja(business_open), getFranja(business_close))
     } else if(actual_hour > parseInt(business_hora_close) && actual_minutes >  parseInt(business_minutes_close)) {
       schedule_message.value = `Cerrados: ${business_open} ${getFranja(business_open)} - ${business_close} ${getFranja(business_close)}`;
       isOpen.value = false;
+      console.log(getFranja(business_open), getFranja(business_close))
     }
-    // if(actual_hour > parseInt(business_hora) && actual_minutes > parseInt(business_minutes)) {
-    //   schedule_message.value = `Cerrados: ${business_open} ${getFranja(business_open)} - ${business_close} ${getFranja(business_close)}`;
-    //   isOpen.value = false;
-    // } else {
-    //   schedule_message.value = `Abierto: ${business_open} ${getFranja(business_open)} - ${business_close} ${getFranja(business_close)}`;
-    //   isOpen.value = true;
-    // }
   }
 
   return { actual_day, checkearDisponibilidad, isOpen, schedule_message }
