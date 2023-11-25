@@ -11,11 +11,11 @@
           {{ advertisement.business.name }}
         </NuxtLink>
         <div class="flex gap-3.5 text-sm">
-          <p class="hour" :class="{closed: !open}">
+          <p class="hour" :class="[ toggleClass ? 'open' : 'closed']">
             <AtomsIcon name="general/clock" :size=32 class="absolute left-0 "/>
-            8:00 a.m. -  5:00 p.m.
+            {{ shedule.schedule_message }}
           </p>
-          <p class="bussines-category">
+          <p class="bussines-category" v-if="category_type !== null">
             {{ category_type.name }}
           </p>
         </div>
@@ -42,27 +42,44 @@
 </template>
 
 <script setup>
-const open = ref(true);
 const categories = useCategories().categories;
 const shedule = useRenderSchedule();
 let toggleClass = ref(false);
-
-const category_type = categories.value.find(element => element.id === props.advertisement.business.business_category_id)
-
 const props = defineProps({
   advertisement: {
     type: Object,
     default: () => {}
+  },
+  category: {
+    type: Number
+  },
+  schedule: {
+    type: null
   }
 });
+const category_type = ref(null);
 
-const days = [];
-console.log(props.advertisement)
-// props.advertisement.business.schedule.forEach(element => {
-//   console.log(element)
-//   days.push(element);
-// });
-// days.find((elex,i) => i === shedule.actual_day ? shedule.checkearDisponibilidad(elex) : '')
+watchEffect(()=> {
+  if(props.category !== null || undefined ) {
+    if(categories.value !== null) {
+      category_type.value = categories.value.find(element => element.id === props.category);
+    }
+  }
+
+  const days = [];
+  if(props.schedule !== null || undefined) {
+    props.schedule.forEach(element => {
+      days.push(element);
+    });
+    days.find((elex,i) => i === shedule.actual_day ? shedule.checkearDisponibilidad(elex) : '');
+  }
+
+  if(shedule.isOpen) {
+    toggleClass.value = true;
+  } else {
+    toggleClass.value = false;
+  }
+});
 
 </script>
 
