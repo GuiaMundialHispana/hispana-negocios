@@ -52,8 +52,8 @@ const emit = defineEmits(['back', 'nexts'])
       v-for="category in data.results"
       :key="category"
       class="option"
-      :class="[{checked: categorySelected === category.id}]">
-      <input type="radio" :value="category.id" v-model="categorySelected">
+      :class="[{checked: use_posts.category_id === category.id}]">
+      <input type="radio" :value="category.id" v-model="use_posts.category_id">
       {{ category.name }}
     </label>
   </div>
@@ -61,7 +61,7 @@ const emit = defineEmits(['back', 'nexts'])
     <AtomsLink btn-style="outline-primary" link-to="/profile?tab=anuncio">
       Cancelar
     </AtomsLink>
-    <AtomsButtons @click="emit('nexts')" :disabled="categorySelected === 0">
+    <AtomsButtons @click="emit('nexts')" :disabled="use_posts.category_id === 0">
       Continuar
     </AtomsButtons>
   </nav>
