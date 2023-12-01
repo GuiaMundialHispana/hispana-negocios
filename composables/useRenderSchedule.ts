@@ -21,11 +21,11 @@ export default function useRenderSchedule() {
     if(actual_hour > parseInt(business_hora_open) && actual_minutes >  parseInt(business_minutes_open)){
       schedule_message.value = `Abierto: ${business_open} ${getFranja(business_open)} - ${business_close} ${getFranja(business_close)}`;
       isOpen.value = true;
-      console.log(getFranja(business_open), getFranja(business_close))
+      // console.log(getFranja(business_open), getFranja(business_close))
     } else if(actual_hour > parseInt(business_hora_close) && actual_minutes >  parseInt(business_minutes_close)) {
       schedule_message.value = `Cerrados: ${business_open} ${getFranja(business_open)} - ${business_close} ${getFranja(business_close)}`;
       isOpen.value = false;
-      console.log(getFranja(business_open), getFranja(business_close))
+      // console.log(getFranja(business_open), getFranja(business_close))
     }
   }
 

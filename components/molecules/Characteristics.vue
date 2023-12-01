@@ -16,7 +16,7 @@
       <AtomsIcon name="general/instagram" :size=20 />
       <a :href="instagram" target="_blank">{{ instagram }}</a>
     </div>
-    <div class="items" v-if="website" @click="addViewSocialMedia('webpage')">
+    <div class="items" v-if="website" @click="addViewSocialMedia('web')">
       <AtomsIcon name="general/web" :size=20 />
       <a :href="website" target="_blank">{{website}}</a>
     </div>

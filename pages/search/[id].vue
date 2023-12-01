@@ -28,7 +28,7 @@
         :phone="advertisement.business.phone"
         :email="advertisement.business.email"
         :instagram="advertisement.business.instagram"
-        :website	="advertisement.business.webpage"
+        :website="advertisement.business.webpage"
         :id="advertisement.id"
         class="contact-info"
       />
