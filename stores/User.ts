@@ -62,24 +62,33 @@ export const useUserStore = defineStore('user', {
       }
     },
     async changePassword() {
-      const { data }  = await useFetch(useRuntimeConfig().API+'auth/change-password',{
+      await useFetch(useRuntimeConfig().public.API+'auth/change-password',{
         method: 'POST',
         body: {
           email: this.emailPassword,
           password: this.newPassword,
           password_confirmation: this.repeatPassword,
           token: localStorage.getItem('token')
+        },
+        onResponseError({ response }) {
+          if(response.status !== 200) {
+            Swal.fire({
+              icon: 'error',
+              text: response._data.message,
+              showConfirmButton: false,
+              timer: 3000
+            });
+          } else {
+            Swal.fire({
+              icon: 'success',
+              title: 'Hemos validado tus datos correctamente, intenta acceder otra vez',
+              showConfirmButton: false,
+              timer: 3000
+            });
+            useRouter().push("/");
+          }
         }
       });
-
-      if(data) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Hemos validado tus datos correctamente, intenta acceder otra vez',
-          timer: 3000
-        })
-        useRouter().push("/");
-      }
     },
     async get_user() {
       const { data, error } = await useFetch('auth/profile',{
