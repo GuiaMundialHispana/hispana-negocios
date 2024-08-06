@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'Hispana Negocios',
+      title: 'Grupo Negocios & mas',
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.jpg" }],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }

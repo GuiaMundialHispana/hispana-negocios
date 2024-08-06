@@ -1,7 +1,7 @@
 export default {
   information:{
     logo: 'logo.png',
-    description: 'Busca y encuentra ese negocio que necesitas en Hispana Negocios, el buscador de negocios que te ofrece la mejor selección de opciones.. ¡Empieza tu búsqueda hoy mismo!'
+    description: 'Busca y encuentra ese negocio que necesitas en Grupo Negocios & mas, el buscador de negocios que te ofrece la mejor selección de opciones.. ¡Empieza tu búsqueda hoy mismo!'
   },
   navigation: [
     // {
@@ -23,11 +23,11 @@ export default {
   ],
   directAccess: [
     {
-      name: 'Hispana Auto',
+      name: 'Grupo Carros & mas',
       route: 'https://hispana-auto-nuxt.vercel.app/'
     },
     {
-      name: 'Hispana Negocios',
+      name: 'Grupo Negocios & mas',
       route: 'https://hispana-negocios.vercel.app/'
     },
     {

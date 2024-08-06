@@ -4,7 +4,7 @@
       <!-- Send email -->
       <div v-if="!user.nextStep" class="mx-auto max-w-[365px]">
         <figure class="mb-5">
-          <img src="/img/logo.png" class="w-40 mx-auto" />
+          <img src="/img/logo.svg" class="w-40 mx-auto" />
         </figure>
         <h3 class="text-neutral-black font-semibold text-center text-xl mb-5">Restablece tu contraseña</h3>
         <p class="text-neutral-black text-sm text-center mb-5">Introduce el <b>correo electrónico</b> que utilizaste al registrarte para recuperar tu contraseña. Recibirá un enlace para restablecer la contraseña .</p>

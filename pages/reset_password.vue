@@ -2,7 +2,7 @@
   <section class="w-full py-16">
     <div class="mx-auto max-w-[365px]">
       <figure class="mb-5">
-        <img src="/img/logo.png" class="w-40 mx-auto" />
+        <img src="/img/logo.svg" class="w-40 mx-auto" />
       </figure>
       <h3 class="text-neutral-black font-semibold text-center text-xl mb-5">Actualizar contraseña</h3>
       <div class="relative w-full mb-4">

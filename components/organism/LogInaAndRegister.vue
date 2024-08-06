@@ -2,7 +2,7 @@
   <div class="modal-content">
     <AtomsButtons @click="closeModalOnHeader()" btn-type="btn-icon" icon-name="general/close" class="absolute right-4 top-4" />
     <figure class="mb-8">
-      <img src="/img/logo.png" alt="Logo Hispana Home" class=" w-60">
+      <img src="/img/logo.svg" alt="Logo Hispana Home" class=" w-60">
     </figure>
     <nav class="border-b border-b-gray-100 flex gap-8 w-full justify-center py-2 mb-6">
       <button

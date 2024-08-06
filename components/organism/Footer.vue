@@ -4,7 +4,7 @@
       <div class="xl:col-span-3 col-span-12">
         <figure class="mb-6">
           <NuxtLink to="/">
-            <img src="/img/logo.png" class="w-60 mx-auto" alt="Hispana Negocios" />
+            <img src="/img/logo.svg" class="w-60 mx-auto" alt="Grupo Negocios & mas" />
           </NuxtLink>
         </figure>
       </div>

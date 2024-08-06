@@ -7,7 +7,7 @@
 		</h1>
 		<p class="text-center relative z-10 text-sm leading-[22px] mx-4" >Busca y encuentra ese negocio que necesitas en 
 			<strong>
-				Hispana Negocios
+				Grupo Negocios & mas
 			</strong>
 			, el buscador <br hidden class="lg:block"> de negocios que te ofrece la mejor selección de opciones. 
 		</p>
