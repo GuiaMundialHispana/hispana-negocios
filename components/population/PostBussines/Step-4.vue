@@ -2,7 +2,7 @@
 import { usePostsStore } from '~/stores/Post';
 
 const use_posts = usePostsStore();
-const allowedFileTypes = ref(['image/jpeg', 'image/png', 'image/gif', 'image/svg', 'image/svg+xml']);
+const allowedFileTypes = ref(['image/jpeg', 'image/png', 'image/gif', 'image/svg', 'image/svg+xml', 'image/jpg']);
 let totalImgs = ref(0);
 let savedImages= ref([]);
 let previewImages = ref([]);
