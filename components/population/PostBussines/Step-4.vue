@@ -21,7 +21,6 @@ function previewFiles(event) {
       if (allowedFileTypes.value.indexOf(images[i].type) !== -1) {
         let file = images[i];
         savedImages.value.push(images[i]);
-        console.log(savedImages.value)
         previewImages.value.push(URL.createObjectURL(file));
         fileFormat.value = true;
         use_posts.saved_images = savedImages.value;
