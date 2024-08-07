@@ -67,7 +67,14 @@ async function createAdvertisement() {
 
       if(res.code === 400) {
         let errors = response._data.message;
-        if(typeof errors === 'string') {
+        if(typeof errors === 'string' && errors === '') {
+          Swal.fire({
+            icon: 'error',
+            text:  `Tuvimos un error procesando tu solicitud, por favor intenta de nuevo más tarde.`,
+            timer: 4000
+          });
+        }
+        if(typeof errors === 'string' && errors !== '') {
           Swal.fire({
             icon: 'error',
             text:  `${errors}`,
