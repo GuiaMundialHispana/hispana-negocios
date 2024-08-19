@@ -139,6 +139,21 @@ export const useUserStore = defineStore('user', {
             navigateTo('/')
             location.reload();
           });
+        },
+        onRequestError({response}) {
+          if(response) {
+            localStorage.removeItem('token');
+            Swal.showLoading();
+            useRouter().push("/").then(() => {
+              Swal.fire({
+                icon: 'error',
+                text: 'Por favor inicia sesion nuevamente',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                timer: 5000
+              });
+            });
+          }
         }
       });
       

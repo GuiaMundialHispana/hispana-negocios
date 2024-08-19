@@ -9,7 +9,9 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if(get_token !== null) {
       user_store.token = get_token;
       use_auth.isLoggedIn = true;
-      user_store.get_user();
+      user_store.get_user().catch(() => {
+        use_auth.isLoggedIn = false;
+      });
     } else {
       use_auth.isLoggedIn = false;
     }
