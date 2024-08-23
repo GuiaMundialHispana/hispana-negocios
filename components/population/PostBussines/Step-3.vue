@@ -4,6 +4,8 @@ import * as yup from "yup";
 import {ref, watch} from 'vue';
 import { usePostsStore } from '~/stores/Post';
 import { useUserStore } from '~/stores/User';
+import { VueTelInput } from 'vue-tel-input';
+import 'vue-tel-input/vue-tel-input.css';
 
 const emit = defineEmits(['nexts']);
 const use_posts = usePostsStore();
@@ -250,7 +252,9 @@ const onSubmit = handleSubmit((values) => {
     <div class="flex gap-4 mt-2">
       <label for="phone" class="title-label mb-5">
         Número telefónico
-        <Field class="form-control" name="phone" type="text" placeholder="(829) 123-4567" />
+        <Field name="phone" v-model="phone">
+          <vue-tel-input mode="international" v-model="phone" class="form-control"></vue-tel-input>
+        </Field>
         <ErrorMessage name="phone" />
       </label>
       <label for="whatsapp" class="title-label mb-5">

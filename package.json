@@ -29,6 +29,7 @@
     "nuxt-swiper": "^1.1.0",
     "sweetalert2": "^11.7.3",
     "vue-sweetalert2": "^5.0.5",
+    "vue-tel-input": "^9.1.4",
     "yup": "^1.2.0"
   }
 }

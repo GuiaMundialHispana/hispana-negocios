@@ -2,6 +2,8 @@
 import {ref, watch} from 'vue';
 import { usePostsStore } from '~/stores/Post';
 import { useUserStore } from '~/stores/User';
+import { VueTelInput } from 'vue-tel-input';
+import 'vue-tel-input/vue-tel-input.css';
 
 const use_posts = usePostsStore();
 const user = useUserStore();
@@ -197,7 +199,8 @@ function previewFiles(event) {
     <div class="flex gap-4 mt-2">
       <label for="phone" class="title-label mb-5">
         Número telefónico
-        <input type="tel" name="phone" id="phone" v-model="use_posts.phone" placeholder="(829) 123-4567" class="form-control">
+        <!-- <input type="tel" name="phone" id="phone" v-model="use_posts.phone" placeholder="(829) 123-4567" class="form-control"> -->
+        <vue-tel-input mode="international" v-model="use_posts.phone" class="form-control"></vue-tel-input>
       </label>
       <label for="whatsapp" class="title-label mb-5">
         WhatsApp

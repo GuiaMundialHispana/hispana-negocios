@@ -50,21 +50,14 @@
         </div>
       </div>
       <h4>Contactos</h4>
-      <div class="flex md:flex-row flex-col gap-2">
+      <div class="flex md:flex-row flex-col gap-2 mb-4">
         <label>
           Teléfono móvil:
-          <input
-            type="tel"
-            class="lg:mr-4 mr-0"
-            v-model="cellphone"
-          >
+          <vue-tel-input v-model="cellphone" mode="international" class="lg:mr-4 mr-0"></vue-tel-input>
         </label>
         <label>
           Teléfono residencial:
-          <input
-            type="tel"
-            v-model="phone"
-          >
+          <vue-tel-input v-model="phone" mode="international"></vue-tel-input>
         </label>
       </div>
       <div>
@@ -170,6 +163,8 @@
 <script setup>
 import Swal from 'sweetalert2';
 import { useUserStore } from '~/stores/User';
+import { VueTelInput } from 'vue-tel-input';
+import 'vue-tel-input/vue-tel-input.css';
 
 definePageMeta({
   middleware: 'check-auth'
