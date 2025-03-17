@@ -70,7 +70,14 @@ onMounted( async () => {
 });
 
 async function processPayment() {
-  await stripe.submitPayment(stripeCardElement.value, email.value, name.value, useRoute().query.quantity, useRoute().query.planId );
+  await stripe.submitPayment(
+    stripeCardElement.value,
+    email.value,
+    name.value,
+    useRoute().query.quantity,
+    useRoute().query.planId,
+    useRoute().query.ref ? useRoute().query.ref : null
+  );
 };
 
 function converPrice(price) {

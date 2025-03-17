@@ -25,7 +25,7 @@ export function useStripe() {
     });
   }
 
-  function submitPayment(cardElement: StripeCardElement, email:string, name:string, quantity: number | string, id: number | string): Promise<void> {
+  function submitPayment(cardElement: StripeCardElement, email:string, name:string, quantity: number | string, id: number | string, ref: string | undefined): Promise<void> {
     return new Promise(async (resolve, reject) => {
       try {
         const result = await stripe.value!.createPaymentMethod({
@@ -37,7 +37,7 @@ export function useStripe() {
           },
         });
         if(result?.paymentMethod) {
-          processPayment(result.paymentMethod?.id, quantity, id)
+          processPayment(result.paymentMethod?.id, quantity, id, ref )
         }
 
         if (result?.error) throw result.error;
@@ -49,7 +49,7 @@ export function useStripe() {
     });
   }
 
-  async function processPayment(pm:string | undefined, quantity: number | string, id: number | string) {
+  async function processPayment(pm:string | undefined, quantity: number | string, id: number | string, ref: string | undefined) {
     Swal.showLoading();
     await useFetch('user-plans', {
       method: 'POST',
@@ -60,7 +60,8 @@ export function useStripe() {
       body: {
         payment_method: pm,
         quantity: quantity,
-        plan_id: id
+        plan_id: id,
+        token: ref
       },
       onResponse({response}) {
         Swal.hideLoading();

@@ -3,12 +3,14 @@ export default defineNuxtConfig({
   css: [
     '@/assets/css/main.css',
   ],
+
   routeRules:{
     '/profile': { ssr: false },
     '/edit-business': { ssr: false },
     '/PostBussines': { ssr: false },
     '/payment': {ssr: false}
   },
+
   app: {
     head: {
       title: 'Grupo Negocios & mas',
@@ -24,6 +26,7 @@ export default defineNuxtConfig({
       ]
     },
   },
+
   modules: [
     'nuxt-icons',
     'nuxt-viewport',
@@ -31,6 +34,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vee-validate/nuxt',
   ],
+
   viewport: {
     breakpoints: {
       xs: 320,
@@ -47,6 +51,7 @@ export default defineNuxtConfig({
     },
     fallbackBreakpoint: 'lg'
   },
+
   postcss: {
     plugins: {
       'tailwindcss/nesting': 'postcss-nesting',
@@ -54,13 +59,17 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+
   runtimeConfig: {
     public: {
       API: process.env.BASE_URL,
       PUBLISH_KEY: process.env.PUBLISH_KEY
     }
   },
+
   experimental: {
     renderJsonPayloads: false
-  }
+  },
+
+  compatibilityDate: '2025-03-17'
 })
