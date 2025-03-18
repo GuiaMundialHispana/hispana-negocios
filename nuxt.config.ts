@@ -67,6 +67,25 @@ export default defineNuxtConfig({
     }
   },
 
+  vite: {
+    build: {
+      rollupOptions: {
+        treeshake: true,
+        output: {
+          experimentalMinChunkSize: 50000,
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              return id.toString().split('node_modules/')[1].split('/')[0].toString();
+            }
+          },
+          chunkFileNames: '_nuxt/chunks/[name]-[hash].js',
+          entryFileNames: '_nuxt/entries/[name]-[hash].js',
+          assetFileNames: '_nuxt/assets/[name]-[hash].[ext]',
+        },
+      },
+    },
+  },
+
   experimental: {
     renderJsonPayloads: false
   },

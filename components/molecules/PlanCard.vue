@@ -122,7 +122,8 @@ export default {
           price: this.plan.price,
           name:this.plan.name,
           pictures: this.plan.pictures,
-          planId: this.plan.id
+          planId: this.plan.id,
+          ref: this.$route.query.ref
         }
         this.$swal.fire({
           title: '¿Deseas pagar este plan?',
