@@ -36,7 +36,7 @@
       <!--  -->
       <AtomsButtons btn-size="xsmall" class="w-full">
         <span class="total-plans">{{ planQuantity }}</span>
-        <p v-if="updatePrice > 0">RD$ {{ updatePrice  }}</p>
+        <p v-if="updatePrice > 0">RD$ {{ showParsedNumber(updatePrice) }}</p>
         <p v-else>Gratis</p>
       </AtomsButtons>
     </div>
@@ -61,7 +61,7 @@
       </AtomsButtons>
     </div>
     <p class="price" v-if="plan.id != 4  && $route.path != '/PostBussines' && $route.path != 'PostBussines' && $route.path != '/edit-business'">
-      <span class="text-base"> RD$ </span>{{ plan.price  }}
+      <span class="text-base"> RD$ </span>{{ showParsedNumber(plan.price)  }}
     </p>
     <p v-if="plan.id === 4" class="free-price mt-4">
       Gratis
@@ -148,6 +148,9 @@ export default {
         });
       }
     },
+    showParsedNumber(number) {
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
   }
 }
 </script>
