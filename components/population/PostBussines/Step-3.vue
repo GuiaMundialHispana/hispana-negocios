@@ -6,6 +6,8 @@ import { usePostsStore } from '~/stores/Post';
 import { useUserStore } from '~/stores/User';
 import { VueTelInput } from 'vue-tel-input';
 import 'vue-tel-input/vue-tel-input.css';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 const emit = defineEmits(['nexts']);
 const use_posts = usePostsStore();
@@ -29,65 +31,81 @@ let categories = [];
 let lat = ref(null);
 let log = ref(null);
 let address = ref('');
+const time = ref({
+  hours: new Date().getHours(),
+  minutes: new Date().getMinutes()
+});
+
+function formatTime(value) {
+  const hours = value.hours % 12 || 12; // Convierte a formato de 12 horas
+  const minutes = value.minutes.toString().padStart(2, '0'); // Asegura que los minutos tengan 2 dígitos
+  const period = value.hours >= 12 ? 'PM' : 'AM'; // Determina si es AM o PM
+  return `${hours}:${minutes} ${period}`;
+}
 
 const week = ref([
   {
     day: "Domingo",
-    open: "00:00",
-    close: "00:00",
+    open: formatTime(time.value),
+    close: formatTime(time.value),
     isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
   },
   {
     day: "Lunes",
-    open: "00:00",
-    close: "00:00",
+    open: formatTime(time.value),
+    close: formatTime(time.value),
     isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
   },
   {
     day: "Martes",
-    open: "00:00",
-    close: "00:00",
+    open: formatTime(time.value),
+    close: formatTime(time.value),
     isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
   },
   {
-    day: "Miercoles",
-    open: "00:00",
-    close: "00:00",
+    day: "Miércoles",
+    open: formatTime(time.value),
+    close: formatTime(time.value),
     isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
   },
   {
     day: "Jueves",
-    open: "00:00",
-    close: "00:00",
+    open: formatTime(time.value),
+    close: formatTime(time.value),
     isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
   },
   {
     day: "Viernes",
-    open: "00:00",
-    close: "00:00",
+    open: formatTime(time.value),
+    close: formatTime(time.value),
     isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
   },
   {
-    day: "Sabado",
-    open: "00:00",
-    close: "00:00",
+    day: "Sábado",
+    open: formatTime(time.value),
+    close: formatTime(time.value),
     isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
   }
 ]);
+
+week.value.forEach((day) => {
+  watch(
+    () => day.open,
+    (newValue) => {
+      if (typeof newValue === 'object' && newValue.hours !== undefined) {
+        day.open = formatTime(newValue);
+      }
+    }
+  );
+  watch(
+    () => day.close,
+    (newValue) => {
+      if (typeof newValue === 'object' && newValue.hours !== undefined) {
+        day.close = formatTime(newValue);
+      }
+    }
+  );
+});
 
 for(let i = 0; i < week.value.length; i++) {
   use_posts.day_of_week.push(week.value[i]);
@@ -152,10 +170,6 @@ const schema = yup.object({
   address: yup.string().required("Este campo es requerido"),
 });
 
-// openDay: yup.object().required(),
-//   closeDay: yup.object().required(),
-//   profilePic: yup.string().required()
-
 const { handleSubmit, setFieldValue} = useForm({
   validationSchema: schema,
 });
@@ -213,37 +227,24 @@ const onSubmit = handleSubmit((values) => {
       <Field as="textarea" name="description" type="text" placeholder="Descripcion de la propiedad" />
       <ErrorMessage name="description" />
     </label>
-    <!--TODO  Horario -->
+    <h3 class="font-bold mb-4">Horario</h3>
     <ul class="col-span-2 flex flex-col gap-5 text-sm leading-[22px] mb-5">
-      <p>Horario</p>
       <li v-for="day in week" :key="day.day">
         <p class="mb-3.5 font-medium">
           {{day.day}}
         </p>
-        <div class="flex items-center gap-x-11 gap-y-2 flex-wrap">
+        <div class="flex flex-wrap items-center gap-x-11 gap-y-2">
           <label class="checkbox-labels">
             <input type="checkbox" class="checkbox" v-model="day.isClose" :true-value=1 :false-value=0>
-            Cerrado
+            Cerrados
           </label>
-          <div class="flex items-center gap-1.5" v-if="day.isClose === 0">
+          <div class="flex flex-wrap items-center gap-1.5" v-if="day.isClose === 0">
             <label for="openHour" class="whitespace-nowrap">Abre a las(s)</label>
-            <div class="hour-select-container">
-              <input type="time" v-model="day.open" min="00:00" max="12:50">
-              <select v-model="day.franja">
-                <option value="AM">A.M.</option>
-                <option value="PM">P.M.</option>
-              </select>
-            </div>
+            <VueDatePicker v-model="time" @update:model-value="(value) => day.open = value" :is-24="false" time-picker  />
           </div>
-          <div class="flex items-center gap-1.5" v-if="day.isClose === 0">
-            <label for="openHour" class="whitespace-nowrap">Cierra a las(s)</label>
-            <div class="hour-select-container">
-              <input type="time" v-model="day.close" min="00:00" max="12:50">
-              <select v-model="day.franjaClose">
-                <option value="AM">A.M.</option>
-                <option value="PM">P.M.</option>
-              </select>
-            </div>
+          <div class="flex flex-wrap items-center gap-1.5" v-if="day.isClose === 0">
+            <label for="closeHour" class="whitespace-nowrap">Cierra a las(s)</label>
+            <VueDatePicker v-model="time" @update:model-value="(value) => day.close = value" :is-24="false" time-picker />
           </div>
         </div>
       </li>

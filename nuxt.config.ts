@@ -69,6 +69,10 @@ export default defineNuxtConfig({
       PUBLISH_KEY: process.env.PUBLISH_KEY
     }
   },
+  
+  build: {
+    transpile: ['@vuepic/vue-datepicker', 'swiper']
+  },
 
   vite: {
     build: {
