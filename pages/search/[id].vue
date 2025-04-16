@@ -118,20 +118,22 @@ watchEffect(()=> {
     });
   }
 
-  useSchemaOrg({
-    '@context': 'https://schema.org',
-    '@type': 'RealEstateListing',
-    name: advertisement.business.name,
-    image: advertisement.business.image,
-    description: advertisement.business.description,
-  });
-
   if(shedule.isOpen) {
     toggleClass.value = true;
   } else {
     toggleClass.value = false;
   }
 });
+
+watch(advertisement, () => {
+  useSchemaOrg({
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateListing',
+    name: advertisement.value.business.name,
+    image: advertisement.value.business.image,
+    description: advertisement.value.business.description,
+  });
+})
 
 definePageMeta({
   middleware: ["not-found"]
