@@ -34,7 +34,7 @@ let address = ref('');
 const time = ref({
   hours: new Date().getHours(),
   minutes: new Date().getMinutes()
-});
+})
 
 function formatTime(value) {
   const hours = value.hours % 12 || 12; // Convierte a formato de 12 horas
@@ -49,42 +49,98 @@ const week = ref([
     open: formatTime(time.value),
     close: formatTime(time.value),
     isClose: 0,
+    timeOpen: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    }),
+    timeClose: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    })
   },
   {
     day: "Lunes",
     open: formatTime(time.value),
     close: formatTime(time.value),
     isClose: 0,
+    timeOpen: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    }),
+    timeClose: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    })
   },
   {
     day: "Martes",
     open: formatTime(time.value),
     close: formatTime(time.value),
     isClose: 0,
+    timeOpen: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    }),
+    timeClose: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    })
   },
   {
     day: "Miércoles",
     open: formatTime(time.value),
     close: formatTime(time.value),
     isClose: 0,
+    timeOpen: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    }),
+    timeClose: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    })
   },
   {
     day: "Jueves",
     open: formatTime(time.value),
     close: formatTime(time.value),
     isClose: 0,
+    timeOpen: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    }),
+    timeClose: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    })
   },
   {
     day: "Viernes",
     open: formatTime(time.value),
     close: formatTime(time.value),
     isClose: 0,
+    timeOpen: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    }),
+    timeClose: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    })
   },
   {
     day: "Sábado",
     open: formatTime(time.value),
     close: formatTime(time.value),
     isClose: 0,
+    timeOpen: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    }),
+    timeClose: ref({
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    })
   }
 ]);
 
@@ -240,11 +296,11 @@ const onSubmit = handleSubmit((values) => {
           </label>
           <div class="flex flex-wrap items-center gap-1.5" v-if="day.isClose === 0">
             <label for="openHour" class="whitespace-nowrap">Abre a las(s)</label>
-            <VueDatePicker v-model="time" @update:model-value="(value) => day.open = value" :is-24="false" time-picker  />
+            <VueDatePicker v-model="day.timeOpen" @update:model-value="(value) => day.open = value" :is-24="false" time-picker  />
           </div>
           <div class="flex flex-wrap items-center gap-1.5" v-if="day.isClose === 0">
             <label for="closeHour" class="whitespace-nowrap">Cierra a las(s)</label>
-            <VueDatePicker v-model="time" @update:model-value="(value) => day.close = value" :is-24="false" time-picker />
+            <VueDatePicker v-model="day.timeClose" @update:model-value="(value) => day.close = value" :is-24="false" time-picker />
           </div>
         </div>
       </li>
