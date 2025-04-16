@@ -1,4 +1,13 @@
 <template>
+  <Head v-if=" advertisement">
+    <Title>{{ advertisement.business.name }}</Title>
+    <Meta name="title" :content="advertisement.business.name" />
+    <Meta name="description" :content="advertisement.business.description" />
+    <Meta property="og:url" :content="currentUrl" />
+    <Meta property="og:title" :content="advertisement.business.name" />
+    <Meta property="og:description" :content="advertisement.business.description" />
+    <Meta property="og:image" :content="advertisement.business.image" />
+  </Head>
   <div v-if="!pending" class="flex flex-nowrap items-center justify-center relative overflow-x-scroll bg-primary-100 bg-opacity-30">
     <img v-for="image in advertisement.business.images" :key="image" :src="image.image" :alt="advertisement.business.name" class="w-auto h-[290px] object-cover">
   </div>
@@ -64,6 +73,10 @@ const shedule = useRenderSchedule();
 const category_type = ref(null);
 const renderMap = ref(null);
 let toggleClass = ref(false);
+const url = useRequestURL();
+const route = useRoute();
+const origin = computed(() => `${url.protocol}//${url.host}`);
+const currentUrl = computed(() => `${origin.value}${route.fullPath}`);
 
 const { data: advertisement, pending, error} = await useLazyFetch(`advertisements/${useRoute().params.id}`, {
   method: 'GET',
@@ -92,6 +105,14 @@ watchEffect(()=> {
       baseURL: config.public.API,
     });
   }
+
+  useSchemaOrg({
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateListing',
+    name: advertisement.business.name,
+    image: advertisement.business.image,
+    description: advertisement.business.description,
+  });
 
   if(shedule.isOpen) {
     toggleClass.value = true;

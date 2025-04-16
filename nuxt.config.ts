@@ -16,7 +16,8 @@ export default defineNuxtConfig({
       title: 'Grupo Negocios & mas',
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.jpg" }],
       meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'description', content: 'Grupo Negocios & mas' },
       ],
       script: [
         {
@@ -33,6 +34,8 @@ export default defineNuxtConfig({
     'nuxt-swiper',
     '@pinia/nuxt',
     '@vee-validate/nuxt',
+    'nuxt-schema-org',
+    '@nuxt/image'
   ],
 
   viewport: {
@@ -88,6 +91,10 @@ export default defineNuxtConfig({
 
   experimental: {
     renderJsonPayloads: false
+  },
+  
+  schemaOrg: {
+    reactive: true,
   },
 
   compatibilityDate: '2025-03-17'
