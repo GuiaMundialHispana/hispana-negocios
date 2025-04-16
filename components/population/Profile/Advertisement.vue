@@ -95,10 +95,10 @@
                   <li  class="actions-options">
                     <NuxtLink :to="{path: `/visitsChart`,query: { id: business.id, name: business.business.name}}">Estadística</NuxtLink>
                   </li>
-                  <li class="actions-options" v-if="business.status != 'inactive'" @click="api_status = 'inactive', changeStatus(business.id)">
+                  <li class="actions-options" v-if="business.status != 'inactive'" @click="api_status = 'inactive', changeStatus(business.business.id)">
                     Cerrar temporalmente
                   </li>
-                  <li class="actions-options" v-if="business.status != 'trashed'" @click="api_status = 'trashed', changeStatus(business.id)">
+                  <li class="actions-options" v-if="business.status != 'trashed'" @click="api_status = 'trashed', changeStatus(business.business.id)">
                     Eliminar empresa
                   </li>
                 </ul>
@@ -146,7 +146,7 @@ const { data, pending, refresh } = await useLazyFetch('advertisements', {
 });
 
 async function changeStatus(id) {
-  const {data} = await useFetch(`advertisements/change-status/${id}/${this.api_status}?_method=PUT`,{
+  const {data} = await useFetch(`advertisements/change-status/${id}/${api_status.value}?_method=PUT`,{
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
