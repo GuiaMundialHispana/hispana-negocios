@@ -56,7 +56,6 @@ let previewPortada = ref(false);
 let newPortada = ref(false);
 watch(newPreview.value, (newx) => {
   if(newPreview.value.length > 0 ) {
-    console.log()
     newPortada.value = true;
   }
 });

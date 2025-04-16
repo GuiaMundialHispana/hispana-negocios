@@ -42,7 +42,6 @@ export default{
         body: form,
         baseURL: this.config.public.API,
         onResponse({response}) {
-          console.log(response)
           if(response.status === 500 ) {
             Swal.fire({
               icon: 'error',
