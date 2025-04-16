@@ -33,7 +33,12 @@
             <!-- User Logged -->
             <li class="user-wrapper" v-if="auth.isLoggedIn" @click="userDropdown = !userDropdown">
               <div class="flex items-center gap-2">
-                <img v-if="user.userData.profile_pic !== null" :src="user.userData.profile_pic" :alt="user.userData.name">
+<!--                <img v-if="user.userData.profile_pic !== null" :src="user.userData.profile_pic" :alt="user.userData.name">-->
+                <NuxtImg
+                  v-if="user.userData.profile_pic !== null"
+                  :src="user.userData.profile_pic"
+                  :alt="user.userData.name"
+                />
                 <span v-else class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-primary-100 text-sm border border-primary-100 bg-secondary-100">
                   {{user.userData.name.charAt(0)}}{{ user.userData.lastname.charAt(0) }}
                 </span>

@@ -2,7 +2,12 @@
   <article class="flex lg:flex-row flex-col border-b-2 rounded-2xl rounded-br-none rounded-bl-none p-6 gap-12 border-b-gray-300 w-full">
     <NuxtLink :to="`/search/${advertisement.business.slug}`">
       <figure class="bg-neutral-white lg:w-[170px] w-full h-[170px] flex items-center justify-center">
-        <img :src="advertisement.business.image" :alt="advertisement.business.name" class="w-full h-full object-cover object-top">
+<!--        <img :src="advertisement.business.image" :alt="advertisement.business.name" class="w-full h-full object-cover object-top">-->
+        <NuxtImg
+          :src="advertisement.business.image"
+          :alt="advertisement.business.name"
+          class="w-full h-full object-cover object-top"
+        />
       </figure>
     </NuxtLink>
     <div class="flex flex-col gap-[18px] flex-grow">

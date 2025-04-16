@@ -6,7 +6,12 @@
           <div class="skeleton w-[117px] h-[117px] rounded-full"></div>
         </figure>
         <figure class="profile-image overflow-hidden" v-else>
-          <img v-if="user.userData.profile_pic != null" :src="user.userData.profile_pic" :alt="user.userData.name">
+<!--          <img v-if="user.userData.profile_pic != null" :src="user.userData.profile_pic" :alt="user.userData.name">-->
+          <NuxtImg
+            v-if="user.userData.profile_pic != null"
+            :src="user.userData.profile_pic"
+            :alt="user.userData.name"
+          />
           <!--  -->
           <span v-if="user.userData.profile_pic === null" class="w-[117px] h-[117px] uppercase flex items-center justify-center font-bold text-primary-100 text-6xl rounded-full border-2 border-primary-100 bg-secondary-100">
             {{user.userData.name.charAt(0)}}{{ user.userData.lastname.charAt(0) }}
