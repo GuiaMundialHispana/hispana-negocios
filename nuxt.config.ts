@@ -17,7 +17,12 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.jpg" }],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Busca y encuentra ese negocio que necesitas en Grupo Negocios & más, El buscador de negocios que te ofrece la mejor selección de opciones.' },
+        { name: "description", content: 'Busca y encuentra ese negocio que necesitas en Grupo Negocios & más, El buscador de negocios que te ofrece la mejor selección de opciones.' },
+        { property: 'og:title', content: 'Grupo Negocios & más' },
+        { property: 'og:description', content: 'Busca y encuentra ese negocio que necesitas en Grupo Negocios & más, El buscador de negocios que te ofrece la mejor selección de opciones.' },
+        { property: 'og:image', content: 'https://www.gruponegociosymas.com/img/logo-header.svg' },
+        { property: 'og:url', content: 'https://www.gruponegociosymas.com/' },
+        { property: 'og:type', content: 'website' },
       ],
       script: [
         {

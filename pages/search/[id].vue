@@ -3,10 +3,14 @@
     <Title>{{ advertisement.business.name }}</Title>
     <Meta name="title" :content="advertisement.business.name" />
     <Meta name="description" :content="advertisement.business.description" />
+    <Meta property="og:type" content="article" />
     <Meta property="og:url" :content="currentUrl" />
     <Meta property="og:title" :content="advertisement.business.name" />
     <Meta property="og:description" :content="advertisement.business.description" />
     <Meta property="og:image" :content="advertisement.business.image" />
+    <Meta property="og:image" :content="advertisement.business.image" />
+    <Meta property="og:locale" content="es_ES" />
+    <Meta name="twitter:card" :content="advertisement.business.image" />
   </Head>
   <div v-if="!pending" class="flex flex-nowrap items-center justify-center relative overflow-x-scroll bg-primary-100 bg-opacity-30">
     <NuxtImg
