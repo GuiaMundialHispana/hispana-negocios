@@ -16,9 +16,9 @@
           {{ advertisement.business.name }}
         </NuxtLink>
         <div class="flex gap-3.5 text-sm">
-          <p class="hour" :class="[ toggleClass ? 'open' : 'closed']">
+          <p class="hour" :class="[ isOpen ? 'open' : 'closed']">
             <AtomsIcon name="general/clock" :size=32 class="absolute left-0 "/>
-            {{ shedule.schedule_message }}
+            {{ schedule_message }}
           </p>
           <p class="bussines-category" v-if="category_type !== null">
             {{ category_type.name }}
@@ -49,8 +49,7 @@
 
 <script setup>
 const categories = useCategories().categories;
-const shedule = useRenderSchedule();
-let toggleClass = ref(false);
+const {isOpen, actual_day, checkSchedule, schedule_message} = useRenderSchedule();
 const props = defineProps({
   advertisement: {
     type: Object,
@@ -77,13 +76,7 @@ watchEffect(()=> {
     props.schedule.forEach(element => {
       days.push(element);
     });
-    days.find((elex,i) => i === shedule.actual_day ? shedule.checkearDisponibilidad(elex) : '');
-  }
-
-  if(shedule.isOpen) {
-    toggleClass.value = true;
-  } else {
-    toggleClass.value = false;
+    days.find((elex,i) => i === actual_day ? checkSchedule(elex) : '')
   }
 });
 
@@ -91,7 +84,10 @@ watchEffect(()=> {
 
 <style lang="postcss" scoped>
   .hour{
-    @apply flex bg-[#D3FFD5] text-[#4CAF50] relative items-center justify-center rounded-lg h-8 pl-8 pr-2 before:content-['Abierto:'] before:mr-1 whitespace-nowrap;
+    @apply flex relative items-center justify-center rounded-lg h-8 pl-8 pr-2 before:mr-1 whitespace-nowrap;
+    &.open {
+      @apply bg-[#D3FFD5] text-[#4CAF50] before:content-['Abierto:'];
+    }
     &.closed {
       @apply bg-[#FFE4E3] text-[#FF2625] before:content-['Cerrado:'];
     }

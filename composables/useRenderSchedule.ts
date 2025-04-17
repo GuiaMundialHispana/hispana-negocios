@@ -4,30 +4,25 @@ export default function useRenderSchedule() {
   const schedule_message = ref('');
   const actual_day = new Date().getDay();
   let isOpen:boolean = ref(false);
-
-  function getFranja(hour:string) {
-    const queEs = hour.substring(0, 2);
-    if(parseInt(queEs) > 12) { return 'PM' } else { return 'AM' }
-  }
-
-  function checkearDisponibilidad(hour: object) {
-    const business_open = hour.open_time;
-    const business_close = hour.close_time;
-    const business_hora_close = business_close.substring(0, 2);
-    const business_minutes_close = business_close.substring(3,5);
-    const business_hora_open = business_open.substring(0, 2);
-    const business_minutes_open = business_open.substring(3,5);
-
-    if(actual_hour > parseInt(business_hora_open) && actual_minutes >  parseInt(business_minutes_open)){
-      schedule_message.value = `Abierto: ${business_open} ${getFranja(business_open)} - ${business_close} ${getFranja(business_close)}`;
+  
+  
+  function checkSchedule(day: { open_time: string; close_time: string }) {
+    const [openHour, openMinutes] = day.open_time.split(':').map(Number);
+    const [closeHour, closeMinutes] = day.close_time.split(':').map(Number);
+    
+    const openTotalMinutes = openHour * 60 + openMinutes;
+    const closeTotalMinutes = closeHour * 60 + closeMinutes;
+    
+    const currentTotalMinutes = actual_hour * 60 + actual_minutes;
+    
+    if (currentTotalMinutes >= openTotalMinutes && currentTotalMinutes < closeTotalMinutes) {
+      schedule_message.value = `Abierto: ${day.open_time} - ${day.close_time}`;
       isOpen.value = true;
-      // console.log(getFranja(business_open), getFranja(business_close))
-    } else if(actual_hour > parseInt(business_hora_close) && actual_minutes >  parseInt(business_minutes_close)) {
-      schedule_message.value = `Cerrados: ${business_open} ${getFranja(business_open)} - ${business_close} ${getFranja(business_close)}`;
+    } else {
+      schedule_message.value = `Cerrado: ${day.open_time} - ${day.close_time}`;
       isOpen.value = false;
-      // console.log(getFranja(business_open), getFranja(business_close))
     }
   }
 
-  return { actual_day, checkearDisponibilidad, isOpen, schedule_message }
+  return { actual_day, checkSchedule, isOpen, schedule_message }
 }

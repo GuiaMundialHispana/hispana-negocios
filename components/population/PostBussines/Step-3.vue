@@ -22,12 +22,12 @@ const instagram = ref("");
 const facebook = ref("");
 const countries = useGetCountry().countries;
 const country = ref("");
-const profile_pic = ref(null);
+// const profile_pic = ref(null);
 let sector = ref(0);
 let displaySector = ref(false);
 let city = ref([]);
 let displayCity = ref(false);
-let categories = [];
+// let categories = [];
 let lat = ref(null);
 let log = ref(null);
 let address = ref('');
@@ -230,22 +230,22 @@ const { handleSubmit, setFieldValue} = useForm({
   validationSchema: schema,
 });
 
-function save_data() {
-  use_posts.title = title.value;
-  use_posts.description = description.value;
-  use_posts.phone = phone.value;
-  use_posts.whatsapp = whatsapp.value;
-  use_posts.website = website.value;
-  use_posts.instagram = instagram.value;
-  use_posts.facebook = facebook.value;
-  use_posts.lat = lat;
-  use_posts.log = log;
-  use_posts.address = address.value;
-  use_posts.country_id = country.value;
-  use_posts.town_id = sector.value;
-  use_posts.city_id = city.value;
-  use_posts.image = images.value;
-};
+// function save_data() {
+//   use_posts.title = title.value;
+//   use_posts.description = description.value;
+//   use_posts.phone = phone.value;
+//   use_posts.whatsapp = whatsapp.value;
+//   use_posts.website = website.value;
+//   use_posts.instagram = instagram.value;
+//   use_posts.facebook = facebook.value;
+//   use_posts.lat = lat;
+//   use_posts.log = log;
+//   use_posts.address = address.value;
+//   use_posts.country_id = country.value;
+//   use_posts.town_id = sector.value;
+//   use_posts.city_id = city.value;
+//   use_posts.image = images.value;
+// };
 
 const onSubmit = handleSubmit((values) => {
   use_posts.title = values.title;

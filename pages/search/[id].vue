@@ -9,7 +9,6 @@
     <Meta property="og:image" :content="advertisement.business.image" />
   </Head>
   <div v-if="!pending" class="flex flex-nowrap items-center justify-center relative overflow-x-scroll bg-primary-100 bg-opacity-30">
-<!--    <img v-for="image in advertisement.business.images" :key="image" :src="image.image" :alt="advertisement.business.name" class="w-auto h-[290px] object-cover">-->
     <NuxtImg
       v-for="image in advertisement.business.images"
       :src="`${image.image}`"
@@ -22,7 +21,6 @@
     <section class="max-w-[1250px] mx-auto flex flex-col lg:px-5">
       <div class="relative flex lg:mb-[60px] mb-8 lg:flex-row flex-col pt-10 justify-between items-center">
         <figure class="bg-neutral-white p-6 w-[170px] h-[170px] border-2 rounded-lg flex items-center justify-center border-[#F5F5F5] absolute lg:-top-2/3 -top-1/4 ">
-<!--          <img :src="advertisement.business.image" :alt="advertisement.business.name">-->
           <NuxtImg
             :src="advertisement.business.image"
             :alt="advertisement.business.name"
@@ -31,9 +29,9 @@
         </figure>
         <h2 class="lg:ml-[200px] mt-[90px] lg:mt-0 xl:text-5xl text-4xl font-semibold text-primary-100 mr-4 whitespace-nowrap">{{ advertisement.business.name}}</h2>
         <div class="flex gap-3.5 text-sm mt-4 lg:mt-0 flex-wrap md:justify-end justify-center">
-          <p class="hour" :class="[ toggleClass ? 'open' : 'closed']">
+          <p class="hour" :class="[ isOpen ? 'open' : 'closed']">
             <AtomsIcon name="general/clock" :size=32 class="absolute left-0 "/>
-            {{ shedule.schedule_message }}
+            {{ schedule_message }}
           </p>
           <p class="bussines-category">
             {{ category_type.name }}
@@ -81,10 +79,9 @@
 <script setup>
 const config = useRuntimeConfig();
 const categories = useCategories().categories;
-const shedule = useRenderSchedule();
+const {isOpen, actual_day, checkSchedule, schedule_message} = useRenderSchedule();
 const category_type = ref(null);
 const renderMap = ref(null);
-let toggleClass = ref(false);
 const url = useRequestURL();
 const route = useRoute();
 const origin = computed(() => `${url.protocol}//${url.host}`);
@@ -104,24 +101,18 @@ const { data: advertisement, pending, error} = await useLazyFetch(`advertisement
 
 watchEffect(()=> {
   if(advertisement.value != null) {
-    const days = [];
     category_type.value = categories.value.find(element => element.id === advertisement.value.business.business_category_id);
     renderMap.value = `https://maps.google.com/maps?q=${advertisement.value.business.latitude},${advertisement.value.business.longitude}&hl=es;z%3D14&amp&output=embed`;
+    const days = [];
     advertisement.value.business.schedule.forEach(element => {
       days.push(element);
     });
-    days.find((elex,i) => i === shedule.actual_day ? shedule.checkearDisponibilidad(elex) : '')
+    days.find((elex,i) => i === actual_day ? checkSchedule(elex) : '')
 
     useFetch(`statistics/lead/${advertisement.value.id}/profile_views`, {
       method: 'POST',
       baseURL: config.public.API,
     });
-  }
-
-  if(shedule.isOpen) {
-    toggleClass.value = true;
-  } else {
-    toggleClass.value = false;
   }
 });
 

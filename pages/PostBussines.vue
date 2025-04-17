@@ -12,6 +12,18 @@ definePageMeta({
   middleware: 'check-auth'
 });
 
+function convertTo24Hour(time) {
+  const [timePart, period] = time.split(' ');
+  let [hours, minutes] = timePart.split(':').map(Number);
+
+  if (period === 'PM' && hours !== 12) {
+    hours += 12;
+  } else if (period === 'AM' && hours === 12) {
+    hours = 0;
+  }
+
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+}
 async function createAdvertisement() {
   Swal.showLoading();
   const form = new FormData();
@@ -37,8 +49,8 @@ async function createAdvertisement() {
   use_posts.day_of_week.forEach((element, index)=> {
     form.append('day_of_week[' + index + ']', element.day);
     form.append('is_closed[' + index + ']', element.isClose);
-    form.append('open_time[' + index + ']', element.open);
-    form.append('close_time[' + index + ']', element.close);
+    form.append('open_time[' + index + ']', convertTo24Hour(element.open));
+    form.append('close_time[' + index + ']', convertTo24Hour(element.close));
   });
 
   await useFetch('advertisements',{
