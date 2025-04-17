@@ -24,6 +24,7 @@ function convertTo24Hour(time) {
 
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
 }
+
 async function createAdvertisement() {
   Swal.showLoading();
   const form = new FormData();

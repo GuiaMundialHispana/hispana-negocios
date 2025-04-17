@@ -48,6 +48,23 @@ const { data: property, pending, error} = await useLazyFetch(`advertisements/${u
   }
 });
 
+function convertTo24Hour(time) {
+  if (typeof time !== 'object' || !time.hours || !time.minutes) {
+    throw new TypeError('El formato de tiempo no es válido. Se esperaba un objeto con las propiedades "hours", "minutes" y opcionalmente "seconds".');
+  }
+
+  let hours = parseInt(time.hours, 10);
+  const minutes = parseInt(time.minutes, 10);
+  const seconds = time.seconds ? parseInt(time.seconds, 10) : 0;
+
+  // Asegúrate de que los valores estén en el rango correcto
+  if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59 || seconds < 0 || seconds > 59) {
+    throw new RangeError('El valor de horas, minutos o segundos está fuera de rango.');
+  }
+
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
 async function createAdvertisement() {
   Swal.showLoading();
   const form = new FormData();
@@ -70,8 +87,8 @@ async function createAdvertisement() {
   use_posts.day_of_week.forEach((element, index)=> {
     form.append('day_of_week[' + index + ']', element.day_of_week);
     form.append('is_closed[' + index + ']', element.is_closed);
-    form.append('open_time[' + index + ']', element.open_time);
-    form.append('close_time[' + index + ']', element.close_time);
+    form.append('open_time[' + index + ']', convertTo24Hour(element.open_time));
+    form.append('close_time[' + index + ']', convertTo24Hour(element.close_time));
   });
 
   form.append('image', use_posts.image);

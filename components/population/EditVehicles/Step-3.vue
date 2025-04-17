@@ -4,6 +4,8 @@ import { usePostsStore } from '~/stores/Post';
 import { useUserStore } from '~/stores/User';
 import { VueTelInput } from 'vue-tel-input';
 import 'vue-tel-input/vue-tel-input.css';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 const use_posts = usePostsStore();
 const user = useUserStore();
@@ -36,64 +38,11 @@ const props = defineProps({
 getStates(props.countryId);
 getCities(props.sectorId);
 
-const week = ref([
-  {
-    day: "Domingo",
-    open: "00:00",
-    close: "00:00",
-    isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
-  },
-  {
-    day: "Lunes",
-    open: "00:00",
-    close: "00:00",
-    isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
-  },
-  {
-    day: "Martes",
-    open: "00:00",
-    close: "00:00",
-    isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
-  },
-  {
-    day: "Miercoles",
-    open: "00:00",
-    close: "00:00",
-    isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
-  },
-  {
-    day: "Jueves",
-    open: "00:00",
-    close: "00:00",
-    isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
-  },
-  {
-    day: "Viernes",
-    open: "00:00",
-    close: "00:00",
-    isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
-  },
-  {
-    day: "Sabado",
-    open: "00:00",
-    close: "00:00",
-    isClose: 0,
-    franja: "AM",
-    franjaClose: "PM"
-  }
-]);
+const time = ref({
+  hours: new Date().getHours(),
+  minutes: new Date().getMinutes()
+})
+
 
 async function getStates(country_id) {
   const statesApi = await $fetch(`generals/states/${country_id}`, {
@@ -128,11 +77,6 @@ watch(sector,(sector_id) => {
   displayCity.value = true;
 });
 
-function getFranja(hour) {
-  const queEs = hour.substring(0, 2);
-  if(parseInt(queEs) > 12) { return 'PM' } else { return 'AM' }
-}
-
 const images = ref(null);
 const profilePic = ref("");
 const isNewImage = ref(false);
@@ -142,6 +86,21 @@ function previewFiles(event) {
   profilePic.value = URL.createObjectURL(images.value);
   isNewImage.value = true;
 };
+
+function convertToTimePickerFormat(timeString) {
+  const [hours, minutes, seconds] = timeString.split(':').map(Number);
+  return {
+    hours: hours.toString().padStart(2, '0'),
+    minutes: minutes.toString().padStart(2, '0'),
+    seconds: seconds ? seconds.toString().padStart(2, '0') : '00',
+  };
+}
+
+// Inicializa las fechas como objetos Date
+use_posts.day_of_week.forEach((day) => {
+  day.open_time = convertToTimePickerFormat(day.open_time);
+  day.close_time = convertToTimePickerFormat(day.close_time);
+});
 </script>
 
 <template>
@@ -159,38 +118,23 @@ function previewFiles(event) {
       <textarea id="description" type="text" v-model="use_posts.description" placeholder="Descripción del negocio"></textarea>
     </label>
     <!-- Horario -->
+    <h3 class="font-bold mb-4">Horario</h3>
     <ul class="col-span-2 flex flex-col gap-5 text-sm leading-[22px] mb-5">
-      <p>Horario</p>
       <li v-for="day in use_posts.day_of_week" :key="day.id">
         <p class="mb-3.5 font-medium">
-          {{day.day_of_week}}
         </p>
         <div class="flex items-center gap-x-11 gap-y-2 flex-wrap">
           <label class="checkbox-labels">
             <input type="checkbox" class="checkbox" v-model="day.is_closed" :true-value=1 :false-value=0>
             Cerrado
           </label>
-          <div class="flex items-center gap-1.5" v-if="day.is_closed === 0">
+          <div class="flex flex-wrap items-center gap-1.5" v-if="day.is_closed === 0">
             <label for="openHour" class="whitespace-nowrap">Abre a las(s)</label>
-            <div class="hour-select-container">
-              <input type="time" :placeholder="day.open_time" v-model="day.open_time" min="00:00" max="12:50">
-              <select>
-                <option>{{ getFranja(day.open_time) }}</option>
-                <option value="AM">A.M.</option>
-                <option value="PM">P.M.</option>
-              </select>
-            </div>
+            <VueDatePicker v-model="day.open_time" :is-24="false" time-picker  />
           </div>
-          <div class="flex items-center gap-1.5" v-if="day.is_closed === 0">
-            <label for="openHour" class="whitespace-nowrap">Cierra a las(s)</label>
-            <div class="hour-select-container">
-              <input type="time" :placeholder="day.open_time" v-model="day.close_time" min="00:00" max="12:50">
-              <select>
-                <option>{{ getFranja(day.close_time) }}</option>
-                <option value="AM">A.M.</option>
-                <option value="PM">P.M.</option>
-              </select>
-            </div>
+          <div class="flex flex-wrap items-center gap-1.5" v-if="day.is_closed === 0">
+            <label for="closeHour" class="whitespace-nowrap">Cierra a las(s)</label>
+            <VueDatePicker v-model="day.close_time" :is-24="false" time-picker />
           </div>
         </div>
       </li>
@@ -199,7 +143,6 @@ function previewFiles(event) {
     <div class="flex gap-4 mt-2">
       <label for="phone" class="title-label mb-5">
         Número telefónico
-        <!-- <input type="tel" name="phone" id="phone" v-model="use_posts.phone" placeholder="(829) 123-4567" class="form-control"> -->
         <vue-tel-input mode="international" v-model="use_posts.phone" class="form-control"></vue-tel-input>
       </label>
       <label for="whatsapp" class="title-label mb-5">
