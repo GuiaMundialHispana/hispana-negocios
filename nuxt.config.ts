@@ -13,11 +13,11 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'Grupo Negocios & mas',
+      title: 'Grupo Negocios & más',
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.jpg" }],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Grupo Negocios & mas' },
+        { name: 'description', content: 'Busca y encuentra ese negocio que necesitas en Grupo Negocios & más, El buscador de negocios que te ofrece la mejor selección de opciones.' },
       ],
       script: [
         {
