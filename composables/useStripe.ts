@@ -70,6 +70,7 @@ export function useStripe() {
           successPayment.value = true;
           document.body.classList.add('modal-open')
           setTimeout(() => {
+            localStorage.removeItem('ref');
             successPayment.value = false;
             document.body.classList.remove('modal-open')
             navigateTo("/profile?tab=plan")

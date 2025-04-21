@@ -91,7 +91,8 @@ export default {
       auth: useAuthStore(),
       planQuantity: 1,
       priceUpdated: 0,
-      active: false
+      active: false,
+      refer: useState('refer')
     }
   },
   computed: {
@@ -123,7 +124,7 @@ export default {
           name:this.plan.name,
           pictures: this.plan.pictures,
           planId: this.plan.id,
-          ref: this.$route.query.ref
+          ref: this.refer,
         }
         this.$swal.fire({
           title: '¿Deseas pagar este plan?',

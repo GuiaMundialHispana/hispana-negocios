@@ -56,6 +56,7 @@ const email = ref("");
 const name = ref("");
 const modal = stripe.successPayment;
 const stripeError = stripe.stripeMessage;
+const refer = useState('refer');
 
 definePageMeta({
   middleware: 'check-auth'
@@ -76,7 +77,7 @@ async function processPayment() {
     name.value,
     useRoute().query.quantity,
     useRoute().query.planId,
-    useRoute().query.ref ? useRoute().query.ref : null
+    refer.value
   );
 };
 
