@@ -73,7 +73,7 @@
             <li v-show="auth.isLoggedIn">
               <AtomsLink
                 @click="showMenu = false"
-                link-to="/PostBussines"
+                link-to="/create-ad"
                 icon-name="general/plus"
                 icon-position="left"
                 :icon-size=14

@@ -9,7 +9,7 @@
         <span class="text-primary-100">nada.</span>
       </h6>
       <div class="flex justify-center mb-4">
-        <AtomsLink link-to="/PostBussines" class="mx-auto">Crear un anuncio</AtomsLink>
+        <AtomsLink link-to="/create-ad" class="mx-auto">Crear un anuncio</AtomsLink>
       </div>
       <p class="text-sm text-neutral-black text-center">¡No dejes pasar esta oportunidad de mostrar tu propiedad al mundo!</p>
     </div>
@@ -21,7 +21,7 @@
         <span class="text-primary-100">nada.</span>
       </h6>
       <div class="flex justify-center mb-4">
-        <AtomsLink link-to="/PostBussines" class="mx-auto">Crear un anuncio</AtomsLink>
+        <AtomsLink link-to="/create-ad" class="mx-auto">Crear un anuncio</AtomsLink>
       </div>
       <p class="text-sm text-neutral-black text-center">¡No dejes pasar esta oportunidad de mostrar tu propiedad al mundo!</p>
     </div>
@@ -78,7 +78,7 @@
               </p> 
             </td>
             <td>
-              <NuxtLink v-if="business.status != 'revision'" :to="{ path: `edit-business`, query: { slug: business.business.slug }}" class="xsmall btn solid-secondary whitespace-nowrap w-full">
+              <NuxtLink v-if="business.status != 'revision'" :to="{ path: `edit-ad`, query: { slug: business.business.slug }}" class="xsmall btn solid-secondary whitespace-nowrap w-full">
                 Editar negocio
               </NuxtLink>
               <AtomsButtons v-if="business.status === 'revision'" :disabled="business.status === 'revision'" class="xsmall btn w-full">
@@ -117,7 +117,7 @@
         </tbody>
       </table>
       <div class="flex justify-center my-8">
-        <AtomsLink link-to="/PostBussines" class="mx-auto">Crear un anuncio</AtomsLink>
+        <AtomsLink link-to="/create-ad" class="mx-auto">Crear un anuncio</AtomsLink>
       </div>
     </div>
   </section>
