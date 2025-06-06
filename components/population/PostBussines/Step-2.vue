@@ -4,15 +4,28 @@ import { usePostsStore } from '~/stores/Post';
 
 const user_store = useUserStore();
 const use_posts = usePostsStore();
+const emit = defineEmits(['back', 'nexts'])
 
 // let plans = [];
 let next = ref(false);
 const config = useRuntimeConfig();
+const token = useState('token')
 
+const current = ref(false)
 const { data:plans,pending } = await useLazyFetch('user-plans',{
   method: 'GET',
   headers: {
-    'Authorization': `Bearer ${user_store.token}`
+    'Authorization': `Bearer ${token.value}`
+  },
+  onResponse({response}) {
+    if(response.status === 200) {
+      response._data.results.forEach(element => {
+        if(element.plan.id === use_posts.plan_id) {
+          use_posts.plan_pictures = element.plan.pictures;
+          current.value = true;
+        }
+      });
+    }
   },
   baseURL: config.public.API
 });
@@ -20,8 +33,11 @@ const { data:plans,pending } = await useLazyFetch('user-plans',{
 function send_plan(id,pictures) {
   use_posts.plan_id = id;
   use_posts.plan_pictures = pictures;
+  current.value = false;
   next.value = true;
 };
+
+// send_plan(use_posts.plan_id,use_posts.plan_pictures);
 </script>
 
 <template>
@@ -79,17 +95,23 @@ function send_plan(id,pictures) {
         @pay="send_plan"
         :plan="plan.plan"
         :user-quantity="plan.quantity"
-      />
+        :seleccionado="plan.plan.id === use_posts.plan_id && current"
+      >
+        <AtomsButtons class="my-2 w-full active">
+          Seleccionado
+        </AtomsButtons>
+      </MoleculesPlanCard>
     </li>
   </ul>
   <div class="flex justify-center">
-    <AtomsLink link-to="/plans" class="mx-auto my-6">Adquirir mas planes</AtomsLink>
+    <AtomsLink link-to="/planes" class="mx-auto my-6">Adquirir mas planes</AtomsLink>
   </div>
-  <nav class="control-steps-PostBussines">
-    <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
-      Atras
+  <nav class="control-steps-postProperty">
+    <AtomsButtons @click="emit('back')" btn-style="outline-primary">
+      Atrás
     </AtomsButtons>
-    <AtomsButtons @click="$emit('nexts')" :disabled="!next">
+    <!-- :disabled="!next" -->
+    <AtomsButtons @click="emit('nexts')">
       Continuar
     </AtomsButtons>
   </nav>

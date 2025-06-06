@@ -14,11 +14,20 @@
   </Head>
   <div v-if="!pending" class="flex flex-nowrap items-center justify-center relative overflow-x-scroll bg-primary-100 bg-opacity-30">
     <NuxtImg
+      v-if="advertisement.business.images.length > 1"
       v-for="image in advertisement.business.images"
       :src="`${image.image}`"
       :alt="advertisement.business.name"
       placeholder="/img/logo.png"
       class="w-auto h-[290px] object-cover"
+    />
+    <NuxtImg
+      v-else
+      v-for="image in advertisement.business.images"
+      :src="`${image.image}`"
+      :alt="advertisement.business.name"
+      placeholder="/img/logo.png"
+      class="w-full h-[290px] object-cover"
     />
   </div>
   <main v-if="!pending" class="lg:px-20 md:px-8 px-5">

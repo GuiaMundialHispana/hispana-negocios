@@ -1,68 +1,77 @@
 <template>
-  <div class="flex flex-col w-full  items-center justify-center">
+  <form @submit.prevent="onSubmit" class="flex flex-col w-full items-center justify-center">
     <div class="relative w-full">
-      <input placeholder="Correo electrónico" type="email" v-model="authStore.email">
+      <Field class="form-control" name="email" type="email" placeholder="Correo electrónico" />
       <AtomsIcon
         name="general/user"
         :size=14
         class="absolute text-primary-100 z-50 top-1/4 left-2"
       />
     </div>
+    <ErrorMessage name="email" class="error" />
     <div class="relative w-full">
-      <input placeholder="Contraseña" type="password" v-model="authStore.password">
+      <Field class="form-control" name="password" type="password" placeholder="Contraseña" />
       <AtomsIcon
         name="general/lock"
         :size=14
         class="absolute text-primary-100 z-50 top-1/4 left-2"
       />
     </div>
+    <ErrorMessage name="password" class="error" />
     <NuxtLink to="/forgotPassword" @click="$emit('close')" class="text-primary-100 ml-auto w-max block">Olvidé la contraseña</NuxtLink>
-    <AtomsButtons btn-size="medium" @click="login();">
-      Entrar
-    </AtomsButtons>
-  </div>
+    <AtomsButtons btn-size="medium" type="submit" :is-disabled="!meta.dirty || !meta.valid">Entrar</AtomsButtons>
+  </form>
 </template>
 
-<script setup>
-import { useAuthStore } from '~/stores/Auth';
+<script lang="ts" setup>
 import Swal from 'sweetalert2';
+import { useForm, Field, ErrorMessage } from "vee-validate";
+import * as yup from "yup";
 
-const authStore = useAuthStore();
 const config = useRuntimeConfig();
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close']);
+const schema = yup.object({
+  email: yup.string().email('Correo electrónico inválido').required('El correo electrónico es obligatorio'),
+  password: yup.string().required('La contraseña es obligatoria')
+});
 
-async function login() {
+const { handleSubmit, meta} = useForm({
+  validationSchema: schema,
+});
+
+const onSubmit = handleSubmit(async (values) => {
+  await login(values.email, values.password);
+});
+
+async function login(email: string, password: string) {
   Swal.showLoading()
-  const { data}  = await useFetch('auth/login',{
+  await $fetch('auth/login',{
     method: 'POST',
     baseURL: config.public.API,
-    body: {
-      email: authStore.email,
-      password: authStore.password
-    },
-  });
-
-  try {
+    body: { email, password},
+  }).then((response) => {
     Swal.hideLoading();
-    const res = data.value.results;
+    const response_data = response.results;
     Swal.fire({
       icon: 'success',
       text: 'Bienvenido',
       showConfirmButton: false,
       timer: 2000
     });
+    const token = response_data.access_token.original.access_token;
+    useState('token', token);
+    localStorage.setItem('token', token);
     navigateTo('/profile?tab=anuncio')
-    localStorage.setItem('token', res.access_token.original.access_token);
     emit('close');
-  } 
-  catch (error) {
+  }).catch((error) => {
+    console.log(error);
     Swal.hideLoading();
     Swal.fire({
       icon: 'error',
-      text: 'Confirma que tus datos esten correctos'
+      text: 'Confirma que tus datos estén correctos'
     });
-  }
-};
+  });
+}
 </script>
 
 <style lang="postcss" scoped>

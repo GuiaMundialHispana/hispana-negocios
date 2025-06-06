@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { useForm } from "vee-validate";
 import * as yup from "yup";
 import {ref, watch} from 'vue';
@@ -16,13 +16,8 @@ const config = useRuntimeConfig();
 const title = ref('');
 const description = ref('');
 const phone = ref("");
-const whatsapp = ref("");
-const website = ref("");
-const instagram = ref("");
-const facebook = ref("");
 const countries = useGetCountry().countries;
 const country = ref("");
-// const profile_pic = ref(null);
 let sector = ref(0);
 let displaySector = ref(false);
 let city = ref([]);
@@ -35,6 +30,7 @@ const time = ref({
   hours: new Date().getHours(),
   minutes: new Date().getMinutes()
 })
+const mapNotSupported = ref(false);
 
 function formatTime(value) {
   const hours = value.hours % 12 || 12; // Convierte a formato de 12 horas
@@ -167,12 +163,12 @@ for(let i = 0; i < week.value.length; i++) {
   use_posts.day_of_week.push(week.value[i]);
 }
 
-function getAddress(lant, long, location) {
-  lat.value = lant;
-  log.value = long;
+function getAddress(lat:any, long:any, location:string) {
+  use_posts.lat = lat;
+  use_posts.log = long;
   address.value = location;
   setFieldValue('address', location);
-};
+}
 
 let sectors = ref([])
 watch(country,(country_id) => {
@@ -213,9 +209,9 @@ function previewFiles(event) {
 };
 
 const schema = yup.object({
-  title: yup.string().required("El nombre es requrido"),
-  description: yup.string().required("La descripcion es requerida"),
-  country: yup.string().required("El pais es requerido"),
+  title: yup.string().required("El nombre es requerido"),
+  description: yup.string().required("La descripción es requerida"),
+  country: yup.string().required("El país es requerido"),
   sector: yup.number().required("El sector es requerido"),
   city: yup.number().required("La ciudad es requerida"),
   phone: yup.number().required("Este campo es requerido"),
@@ -232,8 +228,8 @@ const { handleSubmit, setFieldValue} = useForm({
 
 const onSubmit = handleSubmit((values) => {
   use_posts.title = values.title;
-  use_posts.lat = lat.value;
-  use_posts.log = log.value;
+  use_posts.lat;
+  use_posts.log;
   use_posts.country_id = values.country;
   use_posts.town_id = values.sector;
   use_posts.city_id = values.city;
@@ -350,8 +346,14 @@ const onSubmit = handleSubmit((values) => {
       <div class="col-span-2">
         <label for="map" class="text-sm">Ubicación</label>
         <ClientOnly>
-          <PopulationPostBussinesMap @send-location="getAddress" name="map" id="map" />
+          <PopulationPostBussinesMap v-if="!mapNotSupported" @send-location="getAddress" @mapNotSupported="mapNotSupported = true" />
         </ClientOnly>
+        <div v-if="!mapNotSupported && use_posts.lat === 0 && use_posts.log === 0" class="bg-[yellow] bg-opacity-35 border-[yellow] border rounded-sm p-4 text-sm mt-3 text-center mb-5">
+          Por favor mueva el indicador en el mapa a la ubicación de la propiedad, esto nos ayudará a mostrarla en el mapa.
+        </div>
+        <div v-if="mapNotSupported" class="bg-[red] bg-opacity-35 border-[red] border rounded-sm p-4 text-sm mt-3 font-medium text-black text-center mb-5">
+          Por favor active la geolocalización en su navegador para poder ubicar la propiedad en el mapa.
+        </div>
       </div>
       <!-- ubicacion -->
       <label class="w-full sm:mb-2 mb-5 col-span-2 title-label">

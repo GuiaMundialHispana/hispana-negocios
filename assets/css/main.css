@@ -90,3 +90,9 @@ input[type=number] {
 .skeleton {
   @apply bg-neutral-20 animate-pulse;
 }
+
+.error {
+  @apply text-[red] text-sm mb-2 text-left ml-2 block font-medium;
+}
+
+.control-steps-postProperty { @apply flex justify-center w-full gap-2.5 mt-6 mb-11; }

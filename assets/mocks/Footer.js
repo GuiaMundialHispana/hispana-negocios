@@ -10,7 +10,7 @@ export default {
     // },
     {
       name: 'Contacto',
-      route: '/contact'
+      route: '/contacto'
     },
     {
       name: 'Aviso legal',

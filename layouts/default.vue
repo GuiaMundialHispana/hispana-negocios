@@ -19,12 +19,8 @@ const user_store = useUserStore();
 const auth_store = useAuthStore();
 const route = useRoute();
 const refer = useState<string>('refer', () => '');
-
-const miFuncionGlobal = () => {
-  if(auth_store.isLoggedIn) {
-    user_store.refresh_token();
-  }
-}
+const { refresh_token } = useRefresh();
+const isLogged = useState('isLogged');
 
 if(import.meta.client) {
   let tokenReferClient = localStorage.getItem('ref');
@@ -41,7 +37,12 @@ if(import.meta.client) {
 
 
 onMounted(() => {
-  useRefresh(miFuncionGlobal)
+  setInterval(async () => {
+    if(isLogged) {
+      console.log('Refreshing token...');
+      await refresh_token();
+    }
+  }, 120000);
 
   const handleBeforeUnload = () => {
     localStorage.removeItem('ref');

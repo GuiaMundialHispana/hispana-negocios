@@ -9,12 +9,13 @@ const emit = defineEmits(['back', 'nexts'])
 // let plans = [];
 let next = ref(false);
 const config = useRuntimeConfig();
+const token = useState('token')
 
 const current = ref(false)
 const { data:plans,pending } = await useLazyFetch('user-plans',{
   method: 'GET',
   headers: {
-    'Authorization': `Bearer ${user_store.token}`
+    'Authorization': `Bearer ${token.value}`
   },
   onResponse({response}) {
     if(response.status === 200) {
@@ -103,11 +104,11 @@ function send_plan(id,pictures) {
     </li>
   </ul>
   <div class="flex justify-center">
-    <AtomsLink link-to="/plans" class="mx-auto my-6">Adquirir mas planes</AtomsLink>
+    <AtomsLink link-to="/planes" class="mx-auto my-6">Adquirir mas planes</AtomsLink>
   </div>
-  <nav class="control-steps-PostBussines">
+  <nav class="control-steps-postProperty">
     <AtomsButtons @click="emit('back')" btn-style="outline-primary">
-      Atras
+      Atrás
     </AtomsButtons>
     <!-- :disabled="!next" -->
     <AtomsButtons @click="emit('nexts')">
@@ -115,7 +116,6 @@ function send_plan(id,pictures) {
     </AtomsButtons>
   </nav>
 </template>
-
 <style lang="postcss" scoped>
 h4 { @apply font-semibold text-[28px] leading-[42px] mt-11 mb-14 text-center; }
 

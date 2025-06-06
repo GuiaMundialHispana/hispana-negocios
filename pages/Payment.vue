@@ -18,14 +18,14 @@
               </select>
             </div>
             <h6 class="plan-price" v-if="useRoute().query.price > 0">
-              RD$ {{ converPrice(useRoute().query.price) }}
+              RD$ {{ convertPrice(useRoute().query.price) }}
             </h6>
             <h6 class="plan-price uppercase" v-else>gratis</h6>
           </li>
         </ul>
         <p class="total-price max-w-max md:w-full md:ml-auto md:mr-0 mr-auto">
           <span class="text-sm font-normal block text-left mt-8">Pago total</span>
-          RD$ {{ converPrice($route.query.newPrice) }}
+          RD$ {{ convertPrice($route.query.newPrice) }}
         </p>
       </div>
       <!--  -->
@@ -38,7 +38,7 @@
           <label>Correo</label>
           <input type="email" v-model="email">
         </div>
-        <div id="card-form" ref="cardRef" class="h-10 mt-8"></div>
+        <div id="card-form" ref="cardRef" class=" mt-8"></div>
         <p v-if="stripeError.length > 0" class="font-semibold text-primary-100 my-3">{{stripeError}}</p>
         <AtomsButtons btnSize="medium" @click="processPayment()" class="w-full mt-4" :disabled="name.length === 0 || email.length === 0">Pagar</AtomsButtons>
       </div>
@@ -47,16 +47,13 @@
   </section>
 </template>
 
-<script setup>
-const isDataFilled = ref(false);
-const stripeCardElement = ref(null);
+<script lang="ts" setup>
 const stripe = useStripe();
 const cardRef = ref(null);
 const email = ref("");
 const name = ref("");
 const modal = stripe.successPayment;
 const stripeError = stripe.stripeMessage;
-const refer = useState('refer');
 
 definePageMeta({
   middleware: 'check-auth'
@@ -64,24 +61,20 @@ definePageMeta({
 
 onMounted( async () => {
   await stripe.initStripe();
-  stripeCardElement.value = await stripe.setCardElement("#card-form");
-  stripeCardElement.value.on('change', (event) => {
-    isDataFilled.value = !event.empty;
-  });
 });
 
+const refer = useState('refer');
 async function processPayment() {
   await stripe.submitPayment(
-    stripeCardElement.value,
     email.value,
     name.value,
     useRoute().query.quantity,
     useRoute().query.planId,
     refer.value
   );
-};
+}
 
-function converPrice(price) {
+function convertPrice(price) {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 

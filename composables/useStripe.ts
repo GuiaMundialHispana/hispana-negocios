@@ -6,52 +6,61 @@ export function useStripe() {
   const stripe = ref<Stripe | null>(null);
   const successPayment = ref(false);
   const stripeMessage = ref('')
-
+  
   async function initStripe(): Promise<void> {
     const stripeCore = await loadStripe(config.public.PUBLISH_KEY as string);
     stripe.value = stripeCore;
   }
   
-  function setCardElement(elementToMount: string | HTMLElement): Promise<StripeCardElement> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const elements = stripe.value!.elements();
-        const card = elements!.create('card');
-        card.mount(elementToMount);
-        resolve(card);
-      } catch (error) {
-        reject(error);
-      }
+  const options = {
+    mode: 'payment',
+    amount: 1099,
+    currency: 'usd',
+    clientSecret: process.env.CONSUMER_SECRET,
+    appearance: {/*...*/},
+    payment_method_types: ['card'],
+  };
+  
+  let elements = ref(null);
+  let paymentElement = ref<StripeCardElement | null>(null);
+  watch(stripe, (newValue) => {
+    elements.value = stripe.value!.elements({
+      ...options,
+      paymentMethodCreation: 'manual'
     });
-  }
-
-  function submitPayment(cardElement: StripeCardElement, email:string, name:string, quantity: number | string, id: number | string, ref: string | undefined): Promise<void> {
+    const paymentElementOptions = { layout: 'accordion'};
+    paymentElement = elements.value.create('payment', paymentElementOptions);
+    paymentElement.mount('#card-form');
+  })
+  
+  async function submitPayment(email:string, name:string, quantity: number | string, id: number | string, ref: string | undefined): Promise<void> {
+    await elements.value.submit();
     return new Promise(async (resolve, reject) => {
       try {
         const result = await stripe.value!.createPaymentMethod({
-          type: 'card',
-          card: cardElement,
-          billing_details: {
-            name: name,
-            email: email
-          },
+          elements: elements.value,
+          params: {
+            billing_details: {
+              name: name,
+              email: email
+            },
+          }
         });
         if(result?.paymentMethod) {
-          processPayment(result.paymentMethod?.id, quantity, id, ref )
+          await processPayment(result.paymentMethod?.id, quantity, id, ref )
         }
-
+        
         if (result?.error) throw result.error;
         resolve();
       } catch (error) {
-        stripeMessage.value = error.message;
         reject(error);
       }
     });
   }
-
+  
   async function processPayment(pm:string | undefined, quantity: number | string, id: number | string, ref: string | undefined) {
     Swal.showLoading();
-    await useFetch('user-plans', {
+    await $fetch('user-plans', {
       method: 'POST',
       baseURL: config.public.API,
       headers: {
@@ -64,30 +73,34 @@ export function useStripe() {
         token: ref
       },
       onResponse({response}) {
-        Swal.hideLoading();
-        Swal.close();
-        if(response.status === 200 ) {
+        if(!response._data.status) {
+          Swal.hideLoading();
+          Swal.fire({
+            icon: 'error',
+            title: 'Payment Failed',
+            text: response._data.message || 'An error occurred while processing your payment.',
+          });
+          return;
+        } else {
+          Swal.hideLoading();
+          Swal.close()
           successPayment.value = true;
-          document.body.classList.add('modal-open')
+          document.body.classList.add('modal-open');
           setTimeout(() => {
             localStorage.removeItem('ref');
             successPayment.value = false;
-            document.body.classList.remove('modal-open')
-            navigateTo("/profile?tab=plan")
+            document.body.classList.remove('modal-open');
+            navigateTo("/profile?tab=plan");
           }, 3000);
-        }
-        if(response._data.status === false) {
-          stripeMessage.value = response._data.message;
         }
       }
     })
   }
-
+  
   return {
     initStripe,
-    setCardElement,
     submitPayment,
     successPayment,
-    stripeMessage
+    stripeMessage,
   }
 }

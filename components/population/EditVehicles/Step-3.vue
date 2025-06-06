@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import {ref, watch} from 'vue';
 import { usePostsStore } from '~/stores/Post';
 import { useUserStore } from '~/stores/User';
@@ -23,6 +23,7 @@ let categories = [];
 let lat = null;
 let log = null;
 let address = ref('');
+const mapNotSupported = ref(false);
 
 const props = defineProps({
   countryId: {
@@ -58,11 +59,12 @@ async function getCities(sector_id) {
   cities.push(citiesApi.results.data);
 };
 
-function getAddress(lant, long, location) {
-  lat = lant;
-  log = long;
+function getAddress(lat:any, long:any, location:string) {
+  use_posts.lat = lat;
+  use_posts.log = long;
+  address.value = location;
   use_posts.address = location;
-};
+}
 
 watch(country,(country_id) => {
   getStates(country_id);
@@ -202,8 +204,14 @@ use_posts.day_of_week.forEach((day) => {
       <div class="col-span-2">
         <label for="map" class="text-sm">Ubicación</label>
         <ClientOnly>
-          <PopulationEditVehiclesMap :lat="use_posts.lat" :long="use_posts.log" @send-location="getAddress"/>
+          <PopulationEditVehiclesMap :lat="use_posts.lat" :long="use_posts.log" @send-location="getAddress" @mapNotSupported="mapNotSupported = true"/>
         </ClientOnly>
+        <div v-if="!mapNotSupported && use_posts.lat === 0 && use_posts.log === 0" class="bg-[yellow] bg-opacity-35 border-[yellow] border rounded-sm p-4 text-sm mt-3 text-center mb-5">
+          Por favor mueva el indicador en el mapa a la ubicación de la propiedad, esto nos ayudará a mostrarla en el mapa.
+        </div>
+        <div v-if="mapNotSupported" class="bg-[red] bg-opacity-35 border-[red] border rounded-sm p-4 text-sm mt-3 font-medium text-black text-center mb-5">
+          Por favor active la geolocalización en su navegador para poder ubicar la propiedad en el mapa.
+        </div>
       </div>
       <!-- ubicacion -->
       <label class="w-full sm:mb-2 mb-5 col-span-2 title-label">

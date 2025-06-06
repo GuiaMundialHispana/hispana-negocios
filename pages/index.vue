@@ -44,8 +44,8 @@
 					{{ checkedCategories.length < 1 ? 'Categorías' : categoryName }}
 				</button>
 				<AtomsButtons v-if="displayCategories" icon-name="general/close" btn-type="btn-icon" class="close-btn" @click="displayCategories = false" />
-				<OnClickOutside @trigger="displayCategories = false" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md" v-if="displayCategories">
-					<div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
+				<OnClickOutside @trigger="displayCategories = false" class="absolute lg:top-14 top-16 left-0 w-full h-[270px]" v-if="displayCategories">
+					<div class="dropdown-wrapper bg-primary-50 scrollbar mt-[5px] min-h-max max-h-[273px]">
 						<label class="checkbox-labels" v-for="category in categories" :key="category">
 							<input
 								type="radio"

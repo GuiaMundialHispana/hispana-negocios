@@ -26,19 +26,6 @@ export const useUserStore = defineStore('user', {
     }
   },
   actions: {
-    async getGoogle(){
-      const { data,error }  = await useFetch(this.$config.public.API+'auth/social/google',{
-        method: 'GET',
-        headers: {
-          'access-control-allow-origin': "*",
-          'Content-Type':"application/json",
-          'Accept': "application/json",
-        }
-
-      });
-      const res = error;
-      const res2 = data;
-    },
     async sendPassWordEmail() {
       const { data, pending } = await useFetch('auth/forgot-password',{
         method: 'POST',
@@ -90,71 +77,5 @@ export const useUserStore = defineStore('user', {
         }
       });
     },
-    async get_user() {
-      const { data, error } = await useFetch('auth/profile',{
-        method: 'GET',
-        baseURL: useRuntimeConfig().public.API,
-        headers: {
-          'Authorization': `Bearer ${this.token}`
-        },
-        onResponse({ response }) {
-          let responseApi = response._data.message;
-
-          if(response.status === 404 || responseApi === "Token invalid or not provided." || response.status === 500 || response.status === 302) {
-            console.log('error')
-            useErrorResponseLogOut();
-          }
-
-          if(response._data.status === false) {
-            console.log('error')
-            useErrorResponseLogOut();
-          }
-        },
-        onResponseError() {
-          console.log('error')
-          useErrorResponseLogOut();
-        },
-        onRequestError({response}) {
-          console.log('error')
-          useErrorResponseLogOut();
-        }
-      });
-      
-      if(data.value != null) {
-        let response = data.value;
-        let user_response = data.value.results.user;
-
-        if(response.code === 200) {
-          this.userData = user_response;
-        }
-      }
-    },
-    async refresh_token() {
-      const {data, error} = await useFetch('auth/refresh',{
-        method: 'POST',
-        baseURL: useRuntimeConfig().public.API,
-        headers: {
-          'Authorization': `Bearer ${this.token}`
-        },
-        onResponseError() {
-          console.log('error')
-          useErrorResponseLogOut();
-        },
-        onRequestError({response}) {
-          console.log('error')
-          useErrorResponseLogOut();
-        }
-      });
-
-      if(data) {
-        let response = data.value;
-        let user_response = data.value.results.user;
-      }
-
-      if(data.value != null) {
-        this.token = data.value.results.access_token;
-        localStorage.setItem('token', this.token);
-      }
-    }
   }
 });

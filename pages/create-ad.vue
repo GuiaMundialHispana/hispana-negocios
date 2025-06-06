@@ -25,6 +25,7 @@ function convertTo24Hour(time) {
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
 }
 
+const token = useState('token')
 async function createAdvertisement() {
   Swal.showLoading();
   const form = new FormData();
@@ -57,7 +58,7 @@ async function createAdvertisement() {
   await useFetch('advertisements',{
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${user_store.token}`,
+      'Authorization': `Bearer ${token.value}`,
       'Accept': 'application/json'
     },
     body: form,

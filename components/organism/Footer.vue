@@ -16,7 +16,7 @@
       <!--  -->
       <nav class="flex xl:flex-col md:flex-row flex-col gap-4 xl:justify-start justify-center xl:items-start items-center flex-none xl:col-span-2 col-span-12">
         <h6 class="uppercase text-primary-100 font-medium text-sm xl:block hidden">NAVEGACIÓN</h6>
-        <NuxtLink class="link-to" target="blank" :to="item.route" v-for="item in navigation" :key="item">
+        <NuxtLink class="link-to" :to="item.route" v-for="item in navigation" :key="item">
           {{ item.name }}
         </NuxtLink>
       </nav>
@@ -27,11 +27,11 @@
         </NuxtLink>
       </nav>
       <!--  -->
-      <nav class="flex flex-none items-center xl:justify-start justify-center gap-2 xl:col-span-2 col-span-12 md:h-full">
-        <a :href="socialLink.route" target="blank" v-for="socialLink in socialMedia" :key="socialLink" class="social-link">
-          <AtomsIcon :name="`social-media/${socialLink.icon}`" />
-        </a>
-      </nav>
+<!--      <nav class="flex flex-none items-center xl:justify-start justify-center gap-2 xl:col-span-2 col-span-12 md:h-full">-->
+<!--        <a :href="socialLink.route" target="blank" v-for="socialLink in socialMedia" :key="socialLink" class="social-link">-->
+<!--          <AtomsIcon :name="`social-media/${socialLink.icon}`" />-->
+<!--        </a>-->
+<!--      </nav>-->
     </div>
   </footer>
 </template>

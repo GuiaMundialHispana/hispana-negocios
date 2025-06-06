@@ -52,15 +52,15 @@
 </template>
 
 <script setup>
-import { useUserStore } from '~/stores/User';
+
 
 const config = useRuntimeConfig();
-const user_store = useUserStore();
+const token = useState('token')
 
 const { data:plans, pending } = useLazyFetch('user-plans',{
   method: 'GET',
   headers: {
-    'Authorization': `Bearer ${user_store.token}`,
+    'Authorization': `Bearer ${token.value}`,
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   },

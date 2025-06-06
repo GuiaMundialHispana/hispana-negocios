@@ -2,48 +2,50 @@
   <header>
     <div class='w-full mx-auto flex items-center justify-between xl:px-14 px-4'>
       <NuxtLink to="/">
-        <figure class="mr-3">
-          <img src='/img/logo.svg' alt='Grupo Negocios & mas' class="lg:w-32 w-24 object-contain">
+        <figure>
+          <img src='/img/logo.svg' alt='Grupo Casas & mass' class="lg:w-32 w-24 object-contain">
         </figure>
       </NuxtLink>
       <OnClickOutside @trigger="showMenu = false">
         <nav :class="{'hidden':!showMenu}">
           <span class="w-full flex justify-end" v-if="showMenu === true">
-            <AtomsButtons 
-            @click="showMenu = false"
-            btn-type="btn-icon" 
-            btn-style="outline-primary" 
-            icon-name="general/close" 
-            btn-size="xsmall" 
-            :icon-size=16 
-          />
+            <AtomsButtons
+              @click="showMenu = false"
+              btn-type="btn-icon"
+              btn-style="outline-primary"
+              icon-name="general/close"
+              btn-size="xsmall"
+              :icon-size=16
+            />
           </span>
           <ul>
-            <li v-for='item in menu'
-              :key='item.name'
-              class="text-sm text-neutral-black font-normal hover:text-primary-100 mb-4 lg:mb-0 cursor-pointer"
-            >
+            <li v-for="item in menu" :key='item.name' class="nav-item" :class="{'active': route.fullPath === item.route}">
               <NuxtLink :to='item.route'  @click="showMenu = false">{{item.name}}</NuxtLink>
             </li>
-            <li class="mb-4 lg:mb-0" v-show="!auth.isLoggedIn">
+            <li class="nav-item cursor-pointer" :class="{'active': route.fullPath === '/create-ad'}" @click="checkSell">
+              Vender
+            </li>
+            <li class="nav-item" :class="{'active': route.fullPath === '/contacto'}">
+              <NuxtLink to='/contacto' @click="showMenu = false">Contacto</NuxtLink>
+            </li>
+            <li class="nav-item" :class="{'active': route.fullPath === '/planes'}">
+              <NuxtLink to='/planes' @click="showMenu = false">Planes</NuxtLink>
+            </li>
+            <li class="mb-4 lg:mb-0" v-show="!isLogged">
               <AtomsButtons @click="showMenu = false; displayModal = true">
                 Iniciar sesión
               </AtomsButtons>
             </li>
             <!-- User Logged -->
-            <li class="user-wrapper" v-if="auth.isLoggedIn" @click="userDropdown = !userDropdown">
+            <li class="user-wrapper" v-if="isLogged && user" @click="userDropdown = !userDropdown">
               <div class="flex items-center gap-2">
                 <NuxtImg
-                  v-if="user.userData.profile_pic !== null"
-                  :src="user.userData.profile_pic"
-                  :alt="user.userData.name"
+                  v-if="user.profile_pic !== null"
+                  :src="user.profile_pic"
                   placeholder="/favicon.jpg"
+                  :alt="user.name"
                 />
-                <span v-else class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-primary-100 text-sm border border-primary-100 bg-secondary-100">
-                  {{user.userData.name.charAt(0)}}{{ user.userData.lastname.charAt(0) }}
-                </span>
-                <!-- <img src="/img/user.jpg" v-if="user.userData.profile_pic === null || ''" :alt="user.userData.name"> -->
-                {{ user.userData.name }} {{ user.userData.lastname }}
+                {{ user.name }} {{ user.lastname }}
                 <AtomsIcon name="arrows/arrow-down" v-show="!userDropdown" :size=15 class="text-primary-100" />
                 <AtomsIcon name="arrows/arrow-down" v-show="userDropdown" :size=15 class="text-primary-100 rotate-180" />
               </div>
@@ -62,7 +64,7 @@
                         Mis planes
                       </NuxtLink>
                     </li>
-                    <li @click="auth.logOut(), showMenu = false">
+                    <li @click="useErrorResponseLogOut(); showMenu = false">
                       <AtomsIcon name="general/logout" class="mr-2.5" />
                       Cerrar sesión
                     </li>
@@ -70,7 +72,7 @@
                 </div>
               </OnClickOutside>
             </li>
-            <li v-show="auth.isLoggedIn">
+            <li v-show="isLogged">
               <AtomsLink
                 @click="showMenu = false"
                 link-to="/create-ad"
@@ -79,7 +81,7 @@
                 :icon-size=14
                 btnStyle="outline-primary"
               >
-                Publicar mi negocio
+                Publicar
               </AtomsLink>
             </li>
           </ul>
@@ -97,61 +99,58 @@
   </header>
   <!-- Modal login and register component -->
   <OrganismLogInaAndRegister
-    @closeModal="displayModal = false"
+    @closeModal="displayModal = false, showMenu = false"
     v-if="displayModal"
   />
 </template>
 
-<script>
-import { useAuthStore } from '~/stores/Auth';
-import { useUserStore } from '~/stores/User';
-export default {
-  name: 'AppHeader',
-  data() {
-    return {
-      auth: useAuthStore(),
-      user: useUserStore(),
-      viewport: useViewport(),
-      showMenu: false,
-      userDropdown: false,
-      displayModal: false,
-      menu: [
-      {
-        name: 'Buscar',
-        route: '/search'
-      },
-      {
-        name: 'Contacto',
-        route: '/contact'
-      },
-      {
-        name: 'Planes',
-        route: '/plans'
-      }
-      ]
-    }
-  },
-  watch: {
-    showMenu: function() {
-      if(this.showMenu) {
-        document.body.classList.add('modal-open')
-      } else {
-        document.body.classList.remove('modal-open')
-      }
-    },
-    displayModal: function() {
-      if(this.displayModal) {
-        document.body.classList.add('modal-open')
-      } else {
-        document.body.classList.remove('modal-open')
-      }
-    }
-  },
-}
-</script>
+<script lang="ts" setup>
+import {OnClickOutside} from "@vueuse/components";
+const user = useState('user');
+const viewport = useViewport();
 
-<script setup>
-import { OnClickOutside } from '@vueuse/components';
+const showMenu = ref(false);
+const userDropdown = ref(false);
+const displayModal = ref(false);
+const isLogged = useState('isLogged');
+const route = useRoute();
+
+defineComponent({
+  components: {
+    OnClickOutside
+  }
+})
+
+const menu = reactive([
+  { name: 'Buscar', route: '/search' },
+]);
+
+// Watchers
+watch(showMenu, (newValue: boolean) => {
+  if (newValue) {
+    document.body.classList.add('modal-open');
+  } else {
+    document.body.classList.remove('modal-open');
+  }
+});
+
+function checkSell() {
+  if(isLogged.value) {
+    navigateTo('/create-ad');
+    showMenu.value = false
+  } else {
+    showMenu.value = false
+    displayModal.value = true
+  }
+}
+
+watch(displayModal, (newValue: boolean) => {
+  if (newValue) {
+    document.body.classList.add('modal-open');
+  } else {
+    document.body.classList.remove('modal-open');
+  }
+});
 </script>
 
 <style lang="postcss" scoped>
