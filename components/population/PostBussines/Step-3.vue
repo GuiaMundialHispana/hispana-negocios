@@ -227,6 +227,10 @@ const { handleSubmit, setFieldValue} = useForm({
 });
 
 const onSubmit = handleSubmit((values) => {
+  if( use_posts.lat === 0 || use_posts.log === 0) {
+    window.scrollTo(0, 0);
+    return alert('Por favor mueva el indicador en el mapa a la ubicación de la propiedad');
+  }
   use_posts.title = values.title;
   use_posts.lat;
   use_posts.log;
@@ -324,6 +328,11 @@ const onSubmit = handleSubmit((values) => {
             <img
               v-if="isNewImage"
               :src="`${profilePic}`"
+              class="w-full h-full object-cover"
+            >
+            <img
+              v-else
+              src="/favicon.jpg"
               class="w-full h-full object-cover"
             >
           </figure>

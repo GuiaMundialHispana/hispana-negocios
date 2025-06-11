@@ -67,6 +67,7 @@ async function createAdvertisement() {
       Swal.hideLoading();
       const res = response._data;
       if(res.code === 200 ) {
+        use_posts.$reset();
         Swal.fire({
           icon: 'success',
           text:  `${res.message}`,
@@ -110,7 +111,13 @@ async function createAdvertisement() {
           });
         }
       }
-    }    
+    },
+    onResponseError(error) {
+      Swal.fire({
+        icon: 'error',
+        text:  'Error del servidor, por favor intente más tarde.',
+      });
+    }
   });
 };
 
