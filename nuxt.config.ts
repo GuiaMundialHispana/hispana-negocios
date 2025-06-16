@@ -26,7 +26,7 @@ export default defineNuxtConfig({
       ],
       script: [
         {
-          src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyD4T85-FkXl586zyEpYLy32ipUyGAvLSAs',
+          src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAS9Yycg7zuzKAJ6mGgih093gdGUs8dTP8',
           defer: true
         }
       ]
