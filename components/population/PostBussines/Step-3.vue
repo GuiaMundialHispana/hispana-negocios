@@ -272,7 +272,7 @@ const onSubmit = handleSubmit((values) => {
         <p class="mb-3.5 font-medium">
           {{day.day}}
         </p>
-        <div class="flex flex-wrap items-center gap-x-11 gap-y-2">
+        <div class="flex md:flex-row flex-col md:items-center gap-x-11 gap-y-2">
           <label class="checkbox-labels">
             <input type="checkbox" class="checkbox" v-model="day.isClose" :true-value=1 :false-value=0>
             Cerrados

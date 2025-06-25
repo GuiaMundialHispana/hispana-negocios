@@ -125,7 +125,7 @@ use_posts.day_of_week.forEach((day) => {
       <li v-for="day in use_posts.day_of_week" :key="day.id">
         <p class="mb-3.5 font-medium">
         </p>
-        <div class="flex items-center gap-x-11 gap-y-2 flex-wrap">
+        <div class="flex md:flex-row flex-col md:items-center gap-x-11 gap-y-2">
           <label class="checkbox-labels">
             <input type="checkbox" class="checkbox" v-model="day.is_closed" :true-value=1 :false-value=0>
             Cerrado
