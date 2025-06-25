@@ -167,14 +167,6 @@ async function createAdvertisement() {
         }
       }
     },
-    onResponseError(error) {
-      if(error.response._data.code === 500){
-        Swal.fire({
-          icon: 'error',
-          text:  'Error del servidor, por favor intente más tarde.',
-        });
-      }
-    }
   });
 };
 

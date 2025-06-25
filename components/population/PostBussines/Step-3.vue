@@ -13,8 +13,6 @@ const emit = defineEmits(['nexts']);
 const use_posts = usePostsStore();
 const user = useUserStore();
 const config = useRuntimeConfig();
-const title = ref('');
-const description = ref('');
 const phone = ref("");
 const countries = useGetCountry().countries;
 const country = ref("");
@@ -202,11 +200,11 @@ const images = ref(null);
 const profilePic = ref("");
 const isNewImage = ref(false);
 
-function previewFiles(event) {
+function previewFiles(event:any) {
   images.value = event.target.files[0]
   profilePic.value = URL.createObjectURL(images.value);
   isNewImage.value = true;
-};
+}
 
 const schema = yup.object({
   title: yup.string().required("El nombre es requerido"),
@@ -220,6 +218,7 @@ const schema = yup.object({
   instagram: yup.string(),
   facebook: yup.string(),
   address: yup.string().required("Este campo es requerido"),
+  imageProfile: yup.mixed().required("La imagen de perfil es requerida"),
 });
 
 const { handleSubmit, setFieldValue} = useForm({
@@ -346,10 +345,12 @@ const onSubmit = handleSubmit((values) => {
           <span class="text-primary-100">Click para subir</span>
           o arrastra y suelta SVG, PNG, <br> JPG or GIF (max. 800px400px)
         </p>
-        <input type="file" @change="previewFiles" class="absolute left-0 top-0 scale-[9] cursor-pointer opacity-0">
+        <Field name="imageProfile" v-slot="{ handleChange }">
+          <input type="file" @change="(e) => { handleChange(e); previewFiles(e); }" class="absolute left-0 top-0 scale-[9] cursor-pointer opacity-0" />
+        </Field>
       </div>
     </div>
-
+    <ErrorMessage name="imageProfile" class="my-3" />
     <!-- Map -->
     <div class="col-span-2 gap-4 sm:grid grid-cols-2 mt-4 md:mt-0">
       <div class="col-span-2">

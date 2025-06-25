@@ -112,12 +112,6 @@ async function createAdvertisement() {
         }
       }
     },
-    onResponseError(error) {
-      Swal.fire({
-        icon: 'error',
-        text:  'Error del servidor, por favor intente más tarde.',
-      });
-    }
   });
 };
 
