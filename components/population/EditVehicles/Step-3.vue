@@ -141,7 +141,7 @@ use_posts.day_of_week.forEach((day) => {
       </li>
     </ul>
     <!-- telefono y whatsapp -->
-    <div class="flex gap-4 mt-2">
+    <div class="grid grid-cols-2 gap-4 mt-2">
       <label for="phone" class="title-label mb-5">
         Número telefónico
         <vue-tel-input mode="international" v-model="use_posts.phone" class="form-control"></vue-tel-input>

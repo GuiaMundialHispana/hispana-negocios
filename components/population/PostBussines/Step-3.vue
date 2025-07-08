@@ -212,7 +212,7 @@ const schema = yup.object({
   country: yup.string().required("El país es requerido"),
   sector: yup.number().required("El sector es requerido"),
   city: yup.number().required("La ciudad es requerida"),
-  phone: yup.number().required("Este campo es requerido"),
+  phone: yup.string().required("Este campo es requerido"),
   whatsapp: yup.number(),
   web: yup.string(),
   instagram: yup.string(),
@@ -287,8 +287,8 @@ const onSubmit = handleSubmit((values) => {
         </div>
       </li>
     </ul>
-    <!-- telefono y whatsapp -->
-    <div class="flex gap-4 mt-2">
+    <!-- phone y whatsapp -->
+    <div class="grid grid-cols-2 gap-4 mt-2">
       <label for="phone" class="title-label mb-5">
         Número telefónico
         <Field name="phone" v-model="phone">
@@ -298,7 +298,7 @@ const onSubmit = handleSubmit((values) => {
       </label>
       <label for="whatsapp" class="title-label mb-5">
         WhatsApp
-        <Field class="form-control" name="whatsapp" type="text" placeholder="(829) 123-4567" />
+        <Field class="form-control" name="whatsapp" type="number" placeholder="(829) 123-4567" />
       </label>
     </div>
     <!-- Web -->
@@ -316,8 +316,7 @@ const onSubmit = handleSubmit((values) => {
       Facebook
       <Field class="form-control" name="facebook" type="text" placeholder="ej: https://facebook.com/hispana-negocios" />
     </label>
-
-    <!-- TODO Foto de perfil -->
+    <!--  Profile photo-->
     <div class="mt-8 md:h-40 flex flex-col md:flex-row col-span-2 items-center md:items-start">
       <div class="flex md:mr-14 mb-6">
         <div class="flex flex-col items-center">
