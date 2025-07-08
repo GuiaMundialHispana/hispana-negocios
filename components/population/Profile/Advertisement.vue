@@ -42,7 +42,7 @@
               <p class="text-xs text-secondary-100 leading-[22px]">{{ business.business.address }}</p>
             </td>
             <td v-if="business.status === 'inactive'">
-              <p class="flex items-center justify-center gap-2">
+              <p class="flex items-center justify-start gap-2">
                 <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': false }"></span>
                 Inactivo
               </p> 
@@ -54,25 +54,25 @@
               </p> 
             </td>
             <td v-if="business.status === 'revision'">
-              <p class="flex items-center justify-center gap-2 whitespace-nowrap">
+              <p class="flex items-center justify-start gap-2 whitespace-nowrap">
                 <span class="w-2.5 h-2.5 bg-[#FFCC00] rounded-full block"></span>
                 En revisión
               </p> 
             </td>
             <td v-if="business.status === 'trashed'">
-              <p class="flex items-center justify-center gap-2">
+              <p class="flex items-center justify-start gap-2">
                 <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': false }"></span>
                 Eliminado
               </p> 
             </td>
             <td v-if="business.status === 'refused'">
-              <p class="flex items-center justify-center gap-2">
+              <p class="flex items-center justify-start gap-2">
                 <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': false }"></span>
                 {{ business.status }}
               </p> 
             </td>
             <td v-if="business.status === 'expired'">
-              <p class="flex items-center justify-center gap-2">
+              <p class="flex items-center justify-start gap-2">
                 <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': false }"></span>
                 Expirado
               </p> 
