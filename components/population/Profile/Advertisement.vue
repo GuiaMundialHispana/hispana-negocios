@@ -48,15 +48,15 @@
               </p> 
             </td>
             <td v-if="business.status === 'active'">
-              <p class="flex items-center justify-center gap-2">
+              <p class="flex items-center justify-start gap-2">
                 <span class="w-2.5 h-2.5 bg-[#FF2625] rounded-full block" :class="{'state-active': true }"></span>
                 Activo
               </p> 
             </td>
             <td v-if="business.status === 'revision'">
-              <p class="flex items-center justify-center gap-2">
+              <p class="flex items-center justify-center gap-2 whitespace-nowrap">
                 <span class="w-2.5 h-2.5 bg-[#FFCC00] rounded-full block"></span>
-                En revision
+                En revisión
               </p> 
             </td>
             <td v-if="business.status === 'trashed'">
@@ -81,7 +81,7 @@
               <NuxtLink v-if="business.status != 'revision'" :to="{ path: `edit-ad`, query: { slug: business.business.slug }}" class="xsmall btn solid-secondary whitespace-nowrap w-full">
                 Editar negocio
               </NuxtLink>
-              <AtomsButtons v-if="business.status === 'revision'" :disabled="business.status === 'revision'" class="xsmall btn w-full">
+              <AtomsButtons v-if="business.status === 'revision'" :disabled="business.status === 'revision'" class="xsmall whitespace-nowrap btn w-full">
                 Editar negocio
               </AtomsButtons>
             </td>
@@ -92,13 +92,16 @@
                   <AtomsIcon name="general/arrow-down" :class="[{arrow: index === actionsIndex && actionsDropdown }]" />
                 </AtomsButtons>
                 <ul class="actions-dropdown" v-if="index === actionsIndex && actionsDropdown">
-                  <li  class="actions-options">
+                  <li class="actions-options">
                     <NuxtLink :to="{path: `/visitsChart`,query: { id: business.id, name: business.business.name}}">Estadística</NuxtLink>
                   </li>
-                  <li class="actions-options" v-if="business.status != 'inactive'" @click="api_status = 'inactive', changeStatus(business.business.id)">
+                  <li class="actions-options" v-if="business.status != 'inactive'" @click="api_status = 'inactive'; changeStatus(business.business.id)">
                     Cerrar temporalmente
                   </li>
-                  <li class="actions-options" v-if="business.status != 'trashed'" @click="api_status = 'trashed', changeStatus(business.business.id)">
+                  <li class="actions-options" v-if="business.status === 'inactive'" @click="api_status = 'active'; changeStatus(business.business.id)">
+                    Volver activar
+                  </li>
+                  <li class="actions-options" v-if="business.status != 'trashed'" @click="api_status = 'trashed'; changeStatus(business.business.id)">
                     Eliminar empresa
                   </li>
                 </ul>
