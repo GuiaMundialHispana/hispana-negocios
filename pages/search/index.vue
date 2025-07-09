@@ -9,7 +9,7 @@
         <label class="form-control relative " :class="{'bg-[#e2ecf7]': displayCountry}">
           <AtomsIcon name="general/location" :size=26 class="text-secondary-100" />
           <button class="whitespace-nowrap" @click="displayCountry = !displayCountry">
-            {{ checkedCountry.length < 1 ? 'Pais' : countryName }}
+            {{ checkedCountry.length < 1 ? 'País' : countryName }}
           </button>
           <OnClickOutside @trigger="displayCountry = false" class="absolute lg:top-12 top-11 left-0 sm:w-full h-fit z-10" v-if="displayCountry">
             <div class="dropdown-wrapper scrollbar h-fit w-[200px] shadow-md">

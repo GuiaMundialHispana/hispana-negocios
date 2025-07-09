@@ -20,7 +20,7 @@
 			<label class="form-control relative">
 				<AtomsIcon name="general/location" :size=24 class="text-secondary-100" />
 				<button class="categories-btn" @click="displayCountry = !displayCountry">
-					{{ checkedCountry.length < 1 ? 'Pais' : countryName }}
+					{{ checkedCountry.length < 1 ? 'País' : countryName }}
 				</button>
 				<OnClickOutside @trigger="displayCountry = false" class="absolute lg:top-14 top-16 left-0 w-full h-[270px] shadow-md" v-if="displayCountry">
 					<div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">

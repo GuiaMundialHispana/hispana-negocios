@@ -172,7 +172,7 @@ let sectors = ref([])
 watch(country,(country_id) => {
   displaySector.value = true;
   sectors.value = [];
-  const { data } = useFetch(`generals/states/${country_id}`, {
+  useFetch(`generals/states/${country_id}`, {
     method: 'GET',
     baseURL: config.public.API,
     server: false,
