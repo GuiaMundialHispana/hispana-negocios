@@ -225,6 +225,11 @@ const { handleSubmit, setFieldValue} = useForm({
   validationSchema: schema,
 });
 
+function onlyNumbersInput(value: string) {
+  const str = String(value ?? '');
+  return str.replace(/\D/g, '');
+}
+
 const onSubmit = handleSubmit((values) => {
   if( use_posts.lat === 0 || use_posts.log === 0) {
     window.scrollTo(0, 0);
@@ -260,7 +265,7 @@ const onSubmit = handleSubmit((values) => {
       <Field class="form-control" name="title" type="text" placeholder="Nombre del negocio" />
       <ErrorMessage name="title" />
     </label>
-    <!-- Descripcion -->
+    <!-- Descripción -->
     <label for="description" class="col-span-2 title-label mb-5">Descripción
       <Field as="textarea" name="description" type="text" placeholder="Descripcion de la propiedad" />
       <ErrorMessage name="description" />
@@ -292,13 +297,25 @@ const onSubmit = handleSubmit((values) => {
       <label for="phone" class="title-label mb-5">
         Número telefónico
         <Field name="phone" v-model="phone">
-          <vue-tel-input mode="international" v-model="phone" class="form-control"></vue-tel-input>
+          <vue-tel-input
+            mode="international"
+            v-model="phone"
+            class="form-control"
+            @update:model-value="val => phone = onlyNumbersInput(val)"
+          ></vue-tel-input>
         </Field>
         <ErrorMessage name="phone" />
       </label>
       <label for="whatsapp" class="title-label mb-5">
         WhatsApp
-        <Field class="form-control" name="whatsapp" type="number" placeholder="(829) 123-4567" />
+        <Field
+          class="form-control"
+          name="whatsapp"
+          type="number"
+          placeholder="(829) 123-4567"
+          @input="use_posts.whatsapp = onlyNumbersInput($event.target.value)"
+        />
+        <ErrorMessage name="whatsapp" />
       </label>
     </div>
     <!-- Web -->

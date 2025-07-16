@@ -2,32 +2,98 @@
 import { useUserStore } from '~/stores/User';
 import { usePostsStore } from '~/stores/Post';
 
-const user_store = useUserStore();
+// const user_store = useUserStore();
+// const use_posts = usePostsStore();
+// const emit = defineEmits(['back', 'nexts'])
+//
+// // let plans = [];
+// let next = ref(false);
+// const config = useRuntimeConfig();
+// const token = useState('token')
+//
+// const current = ref(false)
+// const { data:plans,pending } = await useLazyFetch('user-plans',{
+//   method: 'GET',
+//   headers: {
+//     'Authorization': `Bearer ${token.value}`
+//   },
+//   onResponse({response}) {
+//     if(response.status === 200) {
+//       response._data.results.forEach(element => {
+//         if(element.plan.id === use_posts.plan_id) {
+//           use_posts.plan_pictures = element.plan.pictures;
+//           current.value = true;
+//         }
+//       });
+//     }
+//   },
+//   baseURL: config.public.API
+// });
+//
+// function send_plan(id,pictures) {
+//   use_posts.plan_id = id;
+//   use_posts.plan_pictures = pictures;
+//   current.value = false;
+//   next.value = true;
+// };
+//
+// import { usePostsStore } from '~/stores/Post';
+
 const use_posts = usePostsStore();
+let next = ref(false);
+const current = ref(false)
+const config = useRuntimeConfig();
+const token = useState('token');
+const plans = ref([]);
 const emit = defineEmits(['back', 'nexts'])
 
-// let plans = [];
-let next = ref(false);
-const config = useRuntimeConfig();
-const token = useState('token')
-
-const current = ref(false)
-const { data:plans,pending } = await useLazyFetch('user-plans',{
+const { data:userPlans, pending } = await useLazyFetch('user-plans',{
   method: 'GET',
-  headers: {
-    'Authorization': `Bearer ${token.value}`
-  },
-  onResponse({response}) {
-    if(response.status === 200) {
-      response._data.results.forEach(element => {
-        if(element.plan.id === use_posts.plan_id) {
-          use_posts.plan_pictures = element.plan.pictures;
-          current.value = true;
-        }
+  headers: {'Authorization': `Bearer ${token.value}`},
+  baseURL: config.public.API,
+  transform(data) {
+    return data.results;
+  }
+});
+
+const { data:generalPlans } = useLazyFetch('generals/plans',{
+  method: 'GET',
+  server:false,
+  baseURL: config.public.API,
+  transform(data) {
+    return data.results;
+  }
+});
+
+watch([userPlans, generalPlans], ([userPlans, generalPlans]) => {
+  if (userPlans && generalPlans) {
+    plans.value = []; // Reinicia el array de planes
+    const userPlanIds = userPlans?.map(item => item.plan_id) ?? [];
+
+    const availablePlans = generalPlans?.filter(gp => !userPlanIds.includes(gp.id) && gp.id !== 4) ?? [];
+
+    if (availablePlans.length > 0) {
+      userPlans.forEach((plan) => {
+        plans.value.push({
+          plan: plan.plan,
+          quantity: plan.quantity
+        });
+      });
+      availablePlans.forEach((plan) => {
+        plans.value.push({
+          plan: plan,
+          quantity: 0
+        });
+      });
+    } else {
+      userPlans.forEach((plan) => {
+        plans.value.push({
+          plan: plan.plan,
+          quantity: plan.quantity
+        });
       });
     }
-  },
-  baseURL: config.public.API
+  }
 });
 
 function send_plan(id,pictures) {
@@ -35,7 +101,7 @@ function send_plan(id,pictures) {
   use_posts.plan_pictures = pictures;
   current.value = false;
   next.value = true;
-};
+}
 
 // send_plan(use_posts.plan_id,use_posts.plan_pictures);
 </script>
@@ -88,19 +154,14 @@ function send_plan(id,pictures) {
       <div class="w-full h-8 skeleton rounded-lg mb-4"></div>
     </div>
   </div>
-  <ul v-if="plans && !pending" class="plans-list">
-    <li v-for="plan in plans.results" :key="plan">
+  <ul v-if="!pending && plans" class="plans-list">
+    <li v-for="plan in plans" :key="plan">
       <MoleculesPlanCard
         class="h-full"
         @pay="send_plan"
         :plan="plan.plan"
         :user-quantity="plan.quantity"
-        :seleccionado="plan.plan.id === use_posts.plan_id && current"
-      >
-        <AtomsButtons class="my-2 w-full active">
-          Seleccionado
-        </AtomsButtons>
-      </MoleculesPlanCard>
+      />
     </li>
   </ul>
   <div class="flex justify-center">
