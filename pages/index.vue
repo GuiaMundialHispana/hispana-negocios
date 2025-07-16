@@ -72,7 +72,7 @@
 import {ref} from 'vue';
 import { OnClickOutside } from '@vueuse/components';
 
-const searchText = ref("");
+const searchText = ref();
 const displayCountry = ref(false);
 const countries = useGetCountry().countries;
 const countryName = ref("");

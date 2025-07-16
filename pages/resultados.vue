@@ -168,7 +168,12 @@ const fetchParams = computed(() => ({
 }));
 
 if(useRoute().query.categories) {
-  checkedCategories.value = useRoute().query.categories?.split(',');
+  const categoriesQuery = useRoute().query.categories;
+  checkedCategories.value = typeof categoriesQuery === 'string'
+    ? categoriesQuery.split(',')
+    : Array.isArray(categoriesQuery)
+      ? categoriesQuery
+      : [];
   categoryName.value = categories.value
     .filter((cat: any) => checkedCategories.value.includes(cat.id.toString()))
     .map((cat: any) => cat.name);
