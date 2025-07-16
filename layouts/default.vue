@@ -39,7 +39,6 @@ if(import.meta.client) {
 onMounted(() => {
   setInterval(async () => {
     if(isLogged) {
-      console.log('Refreshing token...');
       await refresh_token();
     }
   }, 120000);
