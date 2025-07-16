@@ -1,43 +1,5 @@
 <script setup>
-import { useUserStore } from '~/stores/User';
 import { usePostsStore } from '~/stores/Post';
-
-// const user_store = useUserStore();
-// const use_posts = usePostsStore();
-// const emit = defineEmits(['back', 'nexts'])
-//
-// // let plans = [];
-// let next = ref(false);
-// const config = useRuntimeConfig();
-// const token = useState('token')
-//
-// const current = ref(false)
-// const { data:plans,pending } = await useLazyFetch('user-plans',{
-//   method: 'GET',
-//   headers: {
-//     'Authorization': `Bearer ${token.value}`
-//   },
-//   onResponse({response}) {
-//     if(response.status === 200) {
-//       response._data.results.forEach(element => {
-//         if(element.plan.id === use_posts.plan_id) {
-//           use_posts.plan_pictures = element.plan.pictures;
-//           current.value = true;
-//         }
-//       });
-//     }
-//   },
-//   baseURL: config.public.API
-// });
-//
-// function send_plan(id,pictures) {
-//   use_posts.plan_id = id;
-//   use_posts.plan_pictures = pictures;
-//   current.value = false;
-//   next.value = true;
-// };
-//
-// import { usePostsStore } from '~/stores/Post';
 
 const use_posts = usePostsStore();
 let next = ref(false);
