@@ -16,10 +16,10 @@ export default function useRenderSchedule() {
     const currentTotalMinutes = actual_hour * 60 + actual_minutes;
     
     if (currentTotalMinutes >= openTotalMinutes && currentTotalMinutes < closeTotalMinutes) {
-      schedule_message.value = `Abierto: ${day.open_time} - ${day.close_time}`;
+      schedule_message.value = `${day.open_time} - ${day.close_time}`;
       isOpen.value = true;
     } else {
-      schedule_message.value = `Cerrado: ${day.open_time} - ${day.close_time}`;
+      schedule_message.value = `${day.open_time} - ${day.close_time}`;
       isOpen.value = false;
     }
   }

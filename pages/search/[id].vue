@@ -91,7 +91,7 @@
 
 <script setup>
 const config = useRuntimeConfig();
-const categories = useCategories().categories;
+const categories = useState('categoriesResponse');
 const {isOpen, actual_day, checkSchedule, schedule_message} = useRenderSchedule();
 const category_type = ref(null);
 const renderMap = ref(null);

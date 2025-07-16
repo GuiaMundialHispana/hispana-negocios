@@ -4,19 +4,19 @@
       <AtomsIcon name="general/phone" :size=20 />
       <a :href="`tel:${phone}`"  target="_blank" @click="addViewSocialMedia('phone')">{{ phone }}</a>
     </div>
-    <div class="items" v-if="whatsapp" @click="addViewSocialMedia('whatsapp')">
+    <div class="items" v-if="whatsapp && whatsapp !== 'undefined'" @click="addViewSocialMedia('whatsapp')">
       <AtomsIcon name="general/whatsapp" :size=20 />
       <a :href="`https://wa.me/${whatsapp}`" target="_blank">{{ whatsapp }}</a>
     </div>
-    <div class="items" v-if="facebook" @click="addViewSocialMedia('facebook')">
+    <div class="items" v-if="facebook && facebook !== 'undefined'" @click="addViewSocialMedia('facebook')">
       <AtomsIcon name="general/facebook" :size=20 />
       <a :href="facebook" target="_blank">{{facebook}}</a>
     </div>
-    <div class="items" v-if="instagram" @click="addViewSocialMedia('instagram')">
+    <div class="items" v-if="instagram && instagram !== 'undefined'" @click="addViewSocialMedia('instagram')">
       <AtomsIcon name="general/instagram" :size=20 />
       <a :href="instagram" target="_blank">{{ instagram }}</a>
     </div>
-    <div class="items" v-if="website" @click="addViewSocialMedia('web')">
+    <div class="items" v-if="website && website !== 'undefined'" @click="addViewSocialMedia('web')">
       <AtomsIcon name="general/web" :size=20 />
       <a :href="website" target="_blank">{{website}}</a>
     </div>

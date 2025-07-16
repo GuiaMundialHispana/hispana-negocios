@@ -8,7 +8,7 @@
         </label>
         <label class="form-control relative " :class="{'bg-[#e2ecf7]': displayCountry}">
           <AtomsIcon name="general/location" :size=26 class="text-secondary-100" />
-          <button class="whitespace-nowrap" @click="displayCountry = !displayCountry">
+          <button type="button" class="whitespace-nowrap" @click="displayCountry = !displayCountry">
             {{ checkedCountry.length < 1 ? 'País' : countryName }}
           </button>
           <OnClickOutside @trigger="displayCountry = false" class="absolute lg:top-12 top-11 left-0 sm:w-full h-fit z-10" v-if="displayCountry">
@@ -29,21 +29,21 @@
           </OnClickOutside>
         </label>
         <label class="form-control relative min-w-[100px] cursor-pointer" :class="{'bg-[#e2ecf7]': displayCategories}">
-          <button class="flex gap-2 whitespace-nowrap" @click="displayCategories = !displayCategories">
+          <button type="button" class="flex gap-2 whitespace-nowrap" @click="displayCategories = !displayCategories">
             <AtomsIcon name="general/tune" :size=22 class="text-secondary-100" />
-            {{ checkedCategories.length < 1 ? 'Categorías' : categoryName }}
+            {{ checkedCategories.length < 1 ? 'Categorías' : categoryName.join(', ') }}
           </button>
           <OnClickOutside @trigger="displayCategories = false" v-if="displayCategories" class="absolute lg:top-12 top-11 left-0 sm:w-full h-fit">
             <div class="dropdown-wrapper scrollbar h-fit w-[200px] shadow-md absolute z-30">
-              <label class="checkbox-labels" v-for="category in categories" :key="category">
+              <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
                 <input
-                  type="radio"
+                  type="checkbox"
                   class="checkbox"
                   :name="category.name"
                   :id="category.name"
-                  :value="category.id"
+                  :value="category.id.toString()"
                   v-model="checkedCategories"
-                  @click="categoryName = category.name"
+                  @click="categoryName.push(category.name)"
                 >
                 {{ category.name }}
               </label>
@@ -68,9 +68,6 @@
     </div>
     <div class="mt-8 pb-14">
       <ul class="property-list" v-if="!pending">
-        <!-- <li v-for="property in properties" :key="property">
-          <MoleculesBusiness :advertisement="property" :schedule="property.business.schedule" :category="property.business.business_category_id" />
-        </li> -->
         <li v-for="property in propertiesVip" :key="property">
           <MoleculesBusiness :advertisement="property" :schedule="property.business.schedule" :category="property.business.business_category_id" />
         </li>
@@ -84,7 +81,7 @@
           <MoleculesBusiness :advertisement="property" :schedule="property.business.schedule" :category="property.business.business_category_id" />
         </li>
       </ul>
-      <div v-if="properties.length === 0 && !pending" class="pt-20">
+      <div v-if="!pending && properties.length === 0" class="pt-20">
         <figure class="mb-4">
           <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
         </figure>
@@ -146,7 +143,6 @@ import { OnClickOutside } from '@vueuse/components';
 import { ref } from 'vue';
 
 const config = useRuntimeConfig();
-const viewport = useViewport();
 
 //Mostrar propiedades
 let properties = ref([]);
@@ -154,29 +150,37 @@ let propertiesVip = ref([]);
 let propertiesExclusive = ref([]);
 let propertiesSilver = ref([]);
 let propertiesBasic = ref([]);
-let showFilters = ref(false);
 
 const title = ref(useRoute().query.title || '');
-const country = ref(useRoute().query.country || '');
 const displayCountry = ref(false);
 const countries = useGetCountry().countries;
 const countryName = ref("");
 const checkedCountry = ref([])
-const checkedCategories = ref(useRoute().query.categories || "");
-const categoryName = ref('');
-const categories = useCategories().categories;
+const checkedCategories = ref(useRoute().query.categories || []);
+const categoryName = ref([]);
+const categories = useState('categoriesResponse');
 const displayCategories = ref(false);
+
+const fetchParams = computed(() => ({
+  title: title.value,
+  country: useRoute().query.country ? useRoute().query.country : checkedCountry.value,
+  categories: checkedCategories.value.length ? checkedCategories.value.join(',') : "",
+}));
+
+if(useRoute().query.categories) {
+  checkedCategories.value = useRoute().query.categories?.split(',');
+  categoryName.value = categories.value
+    .filter((cat: any) => checkedCategories.value.includes(cat.id.toString()))
+    .map((cat: any) => cat.name);
+} else {
+  categoryName.value = [];
+}
 
 const { data, pending, refresh } = useLazyFetch('advertisements/search', {
   method: 'GET',
   baseURL: config.public.API,
-  params: {
-    title : title,
-    country: checkedCountry,
-    categories: checkedCategories,
-  },
+  query: fetchParams,
   transform(data) {
-    // properties.value = data.results.data;
     let response = data.results.data;
     propertiesVip.value = [];
     propertiesExclusive.value = [];
@@ -193,14 +197,16 @@ const { data, pending, refresh } = useLazyFetch('advertisements/search', {
   },
 });
 
-watch(title, () => { refresh(); });
-watch(country, () => { refresh(); });
-watch(checkedCategories, () => { refresh(); });
+watch(checkedCategories, (newVal) => {
+  categoryName.value = categories.value
+    .filter((cat: any) => newVal.includes(cat.id.toString()))
+    .map((cat: any) => cat.name);
+});
 
 function clearFilter() {
   title.value = "";
   checkedCountry.value = "";
-  checkedCategories.value = "";
+  checkedCategories.value = [];
   refresh();
 }
 </script>
@@ -214,13 +220,13 @@ function clearFilter() {
 }
 
 .filters-container{
-	@apply w-full p-3 md:mx-4 flex items-center relative z-10 gap-4 flex-wrap mt-5;
+  @apply w-full p-3 md:mx-4 flex items-center relative z-10 gap-4 flex-wrap mt-5;
 }
 .form-control{
-	@apply p-4 py-1.5 items-center w-full sm:w-fit border-2 rounded-lg text-neutral-black flex gap-2;
-	& input {
-		@apply outline-none appearance-none w-full;
-	}
+  @apply p-4 py-1.5 items-center w-full sm:w-fit border-2 rounded-lg text-neutral-black flex gap-2;
+  & input {
+    @apply outline-none appearance-none w-full;
+  }
 }
 .clearFilter-btn{
   @media (max-width:640px) {

@@ -6,6 +6,7 @@ export default function useCategories() {
     baseURL: config.public.API,
     server:false,
     transform(data) {
+      useState('categoriesResponse', () => data.results);
       return data.results
     }
   });

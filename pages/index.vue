@@ -80,11 +80,11 @@ const checkedCountry = ref([]);
 const displayCategories = ref(false);
 const checkedCategories = ref([]);
 const categoryName = ref('');
-const categories = useCategories().categories;
+const categories = useState('categoriesResponse');
 
 function searchAds() {
 	useRouter().push({
-		path: '/search', 
+		path: '/resultados',
 		query: {
 			title: searchText.value,
 			country: checkedCountry.value,

@@ -3,6 +3,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const token = useState('token');
   const {getUser} = useUser();
   if (import.meta.client) {
+   useCategories().categories;
     let tokenClient = window.localStorage.getItem('token');
     if (tokenClient) {
       token.value = tokenClient;

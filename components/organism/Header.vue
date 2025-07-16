@@ -19,8 +19,8 @@
             />
           </span>
           <ul>
-            <li v-for="item in menu" :key='item.name' class="nav-item" :class="{'active': route.fullPath === item.route}">
-              <NuxtLink :to='item.route'  @click="showMenu = false">{{item.name}}</NuxtLink>
+            <li class="nav-item cursor-pointer" :class="{'active': route.fullPath === '/resultados'}">
+              <NuxtLink to='/resultados' @click="showMenu = false">Buscar</NuxtLink>
             </li>
             <li class="nav-item cursor-pointer" :class="{'active': route.fullPath === '/create-ad'}" @click="checkSell">
               Vender
@@ -120,10 +120,6 @@ defineComponent({
     OnClickOutside
   }
 })
-
-const menu = reactive([
-  { name: 'Buscar', route: '/search' },
-]);
 
 // Watchers
 watch(showMenu, (newValue: boolean) => {

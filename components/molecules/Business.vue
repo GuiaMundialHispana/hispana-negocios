@@ -2,7 +2,6 @@
   <article class="flex lg:flex-row flex-col border-b-2 rounded-2xl rounded-br-none rounded-bl-none p-6 gap-12 border-b-gray-300 w-full">
     <NuxtLink :to="`/search/${advertisement.business.slug}`">
       <figure class="bg-neutral-white lg:w-[170px] w-full h-[170px] flex items-center justify-center">
-<!--        <img :src="advertisement.business.image" :alt="advertisement.business.name" class="w-full h-full object-cover object-top">-->
         <NuxtImg
           :src="advertisement.business.image"
           :alt="advertisement.business.name"
@@ -20,8 +19,8 @@
             <AtomsIcon name="general/clock" :size=32 class="absolute left-0 "/>
             {{ schedule_message }}
           </p>
-          <p class="bussines-category" v-if="category_type !== null">
-            {{ category_type.name }}
+          <p class="bussines-category" v-if="category_type">
+            {{category_type.name}}
           </p>
         </div>
       </div>
@@ -48,7 +47,7 @@
 </template>
 
 <script setup>
-const categories = useCategories().categories;
+const categories = useState('categoriesResponse');
 const {isOpen, actual_day, checkSchedule, schedule_message} = useRenderSchedule();
 const props = defineProps({
   advertisement: {
@@ -62,15 +61,12 @@ const props = defineProps({
     type: null
   }
 });
+
 const category_type = ref(null);
-
+if(categories.value !== null || undefined) {
+  category_type.value = categories.value?.find(element => element.id === props.advertisement.business.business_category_id);
+}
 watchEffect(()=> {
-  if(props.category !== null || undefined ) {
-    if(categories.value !== null) {
-      category_type.value = categories.value.find(element => element.id === props.category);
-    }
-  }
-
   const days = [];
   if(props.schedule !== null || undefined) {
     props.schedule.forEach(element => {
