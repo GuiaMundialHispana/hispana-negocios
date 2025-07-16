@@ -134,7 +134,7 @@ function send_plan(id,pictures) {
       Atrás
     </AtomsButtons>
     <!-- :disabled="!next" -->
-    <AtomsButtons @click="emit('nexts')">
+    <AtomsButtons :isDisabled="use_posts.plan_id === 0" @click="emit('nexts')">
       Continuar
     </AtomsButtons>
   </nav>
