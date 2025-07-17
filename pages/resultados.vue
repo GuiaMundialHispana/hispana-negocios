@@ -141,6 +141,7 @@
 <script lang="ts" setup>
 import { OnClickOutside } from '@vueuse/components';
 import { ref } from 'vue';
+import { useDebounce } from '@vueuse/core';
 
 const config = useRuntimeConfig();
 
@@ -152,6 +153,8 @@ let propertiesSilver = ref([]);
 let propertiesBasic = ref([]);
 
 const title = ref(useRoute().query.title || '');
+const debouncedTitle = useDebounce(title, 500); // espera 500ms tras dejar de escribir
+
 const displayCountry = ref(false);
 const countries = useGetCountry().countries;
 const countryName = ref("");
@@ -160,12 +163,6 @@ const checkedCategories = ref(useRoute().query.categories || []);
 const categoryName = ref([]);
 const categories = useState('categoriesResponse');
 const displayCategories = ref(false);
-
-const fetchParams = computed(() => ({
-  title: title.value,
-  country: useRoute().query.country ? useRoute().query.country : checkedCountry.value,
-  categories: checkedCategories.value.length ? checkedCategories.value.join(',') : "",
-}));
 
 if(useRoute().query.categories) {
   const categoriesQuery = useRoute().query.categories;
@@ -181,10 +178,17 @@ if(useRoute().query.categories) {
   categoryName.value = [];
 }
 
+const fetchParams = computed(() => ({
+  title: debouncedTitle.value,
+  country: useRoute().query.country ? useRoute().query.country : checkedCountry.value,
+  categories: checkedCategories.value.length ? checkedCategories.value.join(',') : "",
+}));
+
 const { data, pending, refresh } = useLazyFetch('advertisements/search', {
   method: 'GET',
   baseURL: config.public.API,
   query: fetchParams,
+  watch: [fetchParams],
   transform(data) {
     let response = data.results.data;
     propertiesVip.value = [];
